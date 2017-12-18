@@ -1,0 +1,25 @@
+{
+  "name": "losant-cli",
+  "version": "1.0.0",
+  "bin": {
+    "losant": "./losant",
+    "losant-configure": "./losant-configure",
+    "losant-views": "./losant-views"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "commander": "^2.11.0",
+    "diff": "^3.4.0",
+    "glob": "^7.1.2",
+    "inquirer": "^3.3.0",
+    "js-yaml": "^3.10.0",
+    "losant-rest": "^1.9.0",
+    "minimatch": "^3.0.4",
+    "mkdirp": "^0.5.1",
+    "opener": "^1.4.3",
+    "pad": "^2.0.3",
+    "request": "^2.83.0",
+    "sanitize-filename": "^1.6.1",
+    "update-notifier": "^2.3.0"
+  }
+}
