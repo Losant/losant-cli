@@ -9,6 +9,7 @@ const minimatch = require('minimatch')
 const mkdirp = require('mkdirp')
 const glob = require('glob')
 const pad = require('pad')
+const { spawn } = require('child_process')
 const { loadConfig, isFileNewer, loadLocalMeta, saveLocalMeta, 
   getLocalStatus, getRemoteStatus, checksum } = require('./lib/utils')
 
@@ -30,7 +31,7 @@ program
     const config = loadConfig(command.config)
     const api = losant.createClient({ accessToken: config.apiToken })
 
-    log()
+    // log()
     api.experienceViews
       .get({ applicationId: config.applicationId })
       .then((views) => {
@@ -113,7 +114,7 @@ program
         } else {
           log('All views are up to date')
         }
-        log()
+        // log()
       })
       .catch((e) => {
         log(`${c.red('Error')} failed to download: ${c.bold(e.message)}`)
@@ -135,8 +136,7 @@ program
     try {
       const config = loadConfig(command.config)
       const api = losant.createClient({ accessToken: config.apiToken })
-
-      log()
+      // log()
       const meta = loadLocalMeta('views') || {}
       api.experienceViews
         .get({ applicationId: config.applicationId })
@@ -229,7 +229,7 @@ program
           } else {
             log('All views are up to date')
           }
-          log()
+          // log()
         })
         .catch((e) => {
           log(`${c.red('Error')} failed to upload: ${c.bold(e.message)}`)
@@ -256,7 +256,7 @@ program
       api.experienceViews
         .get({ applicationId: config.applicationId })
         .then((views) => {
-          log()
+          // log()
           if (command.remote) {
             const remoteStatus = getRemoteStatus('.hbs', 'views', views.items, 'viewType', 'body')
             if (remoteStatus.length === 0) {
@@ -286,7 +286,7 @@ program
               log(`   ${pad(status, 10)}\t${item.file}`)
             })
           }
-          log()
+          // log()
         })
         .catch((e) => {
           log(`${c.red('Error')} failed show status: ${c.bold(e.message)}`)
@@ -295,6 +295,35 @@ program
       log(`${c.red('Error')} ${err.message}`)
       process.exit(1)
     }
+  })
+
+program
+  .command('watch')
+  .option('-c, --config <file>', 'config file to run the command with')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
+  .action((command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    fs.watch('views', { recursive: true }, (eventType, filename) => {
+      if (eventType === 'change') {
+        if (filename) {
+          const cmd = process.argv[0]
+          const args = process.argv.slice(1)
+          args[1] = 'upload'
+          args.push(`${filename.slice(0, -4)}`)
+          const options = {
+            cwd: process.cwd(),
+            stdio: [process.stdin, process.stdout, 'pipe']
+          }
+          const upload = spawn(cmd, args, options)
+          upload.on('error', (err) => {
+            log(`${c.red('Error')} ${err.message}`)
+            process.exit(1)
+          })
+        }
+      }
+    })
   })
 
 program.on('--help', () => {
