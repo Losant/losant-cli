@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+const program = require('commander')
+const c = require('chalk')
+const losant = require('losant-rest')
+const fs = require('fs')
+const path = require('path')
+const minimatch = require('minimatch')
+const mkdirp = require('mkdirp')
+const glob = require('glob')
+const pad = require('pad')
+const { spawn } = require('child_process')
+const csvStringify = require('csv-stringify/lib/sync')
+const CliTable = require('cli-table2')
+const { loadConfig, isFileNewer, loadLocalMeta, saveLocalMeta, 
+  getLocalStatus, getRemoteStatus, checksum } = require('./lib/utils')
+
+const log = console.log
+
+const fetchFlowId  = (api, config, name) => {
+  const params = {
+    applicationId: config.applicationId,
+    filterField: 'name',
+    filter: name
+  }
+  return api.flows
+    .get(params)
+    .then((flows) => {
+      if (flows.count === 0) {
+        log(`${c.red('Error')} flow ${name} not found`)
+        process.exit(1)
+      }
+      return flows.items[0].id
+    })
+}
+
+const formatOutput = (format, result) => {
+  let output
+  if (format === 'csv') {
+    output = csvStringify(result, { header: true })
+  } else if (format === 'table') {
+    const table = new CliTable({ head: Object.keys(result[0]) })
+    result.forEach((item) => {
+      table.push(Object.values(item))
+    })
+    output = table.toString()
+  } else {
+    output = JSON.stringify(result)
+  }
+  return output
+}
+
+program
+  .description('Interact with Losant flows from the command line')
+
+program
+  .command('log [id]')
+  .option('-n, --name <name>', 'name of the data table to export')
+  .option('-l, --limit <limit>', 'max log entries to return')
+  .option('-o, --out <out>', 'file to write the results to')
+  .option('-f, --format <format>', 'sets the format of the output: json, csv, table (default: "json")')
+  .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
+  .action((id, command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+
+    let getId
+    if (!id) {
+      if (!command.name) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      getId = fetchFlowId(api, config, command.name)
+    } else {
+      getId = Promise.resolve(id)
+    }
+    getId.then((id) => {
+      if (!id) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      const params = {
+        applicationId: config.applicationId,
+        flowId: id,
+        limit: command.limit || 100
+      }
+      return api.flow
+        .getLogEntries(params)
+        .then((result) => {
+          const output = formatOutput(command.format, result)
+          if (command.out) {
+            fs.writeFileSync(command.out, output)
+          } else {
+            console.log(output)
+          }
+        })
+    })
+    .catch((err) => {
+      log(`${c.red('Error')} ${err.message}`)
+      process.exit(1)
+    })
+  })
+
+program.parse(process.argv)

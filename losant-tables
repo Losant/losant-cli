@@ -1,0 +1,274 @@
+#!/usr/bin/env node
+const program = require('commander')
+const c = require('chalk')
+const losant = require('losant-rest')
+const fs = require('fs')
+const path = require('path')
+const minimatch = require('minimatch')
+const mkdirp = require('mkdirp')
+const glob = require('glob')
+const pad = require('pad')
+const csvStringify = require('csv-stringify/lib/sync')
+const csvParser = require('csv-parse/lib/sync')
+const CliTable = require('cli-table2')
+const { spawn } = require('child_process')
+const { loadConfig, isFileNewer, loadLocalMeta, saveLocalMeta, 
+  getLocalStatus, getRemoteStatus, checksum } = require('./lib/utils')
+
+const log = console.log
+
+const fetchDataTableId  = (api, config, name) => {
+  const params = {
+    applicationId: config.applicationId,
+    filterField: 'name',
+    filter: name
+  }
+  return api.dataTables
+    .get(params)
+    .then((tables) => {
+      if (tables.count === 0) {
+        log(`${c.red('Error')} data table ${name} not found`)
+        process.exit(1)
+      }
+      return tables.items[0].id
+    })
+}
+
+const formatOutput = (format, result) => {
+  let output
+  if (format === 'csv') {
+    output = csvStringify(result.items, { header: true })
+  } else if (format === 'table') {
+    const table = new CliTable({ head: Object.keys(result.items[0]) })
+    result.items.forEach((item) => {
+      table.push(Object.values(item))
+    })
+    output = table.toString()
+  } else {
+    output = JSON.stringify(result.items)
+  }
+  return output
+}
+
+program
+  .description('Interact with Losant data tables from the command line')
+
+program
+  .command('export [id]')
+  .option('-n, --name <name>', 'name of the data table to export')
+  .option('-o, --out <out>', 'file to write the results to')
+  .option('-f, --format <format>', 'sets the format of the output: json, csv, table (default: "json")')
+  .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
+  .action((id, command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+
+    let getId
+    if (!id) {
+      if (!command.name) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      getId = fetchDataTableId(api, config, command.name)
+    } else {
+      getId = Promise.resolve(id)
+    }
+    getId.then((id) => {
+      if (!id) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      const params = {
+        applicationId: config.applicationId,
+        dataTableId: id,
+        limit: 100000
+      }
+      return api.dataTableRows
+        .get(params)
+        .then((result) => {
+          const output = formatOutput(command.format, result)
+          if (command.out) {
+            fs.writeFileSync(command.out, output)
+          } else {
+            console.log(output)
+          }
+        })
+    })
+    .catch((err) => {
+      log(`${c.red('Error')} ${err.message}`)
+      process.exit(1)
+    })
+  })
+
+program
+  .command('query [id]')
+  .option('-q, --query <query>', 'data table query')
+  .option('-n, --name <name>', 'name of the data table to export')
+  .option('-o, --out <out>', 'file to write the results to')
+  .option('-f, --format <format>', 'sets the format of the output: json, csv, table (default: "json")')
+  .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
+  .action((id, command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+
+    let getId
+    if (!id) {
+      if (!command.name) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      getId = fetchDataTableId(api, config, command.name)
+    } else {
+      getId = Promise.resolve(id)
+    }
+    getId.then((id) => {
+      if (!id) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      const params = {
+        applicationId: config.applicationId,
+        dataTableId: id,
+        limit: 100000,
+        query: command.query
+      }
+      return api.dataTableRows
+        .query(params)
+        .then((result) => {
+          const output = formatOutput(command.format, result)
+          if (command.out) {
+            fs.writeFileSync(command.out, output)
+          } else {
+            console.log(output)
+          }
+        })
+    })
+    .catch((err) => {
+      log(`${c.red('Error')} ${err.message}`)
+      process.exit(1)
+    })
+  })
+
+program
+  .command('import <file> [id]')
+  .option('-n, --name <name>', 'name of the data table to import to')
+  .option('-k, --key <key>', 'finds rows with key field to update instead of insert')
+  .option('--csv', 'reads the input as csv instead of json')
+  .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
+  .action((file, id, command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+
+    let getId
+    if (!id) {
+      if (typeof command.name !== 'string') {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      getId = fetchDataTableId(api, config, command.name)
+    } else {
+      getId = Promise.resolve(id)
+    }
+    
+    getId.then((id) => {
+      if (!id) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      const data = command.csv 
+        ? csvParser(fs.readFileSync(file), { columns: true })
+        : JSON.parse(fs.readFileSync(file))
+      return Promise.all(data.map((row) => {
+        let getRowId
+        if (command.key) {
+          const queryParams = {
+            applicationId: config.applicationId,
+            dataTableId: id,
+            limit: 1,
+            query: {
+              [command.key]: { $eq: row[command.key] }
+            }
+          }
+          getRowId = api.dataTableRows.query(queryParams)
+            .then((results) => {
+              return results.count ? results.items[0].id : null
+            })
+        } else {
+          getRowId = Promise.resolve(row.id)
+        }
+        return getRowId.then((rowId) => {
+          const params = {
+            applicationId: config.applicationId,
+            dataTableId: id,
+            dataTableRow: row
+          }
+          if (rowId) {
+            params.rowId = rowId
+            return api.dataTableRow.patch(params)
+          } else {
+            return api.dataTableRows.post(params)
+          }
+        })
+      }))
+    })
+    .catch((err) => {
+      log(`${c.red('Error')} ${err.message}`)
+      process.exit(1)
+    })
+
+  })
+
+program
+  .command('truncate [id]')
+  .option('-n, --name <name>', 'name of the data table to export')
+  .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
+  .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
+  .action((id, command) => {
+    if (command.dir) {
+      process.chdir(command.dir)
+    }
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+
+    let getId
+    if (!id) {
+      if (typeof command.name !== 'string') {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      getId = fetchDataTableId(api, config, command.name)
+    } else {
+      getId = Promise.resolve(id)
+    }
+
+    getId.then((id) => {
+      if (!id) {
+        log(`${c.red('Error')} id or name is required`)
+        process.exit(1)
+      }
+      const params = {
+        applicationId: config.applicationId,
+        dataTableId: id
+      }
+      return api.dataTableRows.truncate(params)
+    })
+    .catch((err) => {
+      log(`${c.red('Error')} ${err.message}`)
+      process.exit(1)
+    })
+
+  })
+
+program.parse(process.argv)
