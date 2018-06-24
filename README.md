@@ -124,7 +124,7 @@ Force an upload of all views overwriting remote modifications
 $ losant views upload -f
 ```
 
-## `losant-FILES`
+## `losant-files`
 
 ### Description
 
