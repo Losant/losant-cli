@@ -5,25 +5,24 @@
     "losant": "./losant",
     "losant-configure": "./losant-configure",
     "losant-views": "./losant-views",
-    "losant-tables": "./losant-tables"
+    "losant-files": "./losant-files"
   },
   "dependencies": {
     "chalk": "^2.3.0",
-    "cli-table2": "^0.2.0",
     "commander": "^2.11.0",
-    "csv-parse": "^2.0.2",
-    "csv-stringify": "^2.0.2",
-    "diff": "^3.4.0",
+    "form-data": "^2.3.2",
     "glob": "^7.1.2",
     "inquirer": "^3.3.0",
     "js-yaml": "^3.10.0",
-    "losant-rest": "^1.9.3",
+    "lodash-template": "^1.0.0",
+    "losant-rest": "^2.1.0",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
     "opener": "^1.4.3",
     "pad": "^2.0.3",
     "request": "^2.83.0",
     "sanitize-filename": "^1.6.1",
+    "sync-request": "^6.0.0",
     "update-notifier": "^2.3.0"
   }
 }

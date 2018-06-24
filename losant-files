@@ -10,13 +10,15 @@ const mkdirp = require('mkdirp')
 const glob = require('glob')
 const pad = require('pad')
 const { spawn } = require('child_process')
+const request = require('sync-request')
+const FormData = require('form-data')
 const { loadConfig, isFileNewer, loadLocalMeta, saveLocalMeta, 
   getLocalStatus, getRemoteStatus, checksum } = require('./lib/utils')
 
 const log = console.log
 
 program
-  .description('Manage Losant Experience Views from the command line')
+  .description('Manage Losant Files from the command line')
 
 program
   .command('download [pattern]')
@@ -32,29 +34,32 @@ program
     const api = losant.createClient({ accessToken: config.apiToken })
 
     // log()
-    api.experienceViews
+    api.files
       .get({ applicationId: config.applicationId })
-      .then((views) => {
+      .then((files) => {
         const results = []
-        let items = views.items
-        const meta = loadLocalMeta('views') || {}
+        let items = files.items
+        const meta = loadLocalMeta('files') || {}
         let itemsSkipped = false
-        // filter out views that don't match file pattern
-        if (pattern) {
-          items = items.filter((view) => {
-            if (minimatch(view.name, pattern)) {
+        // filter out files that don't match file pattern
+        items = items.filter((file) => {
+          if (file.type === 'directory') { return false }
+          if (pattern) {
+            if (minimatch(file.parentDirectory + file.name, pattern)) {
               return true
             }
             return false
-          })
-        }
-        // map views to id
-        const viewsById = {}
+          } else {
+            return true
+          }
+        })
+        // map files to id
+        const filesById = {}
         items.forEach((item) => {
-          viewsById[item.id] = item
+          filesById[item.id] = item
         })
         // grab the local status and map to ids
-        const localStatus = getLocalStatus('views', '/**/*.hbs', 'views')
+        const localStatus = getLocalStatus('files', '/**/*.*', 'files')
         const localStatusById = {}
         const newLocalFiles = new Set()
         localStatus.forEach((item) => {
@@ -65,7 +70,7 @@ program
           }
         })
         // iterate over remote status and perform the appropriate action
-        const remoteStatus = getRemoteStatus('views', items, 'views/${viewType}s/${name}.hbs', 'body')
+        const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}')
         remoteStatus.forEach((item) => {
           // if forcing the update ignore conflicts and local modifications
           if (!command.force) {
@@ -85,13 +90,18 @@ program
             results.push({ action: 'deleted', file: item.file })
           } else {
             if (!command.dryRun) {
-              const view = viewsById[item.id]
+              const file = filesById[item.id]
               const mtime = new Date(item.remoteModTime)
               mkdirp.sync(path.dirname(item.file))
-              fs.writeFileSync(item.file, view.body)
+              const res = request('GET', file.url)
+              if (res.statusCode !== 200) {
+                throw new Error(`${item.file} (${res.statusCode}: ${file.url})`)
+              }
+              const body = res.getBody()
+              fs.writeFileSync(item.file, res.getBody())
               meta[item.file] = {
                 id: item.id,
-                md5: checksum(view.body),
+                md5: checksum(body),
                 remoteTime: mtime.getTime(),
                 localTime: new Date().getTime()
               }
@@ -99,7 +109,7 @@ program
             results.push({ action: 'downloaded', file: item.file })
           }
         })
-        saveLocalMeta('views', meta)
+        saveLocalMeta('files', meta)
         // display results
         if (results.length > 0) {
           command.dryRun ? log('Downloading (DRY RUN):') : log('Downloading:')
@@ -112,13 +122,13 @@ program
             log(`   ${pad(status, 13)}\t${result.file}`)
           })
         } else {
-          log('All views are up to date')
+          log('All files are up to date')
         }
         // log()
       })
       .catch((e) => {
         log(`${c.red('Error')} failed to download: ${c.bold(e.message)}`)
-        console.log(e)
+        // console.log(e)
       })
 
   })
@@ -137,13 +147,13 @@ program
       const config = loadConfig(command.config)
       const api = losant.createClient({ accessToken: config.apiToken })
       // log()
-      const meta = loadLocalMeta('views') || {}
-      api.experienceViews
+      const meta = loadLocalMeta('files') || {}
+      api.files
         .get({ applicationId: config.applicationId })
-        .then((views) => {
-          let items = views.items
+        .then((files) => {
+          let items = files.items
           // grab remote status and map to file
-          const remoteStatus = getRemoteStatus('views', items, '${viewType}s/${name}.hbs', 'body')
+          const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}', 'type')
           const remoteStatusById = {}
           remoteStatus.forEach((item) => {
             if (item.id) {
@@ -151,9 +161,8 @@ program
             }
           })
           // iterate over local status and perform the appropriate action
-          const localStatus = getLocalStatus('views', '/' + (pattern || '**/*') + '.hbs', 'views')
+          const localStatus = getLocalStatus('files', '/' + (pattern || '**/*'), 'files')
           return Promise.all(localStatus.map((item) => {
-            const pathParts = item.file.split(path.sep)
             // if forcing the update ignore conflicts and remote modifications
             if (!command.force) {
               if (item.status === 'unmodified') { return }
@@ -163,8 +172,8 @@ program
             }
             if (item.status === 'deleted') {
               if (!command.dryRun) {
-                return api.experienceView
-                  .delete({ applicationId: config.applicationId,  experienceViewId: item.id })
+                return api.files
+                  .delete({ applicationId: config.applicationId,  fileId: item.id })
                   .then((view) => {
                     delete meta[item.file]
                     return Promise.resolve({ action: 'deleted', file: item.file })
@@ -176,32 +185,50 @@ program
                 let action
                 const body = fs.readFileSync(item.file)
                 if (item.id) {
-                  action = api.experienceView
+                  action = api.file
                     .patch({ 
                       applicationId: config.applicationId, 
-                      experienceViewId: item.id, 
-                      experienceView:  { body: body.toString() } 
+                      fileId: item.id, 
+                      file:  { 
+                        fileSize: item.size
+                      } 
                     })
                 } else {
-                  action = api.experienceViews
+                  action = api.files
                     .post({
                       applicationId: config.applicationId,
-                      experienceView: { 
-                        viewType: pathParts[1].slice(0, -1), 
-                        name: item.name,
-                        body: body.toString() 
+                      file: { 
+                        name: item.name, 
+                        parentDirectory: path.dirname(item.file),
+                        type: 'file',
+                        fileSize: item.size 
                       }
                     })
                 }
-                return action.then((view) => {
-                  const mtime = new Date(view.lastUpdated)
-                  mkdirp.sync(path.dirname(item.file))
-                  fs.writeFileSync(item.file, view.body)
+                return action.then((file) => {
+                  return new Promise((resolve, reject) => {
+                    const fd = new FormData()
+                    Object.keys(file.upload.fields).forEach((key) => {
+                      if (key !== 'bucket') {
+                        fd.append(key, file.upload.fields[key])
+                      }
+                    })
+                    fd.append('file', body)
+                    fd.submit(file.upload.url, (err, res) => {
+                      if (err) {
+                        return reject(err)
+                      }
+                      return resolve(file)
+                    })
+                  })
+                }).then((file) => {
+                  const mtime = new Date(file.lastUpdated)
+                  //fs.writeFileSync(item.file, body)
                   meta[item.file] = {
-                    id: view.id,
-                    md5: checksum(view.body),
+                    id: item.id,
+                    md5: checksum(body),
                     remoteTime: mtime.getTime(),
-                    localTime: new Date().getTime()
+                    localTime: item.localModTime * 1000
                   }
                   return Promise.resolve({ action: 'uploaded', file: item.file })
                 })
@@ -211,7 +238,7 @@ program
           }))
         })
         .then((results) => {
-          saveLocalMeta('views', meta)
+          saveLocalMeta('files', meta)
           // display results
           results = results.filter((result) => {
             return result
@@ -227,7 +254,7 @@ program
               log(`   ${pad(status, 13)}\t${result.file}`)
             })
           } else {
-            log('All views are up to date')
+            log('All files are up to date')
           }
           // log()
         })
@@ -253,14 +280,18 @@ program
       const config = loadConfig(command.config)
       const api = losant.createClient({ accessToken: config.apiToken })
 
-      api.experienceViews
+      api.files
         .get({ applicationId: config.applicationId })
-        .then((views) => {
+        .then((files) => {
           // log()
           if (command.remote) {
-            const remoteStatus = getRemoteStatus('views', views.items, 'views/${viewType}/${name}.hbs', 'body')
+            // remove directories
+            files.items = files.items.filter((item) => {
+              return item.type === 'file'
+            })
+            const remoteStatus = getRemoteStatus('files', files.items, 'files${parentDirectory}${name}')
             if (remoteStatus.length === 0) {
-              log('No remote views found')
+              log('No remote files found')
             } else {
               log('Remote file status:')
             }
@@ -272,9 +303,9 @@ program
               log(`   ${pad(status, 10)}\t${item.file}`)
             })
           } else {
-            const localStatus = getLocalStatus('views', '/**/*.hbs', 'views')
+            const localStatus = getLocalStatus('files', '/**/*.*', 'files')
             if (localStatus.length === 0) {
-              log('No local views found')
+              log('No local files found')
             } else {
               log('Local file status:')
             }
@@ -305,7 +336,7 @@ program
     if (command.dir) {
       process.chdir(command.dir)
     }
-    fs.watch('views', { recursive: true }, (eventType, filename) => {
+    fs.watch('files', { recursive: true }, (eventType, filename) => {
       if (eventType === 'change') {
         if (filename) {
           const cmd = process.argv[0]
@@ -330,22 +361,22 @@ program.on('--help', () => {
   log('')
   log('  Examples:')
   log('')
-  log('    Download all views')
-  log('     $ losant views download \n')
-  log('    Download component views')
-  log('     $ losant views download components/* \n')
-  log('    Force a download of all views overwriting local modifications')
-  log('     $ losant views download -f \n')
+  log('    Download all files')
+  log('     $ losant files download \n')
+  log('    Download files in images directory')
+  log('     $ losant files download images/* \n')
+  log('    Force a download of all files overwriting local modifications')
+  log('     $ losant files download -f \n')
   log('    Check local modification status')
-  log('     $ losant views status \n')
+  log('     $ losant files status \n')
   log('    Check remote modification status')
-  log('     $ losant views status -r \n')
-  log('    Upload all view')
-  log('     $ losant views upload \n')
-  log('    Upload component view')
-  log('     $ losant views upload components/* \n')
-  log('    Force an upload of all views overwriting remote modifications')
-  log('     $ losant views upload -f \n')
+  log('     $ losant files status -r \n')
+  log('    Upload all files')
+  log('     $ losant files upload \n')
+  log('    Upload files in images directory')
+  log('     $ losant files upload images/* \n')
+  log('    Force an upload of all files overwriting remote modifications')
+  log('     $ losant files upload -f \n')
   log('')
 })  
   
