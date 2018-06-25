@@ -11,9 +11,8 @@ const glob = require('glob')
 const pad = require('pad')
 const { spawn } = require('child_process')
 const { loadConfig, isFileNewer, loadLocalMeta, saveLocalMeta, 
-  getLocalStatus, getRemoteStatus, checksum } = require('./lib/utils')
-
-const log = console.log
+  getLocalStatus, getRemoteStatus, checksum, 
+  log, logProcessing, logResult, logError } = require('./lib/utils')
 
 program
   .description('Manage Losant Experience Views from the command line')
