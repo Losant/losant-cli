@@ -16,12 +16,14 @@
     "js-yaml": "^3.10.0",
     "lodash-template": "^1.0.0",
     "losant-rest": "^2.1.0",
+    "mime-types": "^2.1.18",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
     "opener": "^1.4.3",
     "pad": "^2.0.3",
     "request": "^2.83.0",
     "sanitize-filename": "^1.6.1",
+    "single-line-log": "^1.1.2",
     "sync-request": "^6.0.0",
     "update-notifier": "^2.3.0"
   }

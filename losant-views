@@ -30,14 +30,13 @@ program
     }
     const config = loadConfig(command.config)
     const api = losant.createClient({ accessToken: config.apiToken })
+    const meta = loadLocalMeta('files') || {}
 
-    // log()
     api.experienceViews
       .get({ applicationId: config.applicationId })
       .then((views) => {
         const results = []
         let items = views.items
-        const meta = loadLocalMeta('views') || {}
         let itemsSkipped = false
         // filter out views that don't match file pattern
         if (pattern) {
@@ -66,13 +65,20 @@ program
         })
         // iterate over remote status and perform the appropriate action
         const remoteStatus = getRemoteStatus('views', items, 'views/${viewType}s/${name}.hbs', 'body')
+        if (command.dryRun) { 
+          log('DRY RUN')
+        }
         remoteStatus.forEach((item) => {
+          logProcessing(item.file)
           // if forcing the update ignore conflicts and local modifications
           if (!command.force) {
-            if (item.status === 'unmodified') { return }
-            if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
-              results.push({ action: 'conflict', file: item.file })
+            if (item.status === 'unmodified') { 
+              logResult('unmodified', item.file)
               return 
+            }
+            if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
+              logResult('conflict', item.file, 'red')
+              return
             }
           }
           if (item.status === 'deleted') {
@@ -82,7 +88,7 @@ program
               }
               delete meta[item.file]
             }
-            results.push({ action: 'deleted', file: item.file })
+            logResult('deleted', item.file, 'yellow')
           } else {
             if (!command.dryRun) {
               const view = viewsById[item.id]
@@ -96,31 +102,22 @@ program
                 localTime: new Date().getTime()
               }
             }
-            results.push({ action: 'downloaded', file: item.file })
+            logResult('downloaded', item.file, 'green')
           }
         })
-        saveLocalMeta('views', meta)
-        // display results
-        if (results.length > 0) {
-          command.dryRun ? log('Downloading (DRY RUN):') : log('Downloading:')
-          results.forEach((result) => {
-            if (result.action === 'unmodified') { return }
-            let status = c.gray(result.action)
-            if (result.action === 'downloaded') { status = c.green(result.action) }
-            else if (result.action === 'deleted') { status = c.yellow(result.action) }
-            else if (result.action === 'conflict') { status = c.red(result.action) }
-            log(`   ${pad(status, 13)}\t${result.file}`)
-          })
-        } else {
-          log('All views are up to date')
-        }
-        // log()
+      })
+      .then(() => {
+        saveLocalMeta('files', meta)
       })
       .catch((e) => {
-        log(`${c.red('Error')} failed to download: ${c.bold(e.message)}`)
-        console.log(e)
+        try {
+          saveLocalMeta('files', meta)
+        } catch (err) {
+          logError(err)
+        }
+        logError(e)
+        // console.log(e)
       })
-
   })
 
 program
@@ -133,111 +130,99 @@ program
     if (command.dir) {
       process.chdir(command.dir)
     }
-    try {
-      const config = loadConfig(command.config)
-      const api = losant.createClient({ accessToken: config.apiToken })
-      // log()
-      const meta = loadLocalMeta('views') || {}
-      api.experienceViews
-        .get({ applicationId: config.applicationId })
-        .then((views) => {
-          let items = views.items
-          // grab remote status and map to file
-          const remoteStatus = getRemoteStatus('views', items, '${viewType}s/${name}.hbs', 'body')
-          const remoteStatusById = {}
-          remoteStatus.forEach((item) => {
-            if (item.id) {
-              remoteStatusById[item.id] = item
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
+    const meta = loadLocalMeta('views') || {}
+
+    api.experienceViews
+      .get({ applicationId: config.applicationId })
+      .then((views) => {
+        let items = views.items
+        // grab remote status and map to file
+        const remoteStatus = getRemoteStatus('views', items, 'views/${viewType}s/${name}.hbs', 'body')
+        const remoteStatusById = {}
+        remoteStatus.forEach((item) => {
+          if (item.id) {
+            remoteStatusById[item.id] = item
+          }
+        })
+        // iterate over local status and perform the appropriate action
+        const localStatus = getLocalStatus('views', '/' + (pattern || '**/*') + '.hbs', 'views')
+        if (command.dryRun) { 
+          log('DRY RUN')
+        }
+        return Promise.all(localStatus.map((item) => {
+          logProcessing(item.file)
+          const pathParts = item.file.split(path.sep)
+          // if forcing the update ignore conflicts and remote modifications
+          if (!command.force) {
+            if (item.status === 'unmodified') { 
+              logResult('unmodified', item.file)
+              return 
             }
-          })
-          // iterate over local status and perform the appropriate action
-          const localStatus = getLocalStatus('views', '/' + (pattern || '**/*') + '.hbs', 'views')
-          return Promise.all(localStatus.map((item) => {
-            const pathParts = item.file.split(path.sep)
-            // if forcing the update ignore conflicts and remote modifications
-            if (!command.force) {
-              if (item.status === 'unmodified') { return }
-              if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
-                return Promise.resolve({ action: 'conflict', file: item.file })
-              }
+            if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
+              logResult('conflict', item.file, 'red')
+              return Promise.resolve()            }
+          }
+          if (item.status === 'deleted') {
+            if (!command.dryRun) {
+              return api.experienceView
+                .delete({ applicationId: config.applicationId,  experienceViewId: item.id })
+                .then((view) => {
+                  delete meta[item.file]
+                  logResult('deleted', item.file, 'yellow')
+                  return Promise.resolve()                })
             }
-            if (item.status === 'deleted') {
-              if (!command.dryRun) {
-                return api.experienceView
-                  .delete({ applicationId: config.applicationId,  experienceViewId: item.id })
-                  .then((view) => {
-                    delete meta[item.file]
-                    return Promise.resolve({ action: 'deleted', file: item.file })
+            logResult('deleted', item.file, 'yellow')
+            return Promise.resolve()
+          } else {
+            if (!command.dryRun) {
+              let action
+              const body = fs.readFileSync(item.file)
+              if (item.id) {
+                action = api.experienceView
+                  .patch({ 
+                    applicationId: config.applicationId, 
+                    experienceViewId: item.id, 
+                    experienceView:  { body: body.toString() } 
+                  })
+              } else {
+                action = api.experienceViews
+                  .post({
+                    applicationId: config.applicationId,
+                    experienceView: { 
+                      viewType: pathParts[1].slice(0, -1), 
+                      name: item.name,
+                      body: body.toString() 
+                    }
                   })
               }
-              return Promise.resolve({ action: 'deleted', file: item.file })
-            } else {
-              if (!command.dryRun) {
-                let action
-                const body = fs.readFileSync(item.file)
-                if (item.id) {
-                  action = api.experienceView
-                    .patch({ 
-                      applicationId: config.applicationId, 
-                      experienceViewId: item.id, 
-                      experienceView:  { body: body.toString() } 
-                    })
-                } else {
-                  action = api.experienceViews
-                    .post({
-                      applicationId: config.applicationId,
-                      experienceView: { 
-                        viewType: pathParts[1].slice(0, -1), 
-                        name: item.name,
-                        body: body.toString() 
-                      }
-                    })
+              return action.then((view) => {
+                const mtime = new Date(view.lastUpdated)
+                mkdirp.sync(path.dirname(item.file))
+                fs.writeFileSync(item.file, view.body)
+                meta[item.file] = {
+                  id: view.id,
+                  md5: checksum(view.body),
+                  remoteTime: mtime.getTime(),
+                  localTime: new Date().getTime()
                 }
-                return action.then((view) => {
-                  const mtime = new Date(view.lastUpdated)
-                  mkdirp.sync(path.dirname(item.file))
-                  fs.writeFileSync(item.file, view.body)
-                  meta[item.file] = {
-                    id: view.id,
-                    md5: checksum(view.body),
-                    remoteTime: mtime.getTime(),
-                    localTime: new Date().getTime()
-                  }
-                  return Promise.resolve({ action: 'uploaded', file: item.file })
-                })
-              }
-              return Promise.resolve({ action: 'uploaded', file: item.file })
+                logResult('uploaded', item.file, 'green')
+                return Promise.resolve()              })
             }
-          }))
-        })
-        .then((results) => {
-          saveLocalMeta('views', meta)
-          // display results
-          results = results.filter((result) => {
-            return result
-          })
-          if (results.length > 0) {
-            command.dryRun ? log('Uploading (DRY RUN):') : log('Uploading:')
-            results.forEach((result) => {
-              if (!result || result.action === 'unmodified') { return }
-              let status = c.gray(result.action)
-              if (result.action === 'uploaded') { status = c.green(result.action) }
-              else if (result.action === 'deleted') { status = c.yellow(result.action) }
-              else if (result.action === 'conflict') { status = c.red(result.action) }
-              log(`   ${pad(status, 13)}\t${result.file}`)
-            })
-          } else {
-            log('All views are up to date')
+            logResult('uploaded', item.file, 'green')
+            return Promise.resolve()
           }
-          // log()
-        })
-        .catch((e) => {
-          log(`${c.red('Error')} failed to upload: ${c.bold(e.message)}`)
-        })
-    } catch (err) {
-      log(`${c.red('Error')} ${err.message}`)
-      process.exit(1)
-    }
+        }))
+      })
+      .then(() => {
+        try { saveLocalMeta('files', meta) } catch (e) { logError(e) }
+      })
+      .catch((e) => {
+        try { saveLocalMeta('files', meta) } catch (e) { logError(e) }
+        logError(e)
+        // console.log(e)
+      })
   })
 
 program
@@ -249,52 +234,39 @@ program
     if (command.dir) {
       process.chdir(command.dir)
     }
-    try {
-      const config = loadConfig(command.config)
-      const api = losant.createClient({ accessToken: config.apiToken })
+    const config = loadConfig(command.config)
+    const api = losant.createClient({ accessToken: config.apiToken })
 
-      api.experienceViews
-        .get({ applicationId: config.applicationId })
-        .then((views) => {
-          // log()
-          if (command.remote) {
-            const remoteStatus = getRemoteStatus('views', views.items, 'views/${viewType}/${name}.hbs', 'body')
-            if (remoteStatus.length === 0) {
-              log('No remote views found')
-            } else {
-              log('Remote file status:')
-            }
-            remoteStatus.forEach((item) => {
-              let status = c.gray(item.status)
-              if (item.status === 'added') { status = c.green(item.status) }
-              else if (item.status === 'modified') { status = c.yellow(item.status) }
-              else if (item.status === 'deleted') { status = c.red(item.status) }
-              log(`   ${pad(status, 10)}\t${item.file}`)
-            })
-          } else {
-            const localStatus = getLocalStatus('views', '/**/*.hbs', 'views')
-            if (localStatus.length === 0) {
-              log('No local views found')
-            } else {
-              log('Local file status:')
-            }
-            localStatus.forEach((item) => {
-              let status = c.gray(item.status)
-              if (item.status === 'added') { status = c.green(item.status) }
-              else if (item.status === 'modified') { status = c.yellow(item.status) }
-              else if (item.status === 'deleted') { status = c.red(item.status) }
-              log(`   ${pad(status, 10)}\t${item.file}`)
-            })
+    api.experienceViews
+      .get({ applicationId: config.applicationId })
+      .then((views) => {
+        if (command.remote) {
+          const remoteStatus = getRemoteStatus('views', views.items, 'views/${viewType}s/${name}.hbs', 'body')
+          if (remoteStatus.length === 0) {
+            log('No remote files found')
           }
-          // log()
-        })
-        .catch((e) => {
-          log(`${c.red('Error')} failed show status: ${c.bold(e.message)}`)
-        })
-    } catch (err) {
-      log(`${c.red('Error')} ${err.message}`)
-      process.exit(1)
-    }
+          remoteStatus.forEach((item) => {
+            if (item.status === 'added') { logResult(item.status, item.file, 'green') }
+            else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow') }
+            else if (item.status === 'deleted') { logResult(item.status, item.file, 'red') }
+            else { logResult(item.status, item.file) }
+          })
+        } else {
+          const localStatus = getLocalStatus('views', '/**/*.hbs', 'views')
+          if (localStatus.length === 0) {
+            log('No local files found')
+          }
+          localStatus.forEach((item) => {
+            if (item.status === 'added') { logResult(item.status, item.file, 'green') }
+            else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow') }
+            else if (item.status === 'deleted') { logResult(item.status, item.file, 'red') }
+            else { logResult(item.status, item.file) }
+          })
+        }
+      })
+      .catch((e) => {
+        logError(e)
+      })
   })
 
 program
