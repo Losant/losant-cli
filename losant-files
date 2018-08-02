@@ -78,10 +78,11 @@ program
               logResult('unmodified', item.file)
               return 
             }
-            if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
-              logResult('conflict', item.file, 'red')
-              return
-            }
+            // TODO implement conflict detection
+            // if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
+            //   logResult('conflict', item.file, 'red')
+            //   return
+            // }
           }
           if (item.status === 'deleted') {
             if (!command.dryRun) {
@@ -146,7 +147,7 @@ program
       .then((files) => {
         let items = files.items
         // grab remote status and map to file
-        const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}', 'type')
+        const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}')
         const remoteStatusById = {}
         remoteStatus.forEach((item) => {
           if (item.id) {
@@ -166,10 +167,11 @@ program
               logResult('unmodified', item.file)
               return 
             }
-            if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
-              logResult('conflict', item.file, 'red')
-              return Promise.resolve()
-            }
+            // TODO implement conflict detection
+            // if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
+            //   logResult('conflict', item.file, 'red')
+            //   return Promise.resolve()
+            // }
           }
           if (item.status === 'deleted') {
             if (!command.dryRun) {
@@ -220,10 +222,16 @@ program
                   })
                   fd.append('file', body)
                   fd.submit(file.upload.url, (err, res) => {
+                    const body = []
                     if (err) {
                       return reject(err)
                     }
-                    return resolve(file)
+                    res.on('data', (chunk) => {
+                      body.push(chunk)
+                    })
+                    res.on('end', () => {
+                      return resolve(file)
+                    })
                   })
                 })
               }).then((file) => {
