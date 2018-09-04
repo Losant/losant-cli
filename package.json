@@ -11,7 +11,7 @@
     "lint": "esw . --ext .js",
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
-    "test": "mocha --recursive ./test"
+    "test": "mocha ./test"
   },
   "dependencies": {
     "chalk": "^2.3.0",
