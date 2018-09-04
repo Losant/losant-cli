@@ -1,3 +1,4 @@
 example
 .node-version
 node_modules
+*.log
