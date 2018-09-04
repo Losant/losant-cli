@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const program = require('commander')
-const updateNotifier = require('update-notifier')
-const pkg = require('./package.json')
+const program = require('commander');
+const updateNotifier = require('update-notifier');
+const pkg = require('./package.json');
 
 program
   .version('1.0.0')
