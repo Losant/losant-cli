@@ -3,28 +3,18 @@ const sinon = require('sinon');
 
 describe('utils', () => {
   describe('logging', () => {
-    let mock;
-    beforeEach(() => {
-      mockConsole = sinon.mock(console);
-    });
-    afterEach(() => {
-      mockConsole.restore();
-    })
-    // TODO mock console.log
-    // Or spy on console.log
     it('.log', () => {
-      mockConsole.expects('log').atLeast(1);
       utils.log('a message');
-      mockConsole.verify();
     });
     it('.logProcessing', () => {
-
+      utils.logProcessing('a message');
     });
     it('.logResult', () => {
-
+      utils.logResult('success', 'a result', 'green');
+      utils.logResult('should not explode when color is unknown', 'a result', 'blahblah');
     });
     it('.logError', () => {
-
+      utils.logError('YOU DID SOMETHING BAD!');
     });
   });
 });
