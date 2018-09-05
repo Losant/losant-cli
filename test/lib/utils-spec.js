@@ -1,5 +1,6 @@
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
+const fs        = require('fs');
 
 describe('utils', () => {
   describe('logging', () => {
@@ -48,6 +49,28 @@ describe('utils', () => {
       utils.saveLocalMeta('files', meta);
       const result = utils.loadLocalMeta('files');
       result.should.deepEqual(meta);
+    });
+  });
+  describe('isFileNewer', () => {
+    let file;
+    afterEach(() => {
+      if (file) {
+        fs.unlinkSync(file);
+        file = null;
+      }
+    });
+    it('should return false if it does not exist', () => {
+      utils.isFileNewer('some-file-that-does-not-exist.yaml').should.equal(false);
+    });
+    it('should return true if the file was created after the date', () => {
+      file = './new-file.yaml';
+      fs.writeFileSync(file, 'hello world');
+      utils.isFileNewer(file, new Date(Date.now() - 24 * 60 * 60 * 1000)).should.be.true();
+    });
+  });
+  describe('Checksum', () => {
+    it('should create a hash', () => {
+      utils.checksum('helloworld').should.equal('fc5e038d38a57032085441e7fe7010b0');
     });
   });
 });
