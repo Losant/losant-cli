@@ -5,7 +5,7 @@ const updateNotifier = require('update-notifier');
 const pkg = require('./package.json');
 
 program
-  .version('1.0.0')
+  .version(pkg.version)
   .description('Losant CLI is a command line tool to aid developers while creating custom application on top of the Losant Platform')
   .command('configure', 'Configure the command line tool')
   .command('views', 'Manage Experience Views')
