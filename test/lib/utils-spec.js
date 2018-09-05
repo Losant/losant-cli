@@ -37,4 +37,17 @@ describe('utils', () => {
       result.should.deepEqual(merge(config, { file }));
     });
   });
+  describe('Meta Data', () => {
+    it('should save and load meta data', () => {
+      // to do clean up after this test create a file.
+      const meta = {
+        file1: 'abcde1234',
+        file2: '1234abdcde',
+        file3: 'efghi12345'
+      };
+      utils.saveLocalMeta('files', meta);
+      const result = utils.loadLocalMeta('files');
+      result.should.deepEqual(meta);
+    });
+  });
 });

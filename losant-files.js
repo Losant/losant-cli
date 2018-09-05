@@ -39,14 +39,8 @@ program
       // filter out files that don't match file pattern
       items = items.filter((file) => {
         if (file.type === 'directory') { return false; }
-        if (pattern) {
-          if (minimatch(file.parentDirectory + file.name, pattern)) {
-            return true;
-          }
-          return false;
-        } else {
-          return true;
-        }
+        if (!pattern) return true;
+        return minimatch(file.parentDirectory + file.name, pattern);
       });
       // map files to id
       const filesById = {};
@@ -66,9 +60,7 @@ program
       });
       // iterate over remote status and perform the appropriate action
       const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}'); // eslint-disable-line no-template-curly-in-string
-      if (command.dryRun) {
-        log('DRY RUN');
-      }
+      if (command.dryRun) { log('DRY RUN'); }
       remoteStatus.forEach((item) => {
         logProcessing(item.file);
         // if forcing the update ignore conflicts and local modifications
@@ -98,6 +90,7 @@ program
             mkdirp.sync(path.dirname(item.file));
             const res = request('GET', file.url);
             if (res.statusCode !== 200) {
+              // TODO maybe better errors.
               throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
             }
             const body = res.getBody();
