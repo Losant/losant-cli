@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 const program = require('commander');
-const c = require('chalk');
 const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
 const mkdirp = require('mkdirp');
-const { spawn } = require('child_process');
 const {
   loadConfig,
   loadLocalMeta,
@@ -19,6 +17,9 @@ const {
   logResult,
   logError
 } = require('../lib/utils');
+
+const watchFiles = require('../lib/watch-files');
+const getStatusFunc = require('../lib/get-status-func');
 
 program
   .description('Manage Losant Experience Views from the command line');
@@ -149,7 +150,7 @@ program
       if (command.dryRun) {
         log('DRY RUN');
       }
-      return Promise.all(localStatus.map((item) => {
+      await Promise.all(localStatus.map((item) => {
         logProcessing(item.file);
         const pathParts = item.file.split(path.sep);
         // if forcing the update ignore conflicts and remote modifications
@@ -215,9 +216,9 @@ program
           return Promise.resolve();
         }
       }));
-      await saveLocalMeta('views', meta);
+      saveLocalMeta('views', meta);
     } catch (error) {
-      try { saveLocalMeta('views', meta); } catch (err) { logError(err); }
+      saveLocalMeta('views', meta);
       logError(error);
     }
   });
@@ -227,65 +228,18 @@ program
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action(async (command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    try {
-      const views = await api.experienceViews.get({ applicationId: config.applicationId });
-      if (command.remote) {
-        const remoteStatus = getRemoteStatus('views', views.items, 'views/${viewType}s/${name}.hbs', 'body'); // eslint-disable-line no-template-curly-in-string
-        if (remoteStatus.length === 0) {
-          log('No remote views found');
-        }
-        remoteStatus.forEach((item) => {
-          if (item.status === 'added') { logResult(item.status, item.file, 'green'); } else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow'); } else if (item.status === 'deleted') { logResult(item.status, item.file, 'red'); } else { logResult(item.status, item.file); }
-        });
-      } else {
-        const localStatus = getLocalStatus('views', '/**/*.hbs', 'views');
-        if (localStatus.length === 0) {
-          log('No local views found');
-        }
-        localStatus.forEach((item) => {
-          if (item.status === 'added') { logResult(item.status, item.file, 'green'); } else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow'); } else if (item.status === 'deleted') { logResult(item.status, item.file, 'red'); } else { logResult(item.status, item.file); }
-        });
-      }
-      
-    } catch (err) {
-      logError(err);
-    }
-  });
+  .action(getStatusFunc(
+    'experienceViews',
+    'views',
+    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
+    [ '/**/*.hbs' ])
+  );
 
 program
   .command('watch')
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
-  .action((command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-    fs.watch('views', { recursive: true }, (eventType, filename) => {
-      if (eventType === 'change') {
-        if (filename) {
-          const cmd = process.argv[0];
-          const args = process.argv.slice(1);
-          args[1] = 'upload';
-          args.push(`${filename.slice(0, -4)}`);
-          const options = {
-            cwd: process.cwd(),
-            stdio: [process.stdin, process.stdout, 'pipe']
-          };
-          const upload = spawn(cmd, args, options);
-          upload.on('error', (err) => {
-            log(`${c.red('Error')} ${err.message}`);
-            process.exit(1);
-          });
-        }
-      }
-    });
-  });
+  .action(watchFiles);
 
 program.on('--help', () => {
   log('');

@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 const program = require('commander');
-const c = require('chalk');
 const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
 const mkdirp = require('mkdirp');
-// const pad = require('pad');
-const { spawn } = require('child_process');
 const request = require('sync-request');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
@@ -16,6 +13,8 @@ const {
   getLocalStatus, getRemoteStatus, checksum,
   log, logProcessing, logResult, logError
 } = require('../lib/utils');
+const watchFiles = require('../lib/watch-files');
+const getStatusFunc = require('../lib/get-status-func');
 
 program
   .description('Manage Losant Files from the command line');
@@ -39,7 +38,7 @@ program
       // filter out files that don't match file pattern
       items = items.filter((file) => {
         if (file.type === 'directory') { return false; }
-        if (!pattern) return true;
+        if (!pattern) { return true; }
         return minimatch(file.parentDirectory + file.name, pattern);
       });
       // map files to id
@@ -130,7 +129,7 @@ program
     const api = losant.createClient({ accessToken: config.apiToken });
     const meta = loadLocalMeta('files') || {};
     try {
-      const files = await api.files.get({ applicationId: config.applicationId })
+      const files = await api.files.get({ applicationId: config.applicationId });
       const items = files.items;
       // grab remote status and map to file
       const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}'); // eslint-disable-line no-template-curly-in-string
@@ -145,7 +144,7 @@ program
       if (command.dryRun) {
         log('DRY RUN');
       }
-      return Promise.all(localStatus.map((item) => {
+      await Promise.all(localStatus.map((item) => {
         logProcessing(item.file);
         // if forcing the update ignore conflicts and remote modifications
         if (!command.force) {
@@ -237,9 +236,9 @@ program
           return Promise.resolve();
         }
       }));
-      try { saveLocalMeta('files', meta); } catch (err) { logError(err); }
+      saveLocalMeta('files', meta);
     } catch (error) {
-      try { saveLocalMeta('files', meta); } catch (err) { logError(err); }
+      saveLocalMeta('files', meta);
       logError(error);
     }
   });
@@ -249,70 +248,20 @@ program
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action(async (command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    let files;
-    try {
-      files = await api.files.get({ applicationId: config.applicationId }) || [];
-    } catch (err) {
-      logError(err);
-    }
-    if (command.remote) {
-      // remove directories
-      files.items = files.items.filter((item) => {
-        return item.type === 'file';
-      });
-      const remoteStatus = getRemoteStatus('files', files.items, 'files${parentDirectory}${name}'); // eslint-disable-line no-template-curly-in-string
-      if (remoteStatus.length === 0) {
-        log('No remote files found');
-      }
-      remoteStatus.forEach((item) => {
-        if (item.status === 'added') { logResult(item.status, item.file, 'green'); } else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow'); } else if (item.status === 'deleted') { logResult(item.status, item.file, 'red'); } else { logResult(item.status, item.file); }
-      });
-    } else {
-      const localStatus = getLocalStatus('files', '/**/*.*', 'files');
-      if (localStatus.length === 0) {
-        log('No local files found');
-      }
-      localStatus.forEach((item) => {
-        if (item.status === 'added') { logResult(item.status, item.file, 'green'); } else if (item.status === 'modified') { logResult(item.status, item.file, 'yellow'); } else if (item.status === 'deleted') { logResult(item.status, item.file, 'red'); } else { logResult(item.status, item.file); }
-      });
-    }
-  });
+  .action()
+  .action(getStatusFunc(
+    'files',
+    'files',
+    [ 'files${parentDirectory}${name}' ], // eslint-disable-line no-template-curly-in-string
+    [ '/**/*.*' ],
+    (item) => { return item.type === 'file'; })
+  );
 
 program
   .command('watch')
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
-  .action((command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-    fs.watch('files', { recursive: true }, (eventType, filename) => {
-      if (eventType === 'change') {
-        if (filename) {
-          const cmd = process.argv[0];
-          const args = process.argv.slice(1);
-          args[1] = 'upload';
-          args.push(`${filename.slice(0, -4)}`);
-          const options = {
-            cwd: process.cwd(),
-            stdio: [process.stdin, process.stdout, 'pipe']
-          };
-          const upload = spawn(cmd, args, options);
-          upload.on('error', (err) => {
-            log(`${c.red('Error')} ${err.message}`);
-            process.exit(1);
-          });
-        }
-      }
-    });
-  });
+  .action(watchFiles);
 
 program.on('--help', () => {
   log('');
