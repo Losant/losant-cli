@@ -18,7 +18,7 @@ const {
   logProcessing,
   logResult,
   logError
-} = require('./lib/utils');
+} = require('../lib/utils');
 
 program
   .description('Manage Losant Experience Views from the command line');
