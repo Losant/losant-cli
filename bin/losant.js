@@ -2,7 +2,7 @@
 
 const program = require('commander');
 const updateNotifier = require('update-notifier');
-const pkg = require('./package.json');
+const pkg = require('../package.json');
 
 program
   .version(pkg.version)

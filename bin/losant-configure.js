@@ -2,8 +2,8 @@
 
 const program = require('commander');
 const c = require('chalk');
-const { saveConfig } = require('./lib/utils');
-const { logError, logResult } = require('./lib/utils');
+const { saveConfig } = require('../lib/utils');
+const { logError, logResult } = require('../lib/utils');
 
 program
   .description('Configure the command line tool')

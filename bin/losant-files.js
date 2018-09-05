@@ -15,7 +15,7 @@ const {
   loadConfig, loadLocalMeta, saveLocalMeta,
   getLocalStatus, getRemoteStatus, checksum,
   log, logProcessing, logResult, logError
-} = require('./lib/utils');
+} = require('../lib/utils');
 
 program
   .description('Manage Losant Files from the command line');
