@@ -4,22 +4,24 @@ const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
-const mkdirp = require('mkdirp');
+const { curry } = require('omnibelt');
 const {
-  loadConfig,
-  loadLocalMeta,
-  saveLocalMeta,
-  getLocalStatus,
-  getRemoteStatus,
-  checksum,
-  log,
-  logProcessing,
-  logResult,
-  logError
-} = require('../lib/utils');
-
-const watchFiles = require('../lib/watch-files');
-const getStatusFunc = require('../lib/get-status-func');
+  utils: {
+    loadConfig,
+    loadLocalMeta,
+    saveLocalMeta,
+    getLocalStatus,
+    getRemoteStatus,
+    checksum,
+    log,
+    logProcessing,
+    logResult,
+    logError
+  },
+  watchFiles,
+  getStatusFunc,
+  getDownloader
+} = require('../lib');
 
 program
   .description('Manage Losant Experience Views from the command line');
@@ -30,96 +32,19 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(async (pattern, command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
+  .action(getDownloader(
+    'experienceViews',
+    'views',
+    (view) => { return view.body; },
+    curry((pattern, view) => {
+      return minimatch(view.name, pattern);
+    }),
+    [ '/**/*.hbs' ],
+    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
+    (item, itemLocalStatus, newLocalFiles) => {
+      return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
     }
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    const meta = loadLocalMeta('views') || {};
-    let views;
-    try {
-      views = await api.experienceViews.get({ applicationId: config.applicationId });
-    } catch (e) {
-      await saveLocalMeta('views', meta);
-      return logError(e);
-    }
-    // const results = [];
-    let items = views.items;
-    // const itemsSkipped = false;
-    // filter out views that don't match file pattern
-    if (pattern) {
-      items = items.filter((view) => {
-        if (minimatch(view.name, pattern)) {
-          return true;
-        }
-        return false;
-      });
-    }
-    // map views to id
-    const viewsById = {};
-    items.forEach((item) => {
-      viewsById[item.id] = item;
-    });
-    // grab the local status and map to ids
-    const localStatus = getLocalStatus('views', '/**/*.hbs', 'views');
-    const localStatusById = {};
-    const newLocalFiles = new Set();
-    localStatus.forEach((item) => {
-      if (item.id) {
-        localStatusById[item.id] = item;
-      } else {
-        newLocalFiles.add(item.file);
-      }
-    });
-    // iterate over remote status and perform the appropriate action
-    const remoteStatus = getRemoteStatus('views', items, 'views/${viewType}s/${name}.hbs', 'body'); // eslint-disable-line no-template-curly-in-string
-    if (command.dryRun) {
-      log('DRY RUN');
-    }
-    remoteStatus.forEach((item) => {
-      logProcessing(item.file);
-      // if forcing the update ignore conflicts and local modifications
-      if (!command.force) {
-        if (item.status === 'unmodified') {
-          logResult('unmodified', item.file);
-          return;
-        }
-        if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
-          logResult('conflict', item.file, 'red');
-          return;
-        }
-      }
-      if (item.status === 'deleted') {
-        if (!command.dryRun) {
-          if (fs.existsSync(item.file)) {
-            fs.unlinkSync(item.file);
-          }
-          delete meta[item.file];
-        }
-        logResult('deleted', item.file, 'yellow');
-      } else {
-        if (!command.dryRun) {
-          const view = viewsById[item.id];
-          const mtime = new Date(item.remoteModTime);
-          mkdirp.sync(path.dirname(item.file));
-          fs.writeFileSync(item.file, view.body);
-          meta[item.file] = {
-            id: item.id,
-            md5: checksum(view.body),
-            remoteTime: mtime.getTime(),
-            localTime: new Date().getTime()
-          };
-        }
-        logResult('downloaded', item.file, 'green');
-      }
-    });
-    try {
-      await saveLocalMeta('views', meta);
-    } catch (err) {
-      logError(err);
-    }
-  });
+  ));
 
 program
   .command('upload [pattern]')

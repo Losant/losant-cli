@@ -14,6 +14,7 @@
     "test": "mocha ./test"
   },
   "dependencies": {
+    "@rjhilgefort/export-dir": "^1.1.0",
     "chalk": "^2.3.0",
     "commander": "^2.11.0",
     "form-data": "^2.3.2",

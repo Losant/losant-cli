@@ -4,17 +4,20 @@ const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
-const mkdirp = require('mkdirp');
 const request = require('sync-request');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
+const { curry } = require('omnibelt');
 const {
-  loadConfig, loadLocalMeta, saveLocalMeta,
-  getLocalStatus, getRemoteStatus, checksum,
-  log, logProcessing, logResult, logError
-} = require('../lib/utils');
-const watchFiles = require('../lib/watch-files');
-const getStatusFunc = require('../lib/get-status-func');
+  utils: {
+    loadConfig, loadLocalMeta, saveLocalMeta,
+    getLocalStatus, getRemoteStatus, checksum,
+    log, logProcessing, logResult, logError
+  },
+  watchFiles,
+  getStatusFunc,
+  getDownloader
+} = require('../lib');
 
 program
   .description('Manage Losant Files from the command line');
@@ -25,95 +28,24 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(async (pattern, command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    const meta = loadLocalMeta('files') || {};
-    try {
-      const files = await api.files.get({ applicationId: config.applicationId });
-      let items = files.items;
-      // filter out files that don't match file pattern
-      items = items.filter((file) => {
-        if (file.type === 'directory') { return false; }
-        if (!pattern) { return true; }
-        return minimatch(file.parentDirectory + file.name, pattern);
-      });
-      // map files to id
-      const filesById = {};
-      items.forEach((item) => {
-        filesById[item.id] = item;
-      });
-      // grab the local status and map to ids
-      const localStatus = getLocalStatus('files', '/**/*.*', 'files');
-      const localStatusById = {};
-      const newLocalFiles = new Set();
-      localStatus.forEach((item) => {
-        if (item.id) {
-          localStatusById[item.id] = item;
-        } else {
-          newLocalFiles.add(item.file);
-        }
-      });
-      // iterate over remote status and perform the appropriate action
-      const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}'); // eslint-disable-line no-template-curly-in-string
-      if (command.dryRun) { log('DRY RUN'); }
-      remoteStatus.forEach((item) => {
-        logProcessing(item.file);
-        // if forcing the update ignore conflicts and local modifications
-        if (!command.force) {
-          if (item.status === 'unmodified') {
-            logResult('unmodified', item.file);
-            return;
-          }
-          // TODO implement conflict detection
-          // if ((localStatusById[item.id] && localStatusById[item.id].status !== 'unmodified') || newLocalFiles.has(item.file)) {
-          //   logResult('conflict', item.file, 'red')
-          //   return
-          // }
-        }
-        if (item.status === 'deleted') {
-          if (!command.dryRun) {
-            if (fs.existsSync(item.file)) {
-              fs.unlinkSync(item.file);
-            }
-            delete meta[item.file];
-          }
-          logResult('deleted', item.file, 'yellow');
-        } else {
-          if (!command.dryRun) {
-            const file = filesById[item.id];
-            const mtime = new Date(item.remoteModTime);
-            mkdirp.sync(path.dirname(item.file));
-            const res = request('GET', file.url);
-            if (res.statusCode !== 200) {
-              // TODO maybe better errors.
-              throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
-            }
-            const body = res.getBody();
-            fs.writeFileSync(item.file, res.getBody());
-            meta[item.file] = {
-              id: item.id,
-              md5: checksum(body),
-              remoteTime: mtime.getTime(),
-              localTime: new Date().getTime()
-            };
-          }
-          logResult('downloaded', item.file, 'green');
-        }
-      });
-      return saveLocalMeta('files', meta);
-    } catch (err) {
-      try {
-        saveLocalMeta('files', meta);
-      } catch (error) {
-        logError(error);
+  .action(getDownloader(
+    'files',
+    'files',
+    async (file, item) => {
+      const res = await request('GET', file.url);
+      if (res.statusCode !== 200) {
+        throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
       }
-      logError(err);
-    }
-  });
+      return res.getBody();
+    },
+    curry((pattern, file) => {
+      if (file.type === 'directory') { return false; }
+      if (!pattern) { return true; }
+      return minimatch(file.parentDirectory + file.name, pattern);
+    }),
+    [ '/**/*.*' ],
+    [ 'files${parentDirectory}${name}' ] // eslint-disable-line no-template-curly-in-string
+  ));
 
 program
   .command('upload [pattern]')
