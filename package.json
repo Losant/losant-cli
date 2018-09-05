@@ -2,10 +2,10 @@
   "name": "losant-cli",
   "version": "1.0.0",
   "bin": {
-    "losant": "./losant",
-    "losant-configure": "./losant-configure",
-    "losant-views": "./losant-views",
-    "losant-files": "./losant-files"
+    "losant": "./bin/losant.js",
+    "losant-configure": "./bin/losant-configure.js",
+    "losant-views": "./bin/losant-views.js",
+    "losant-files": "./bin/losant-files.js"
   },
   "scripts": {
     "lint": "esw . --ext .js",
