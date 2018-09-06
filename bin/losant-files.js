@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const program = require('commander');
-const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
@@ -9,14 +8,11 @@ const FormData = require('form-data');
 const mimeTypes = require('mime-types');
 const { curry } = require('omnibelt');
 const {
-  utils: {
-    loadConfig, loadLocalMeta, saveLocalMeta,
-    getLocalStatus, getRemoteStatus, checksum,
-    log, logProcessing, logResult, logError
-  },
+  utils: { log, checksum },
   watchFiles,
   getStatusFunc,
-  getDownloader
+  getDownloader,
+  getUploader
 } = require('../lib');
 
 program
@@ -53,127 +49,71 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(async (pattern, command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
-    }
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    const meta = loadLocalMeta('files') || {};
-    try {
-      const files = await api.files.get({ applicationId: config.applicationId });
-      const items = files.items;
-      // grab remote status and map to file
-      const remoteStatus = getRemoteStatus('files', items, 'files${parentDirectory}${name}'); // eslint-disable-line no-template-curly-in-string
-      const remoteStatusById = {};
-      remoteStatus.forEach((item) => {
-        if (item.id) {
-          remoteStatusById[item.id] = item;
+  .action(getUploader(
+    'files',
+    'files',
+    [ '/**/*.*' ],
+    [ 'files${parentDirectory}${name}' ], // eslint-disable-line no-template-curly-in-string
+    null, // TODO
+    (item, config) => {
+      return { applicationId: config.applicationId,  fileId: item.id };
+    },
+    (item, config) => {
+      return {
+        applicationId: config.applicationId,
+        fileId: item.id,
+        file:  {
+          fileSize: item.size
         }
+      };
+    },
+    (item, config) => {
+      const pathParts = item.file.split(path.sep);
+      return {
+        applicationId: config.applicationId,
+        file: {
+          name: item.name,
+          parentDirectory: pathParts.slice(1, -1).join(path.sep),
+          type: 'file',
+          fileSize: item.size,
+          contentType: mimeTypes.lookup(item.file)
+        }
+      };
+    },
+    async (result, meta, item) => {
+      const body = fs.readFileSync(item.file);
+      const promise = new Promise((resolve, reject) => {
+        const fd = new FormData();
+        Object.keys(result.upload.fields).forEach((key) => {
+          if (key !== 'bucket') {
+            fd.append(key, result.upload.fields[key]);
+          }
+        });
+        fd.append('file', body);
+        fd.submit(result.upload.url, (err, res) => {
+          // const body = [];
+          if (err) {
+            return reject(err);
+          }
+          res.on('data', (chunk) => {
+            body.push(chunk);
+          });
+          res.on('end', () => {
+            return resolve(result);
+          });
+        });
       });
-      // iterate over local status and perform the appropriate action
-      const localStatus = getLocalStatus('files', `/${pattern || '**/*'}`, 'files');
-      if (command.dryRun) {
-        log('DRY RUN');
-      }
-      await Promise.all(localStatus.map((item) => {
-        logProcessing(item.file);
-        // if forcing the update ignore conflicts and remote modifications
-        if (!command.force) {
-          if (item.status === 'unmodified') {
-            logResult('unmodified', item.file);
-            return;
-          }
-          // TODO implement conflict detection
-          // if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
-          //   logResult('conflict', item.file, 'red')
-          //   return Promise.resolve()
-          // }
-        }
-        if (item.status === 'deleted') {
-          if (!command.dryRun) {
-            return api.files
-              .delete({ applicationId: config.applicationId,  fileId: item.id })
-              .then(() => {
-                delete meta[item.file];
-                logResult('deleted', item.file, 'yellow');
-                return Promise.resolve();
-              });
-          }
-          logResult('deleted', item.file, 'yellow');
-          return Promise.resolve();
-        } else {
-          if (!command.dryRun) {
-            let action;
-            const body = fs.readFileSync(item.file);
-            if (item.id) {
-              action = api.file
-                .patch({
-                  applicationId: config.applicationId,
-                  fileId: item.id,
-                  file:  {
-                    fileSize: item.size
-                  }
-                });
-            } else {
-              const pathParts = item.file.split(path.sep);
-              action = api.files
-                .post({
-                  applicationId: config.applicationId,
-                  file: {
-                    name: item.name,
-                    parentDirectory: pathParts.slice(1, -1).join(path.sep),
-                    type: 'file',
-                    fileSize: item.size,
-                    contentType: mimeTypes.lookup(item.file)
-                  }
-                });
-            }
-            return action.then((file) => {
-              return new Promise((resolve, reject) => {
-                const fd = new FormData();
-                Object.keys(file.upload.fields).forEach((key) => {
-                  if (key !== 'bucket') {
-                    fd.append(key, file.upload.fields[key]);
-                  }
-                });
-                fd.append('file', body);
-                fd.submit(file.upload.url, (err, res) => {
-                  // const body = [];
-                  if (err) {
-                    return reject(err);
-                  }
-                  res.on('data', (chunk) => {
-                    body.push(chunk);
-                  });
-                  res.on('end', () => {
-                    return resolve(file);
-                  });
-                });
-              });
-            }).then((file) => {
-              const mtime = new Date(file.lastUpdated);
-              //fs.writeFileSync(item.file, body)
-              meta[item.file] = {
-                id: file.id,
-                md5: checksum(body),
-                remoteTime: mtime.getTime(),
-                localTime: item.localModTime * 1000
-              };
-              logResult('uploaded', item.file, 'green');
-              return Promise.resolve();
-            });
-          }
-          logResult('uploaded', item.file, 'green');
-          return Promise.resolve();
-        }
-      }));
-      saveLocalMeta('files', meta);
-    } catch (error) {
-      saveLocalMeta('files', meta);
-      logError(error);
+      const file = await promise;
+      const mtime = new Date(file.lastUpdated);
+      //fs.writeFileSync(item.file, body)
+      meta[item.file] = {
+        id: file.id,
+        md5: checksum(body),
+        remoteTime: mtime.getTime(),
+        localTime: item.localModTime * 1000
+      };
     }
-  });
+  ));
 
 program
   .command('status')

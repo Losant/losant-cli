@@ -1,26 +1,15 @@
 #!/usr/bin/env node
 const program = require('commander');
-const losant = require('losant-rest');
 const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
 const {
-  utils: {
-    loadConfig,
-    loadLocalMeta,
-    saveLocalMeta,
-    getLocalStatus,
-    getRemoteStatus,
-    checksum,
-    log,
-    logProcessing,
-    logResult,
-    logError
-  },
+  utils: { checksum, log },
   watchFiles,
   getStatusFunc,
-  getDownloader
+  getDownloader,
+  getUploader
 } = require('../lib');
 
 program
@@ -52,101 +41,51 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(async (pattern, command) => {
-    if (command.dir) {
-      process.chdir(command.dir);
+  .action(getUploader(
+    'experienceViews',
+    'views',
+    [ '/**/*.hbs' ],
+    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
+    (item, remoteStatus) => {
+      return remoteStatus && remoteStatus.status !== 'unmodified';
+    },
+    (item, config) => {
+      return { applicationId: config.applicationId,  experienceViewId: item.id };
+    },
+    (item, config) => {
+      // TODO remove sync part and make promisified
+      const body = fs.readFileSync(item.file);
+      return {
+        applicationId: config.applicationId,
+        experienceViewId: item.id,
+        experienceView:  { body: body.toString() }
+      };
+    },
+    (item, config) => {
+      // TODO remove sync part and make promisified
+      const body = fs.readFileSync(item.file);
+      const pathParts = item.file.split(path.sep);
+      return {
+        applicationId: config.applicationId,
+        experienceView: {
+          viewType: pathParts[1].slice(0, -1),
+          name: item.name,
+          body: body.toString()
+        }
+      };
+    },
+    async (view, meta, item) => {
+      const mtime = new Date(view.lastUpdated);
+      // mkdirp.sync(path.dirname(item.file))
+      // fs.writeFileSync(item.file, view.body)
+      meta[item.file] = {
+        id: view.id,
+        md5: checksum(view.body),
+        remoteTime: mtime.getTime(),
+        localTime: item.localModTime * 1000
+      };
     }
-    const config = loadConfig(command.config);
-    const api = losant.createClient({ accessToken: config.apiToken });
-    const meta = loadLocalMeta('views') || {};
-    try {
-      const views = await api.experienceViews.get({ applicationId: config.applicationId });
-      const items = views.items;
-      // grab remote status and map to file
-      const remoteStatus = getRemoteStatus('views', items, 'views/${viewType}s/${name}.hbs', 'body'); // eslint-disable-line no-template-curly-in-string
-      const remoteStatusById = {};
-      remoteStatus.forEach((item) => {
-        if (item.id) {
-          remoteStatusById[item.id] = item;
-        }
-      });
-      // iterate over local status and perform the appropriate action
-      const localStatus = getLocalStatus('views', `/${pattern || '**/*'}.hbs`, 'views');
-      if (command.dryRun) {
-        log('DRY RUN');
-      }
-      await Promise.all(localStatus.map((item) => {
-        logProcessing(item.file);
-        const pathParts = item.file.split(path.sep);
-        // if forcing the update ignore conflicts and remote modifications
-        if (!command.force) {
-          if (item.status === 'unmodified') {
-            logResult('unmodified', item.file);
-            return;
-          }
-          if ((remoteStatusById[item.id] && remoteStatusById[item.id].status !== 'unmodified')) {
-            logResult('conflict', item.file, 'red');
-            return Promise.resolve();
-          }
-        }
-        if (item.status === 'deleted') {
-          if (!command.dryRun) {
-            return api.experienceView
-              .delete({ applicationId: config.applicationId,  experienceViewId: item.id })
-              .then(() => {
-                delete meta[item.file];
-                logResult('deleted', item.file, 'yellow');
-                return Promise.resolve();
-              });
-          }
-          logResult('deleted', item.file, 'yellow');
-          return Promise.resolve();
-        } else {
-          if (!command.dryRun) {
-            let action;
-            const body = fs.readFileSync(item.file);
-            if (item.id) {
-              action = api.experienceView
-                .patch({
-                  applicationId: config.applicationId,
-                  experienceViewId: item.id,
-                  experienceView:  { body: body.toString() }
-                });
-            } else {
-              action = api.experienceViews
-                .post({
-                  applicationId: config.applicationId,
-                  experienceView: {
-                    viewType: pathParts[1].slice(0, -1),
-                    name: item.name,
-                    body: body.toString()
-                  }
-                });
-            }
-            return action.then((view) => {
-              const mtime = new Date(view.lastUpdated);
-              // mkdirp.sync(path.dirname(item.file))
-              // fs.writeFileSync(item.file, view.body)
-              meta[item.file] = {
-                id: view.id,
-                md5: checksum(view.body),
-                remoteTime: mtime.getTime(),
-                localTime: item.localModTime * 1000
-              };
-              logResult('uploaded', item.file, 'green');
-              return Promise.resolve();
-            });
-          }
-          logResult('uploaded', item.file, 'green');
-          return Promise.resolve();
-        }
-      }));
-      saveLocalMeta('views', meta);
-    } catch (error) {
-      saveLocalMeta('views', meta);
-      logError(error);
-    }
-  });
+  ));
 
 program
   .command('status')
