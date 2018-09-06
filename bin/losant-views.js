@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const program = require('commander');
-const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
@@ -9,8 +8,16 @@ const {
   watchFiles,
   getStatusFunc,
   getDownloader,
-  getUploader
+  getUploader,
+  promiseFs: {
+    readFile
+  }
 } = require('../lib');
+
+const COMMAND_TYPE = 'views';
+const API_TYPE = 'experienceViews';
+const LOCAL_STATUS_PARAMS = [ '/**/*.hbs' ];
+const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // eslint-disable-line no-template-curly-in-string
 
 program
   .description('Manage Losant Experience Views from the command line');
@@ -22,14 +29,14 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getDownloader(
-    'experienceViews',
-    'views',
+    API_TYPE,
+    COMMAND_TYPE,
     (view) => { return view.body; },
     curry((pattern, view) => {
       return minimatch(view.name, pattern);
     }),
-    [ '/**/*.hbs' ],
-    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS,
     (item, itemLocalStatus, newLocalFiles) => {
       return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
     }
@@ -42,28 +49,28 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getUploader(
-    'experienceViews',
-    'views',
-    [ '/**/*.hbs' ],
-    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
+    API_TYPE,
+    COMMAND_TYPE,
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS,
     (item, remoteStatus) => {
       return remoteStatus && remoteStatus.status !== 'unmodified';
     },
     (item, config) => {
       return { applicationId: config.applicationId,  experienceViewId: item.id };
     },
-    (item, config) => {
+    async (item, config) => {
       // TODO remove sync part and make promisified
-      const body = fs.readFileSync(item.file);
+      const body = await readFile(item.file);
       return {
         applicationId: config.applicationId,
         experienceViewId: item.id,
         experienceView:  { body: body.toString() }
       };
     },
-    (item, config) => {
+    async (item, config) => {
       // TODO remove sync part and make promisified
-      const body = fs.readFileSync(item.file);
+      const body = await readFile(item.file);
       const pathParts = item.file.split(path.sep);
       return {
         applicationId: config.applicationId,
@@ -93,10 +100,10 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
   .action(getStatusFunc(
-    'experienceViews',
-    'views',
-    [ 'views/${viewType}s/${name}.hbs', 'body' ], // eslint-disable-line no-template-curly-in-string
-    [ '/**/*.hbs' ])
+    API_TYPE,
+    COMMAND_TYPE,
+    REMOTE_STATUS_PARAMS,
+    LOCAL_STATUS_PARAMS)
   );
 
 program

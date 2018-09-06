@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const program = require('commander');
-const fs = require('fs');
 const path = require('path');
 const minimatch = require('minimatch');
 const request = require('sync-request');
@@ -12,8 +11,16 @@ const {
   watchFiles,
   getStatusFunc,
   getDownloader,
-  getUploader
+  getUploader,
+  promiseFs: {
+    readFile
+  }
 } = require('../lib');
+
+const COMMAND_TYPE = 'files';
+const API_TYPE = 'files';
+const LOCAL_STATUS_PARAMS = [ '/**/*.*' ];
+const REMOTE_STATUS_PARAMS = [ 'files${parentDirectory}${name}' ]; // eslint-disable-line no-template-curly-in-string
 
 program
   .description('Manage Losant Files from the command line');
@@ -25,8 +32,8 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getDownloader(
-    'files',
-    'files',
+    API_TYPE,
+    COMMAND_TYPE,
     async (file, item) => {
       const res = await request('GET', file.url);
       if (res.statusCode !== 200) {
@@ -39,8 +46,8 @@ program
       if (!pattern) { return true; }
       return minimatch(file.parentDirectory + file.name, pattern);
     }),
-    [ '/**/*.*' ],
-    [ 'files${parentDirectory}${name}' ] // eslint-disable-line no-template-curly-in-string
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS
   ));
 
 program
@@ -50,10 +57,10 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getUploader(
-    'files',
-    'files',
-    [ '/**/*.*' ],
-    [ 'files${parentDirectory}${name}' ], // eslint-disable-line no-template-curly-in-string
+    API_TYPE,
+    COMMAND_TYPE,
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS,
     null, // TODO
     (item, config) => {
       return { applicationId: config.applicationId,  fileId: item.id };
@@ -81,7 +88,7 @@ program
       };
     },
     async (result, meta, item) => {
-      const body = fs.readFileSync(item.file);
+      const body = await readFile(item.file);
       const promise = new Promise((resolve, reject) => {
         const fd = new FormData();
         Object.keys(result.upload.fields).forEach((key) => {
@@ -122,10 +129,10 @@ program
   .option('-r, --remote', 'show remote file status')
   .action()
   .action(getStatusFunc(
-    'files',
-    'files',
-    [ 'files${parentDirectory}${name}' ], // eslint-disable-line no-template-curly-in-string
-    [ '/**/*.*' ],
+    API_TYPE,
+    COMMAND_TYPE,
+    REMOTE_STATUS_PARAMS,
+    LOCAL_STATUS_PARAMS,
     (item) => { return item.type === 'file'; })
   );
 
