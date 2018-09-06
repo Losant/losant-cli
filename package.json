@@ -2,10 +2,15 @@
   "name": "losant-cli",
   "version": "1.0.0",
   "bin": {
-    "losant": "./losant",
-    "losant-configure": "./losant-configure",
-    "losant-views": "./losant-views",
-    "losant-files": "./losant-files"
+    "losant": "./bin/losant.js",
+    "losant-configure": "./bin/losant-configure.js",
+    "losant-views": "./bin/losant-views.js",
+    "losant-files": "./bin/losant-files.js"
+  },
+  "scripts": {
+    "lint": "esw . --ext .js",
+    "lint:fix": "yarn lint --fix",
+    "lint:watch": "yarn lint --watch"
   },
   "dependencies": {
     "chalk": "^2.3.0",
@@ -26,5 +31,14 @@
     "single-line-log": "^1.1.2",
     "sync-request": "^6.0.0",
     "update-notifier": "^2.3.0"
+  },
+  "devDependencies": {
+    "@losant/eslint-config-losant": "^1.3.3"
+  },
+  "eslintConfig": {
+    "extends": "@losant/eslint-config-losant/env/node",
+    "rules": {
+      "no-shadow": "error"
+    }
   }
 }
