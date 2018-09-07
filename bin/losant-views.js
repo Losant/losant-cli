@@ -31,12 +31,12 @@ program
   .action(getDownloader(
     API_TYPE,
     COMMAND_TYPE,
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS,
     (view) => { return view.body; },
     curry((pattern, view) => {
       return minimatch(view.name, pattern);
     }),
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
     (item, itemLocalStatus, newLocalFiles) => {
       return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
     }
@@ -49,7 +49,7 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getUploader(
-    API_TYPE,
+    'experienceView',
     COMMAND_TYPE,
     LOCAL_STATUS_PARAMS,
     REMOTE_STATUS_PARAMS,

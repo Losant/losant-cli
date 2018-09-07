@@ -1,3 +1,7 @@
+losant.yaml
+losant.yml
+/views/*
+/files/*
 example
 .node-version
 /.losant

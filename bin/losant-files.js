@@ -34,6 +34,8 @@ program
   .action(getDownloader(
     API_TYPE,
     COMMAND_TYPE,
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS,
     async (file, item) => {
       const res = await request('GET', file.url);
       if (res.statusCode !== 200) {
@@ -45,9 +47,7 @@ program
       if (file.type === 'directory') { return false; }
       if (!pattern) { return true; }
       return minimatch(file.parentDirectory + file.name, pattern);
-    }),
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS
+    })
   ));
 
 program
@@ -57,7 +57,7 @@ program
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
   .action(getUploader(
-    API_TYPE,
+    'file',
     COMMAND_TYPE,
     LOCAL_STATUS_PARAMS,
     REMOTE_STATUS_PARAMS,
@@ -127,14 +127,13 @@ program
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action()
   .action(getStatusFunc(
     API_TYPE,
     COMMAND_TYPE,
     REMOTE_STATUS_PARAMS,
     LOCAL_STATUS_PARAMS,
-    (item) => { return item.type === 'file'; })
-  );
+    (item) => { return item.type === 'file'; }
+  ));
 
 program
   .command('watch')
