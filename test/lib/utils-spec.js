@@ -20,19 +20,20 @@ describe('utils', () => {
   });
   describe('Config', () => {
     it('.loadConfig', () => {
-      const filepath = '../test/fixtures/losant.yaml';
+      const filepath = './fixtures/save-config.yaml';
       const config = utils.loadConfig(filepath);
       config.should.deepEqual({
-        losant: {
-          applicationId: '12345abcdefg',
-          losantKey: 'aSecretKeySSSHHH' // just for you, @mk
-        },
+        applicationId: '5b9297591fefb200072e554d',
+        apiToken: 'token',
         file: filepath
       });
     });
     it('.saveConfig', () => {
-      const config = { losant: { abc: 'bar', foo: 1234 } };
-      const file = '../test/fixtures/save-config.yaml';
+      const config = {
+        applicationId: '5b9297591fefb200072e554d',
+        apiToken: 'token'
+      };
+      const file = './fixtures/save-config.yaml';
       utils.saveConfig(file, config);
       const result = utils.loadConfig(file);
       result.should.deepEqual(merge(config, { file }));

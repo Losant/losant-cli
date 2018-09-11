@@ -1,3 +1,2 @@
-losant:
-  abc: bar
-  foo: 1234
+applicationId: 5b9297591fefb200072e554d
+apiToken: token

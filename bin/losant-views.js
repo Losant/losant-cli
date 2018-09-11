@@ -102,9 +102,9 @@ program
   .action(getStatusFunc(
     API_TYPE,
     COMMAND_TYPE,
-    REMOTE_STATUS_PARAMS,
-    LOCAL_STATUS_PARAMS)
-  );
+    LOCAL_STATUS_PARAMS,
+    REMOTE_STATUS_PARAMS
+  ));
 
 program
   .command('watch')

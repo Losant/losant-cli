@@ -1,3 +1,2 @@
-losant:
-  applicationId: 12345abcdefg
-  losantKey: aSecretKeySSSHHH
+applicationId: 5b9297591fefb200072e554d
+apiToken: token
