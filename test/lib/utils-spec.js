@@ -1,6 +1,6 @@
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
-const fs        = require('fs');
+const { writeFile, deleteFile } = require('../../lib/promise-fs');
 
 describe('utils', () => {
   describe('logging', () => {
@@ -54,18 +54,18 @@ describe('utils', () => {
   });
   describe('isFileNewer', () => {
     let file;
-    afterEach(() => {
+    afterEach(async () => {
       if (file) {
-        fs.unlinkSync(file);
+        await deleteFile(file);
         file = null;
       }
     });
     it('should return false if it does not exist', () => {
       utils.isFileNewer('some-file-that-does-not-exist.yaml').should.equal(false);
     });
-    it('should return true if the file was created after the date', () => {
+    it('should return true if the file was created after the date', async () => {
       file = './new-file.yaml';
-      fs.writeFileSync(file, 'hello world');
+      await writeFile(file, 'hello world');
       utils.isFileNewer(file, new Date(Date.now() - 24 * 60 * 60 * 1000)).should.be.true();
     });
   });

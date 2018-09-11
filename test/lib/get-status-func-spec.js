@@ -1,6 +1,4 @@
-const { promisify } = require('util');
-const rimraf = require('rimraf');
-const rmDir = promisify(rimraf);
+const { rmDir } = require('../common');
 const utils     = require('../../lib/utils');
 const { buildDirectories, writeFile, fileExists } = require('../../lib/promise-fs');
 const { merge } = require('omnibelt');
