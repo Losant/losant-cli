@@ -19,28 +19,28 @@ describe('utils', () => {
     });
   });
   describe('Config', () => {
-    it('.loadConfig', () => {
+    it('.loadConfig', async () => {
       const filepath = './fixtures/save-config.yaml';
-      const config = utils.loadConfig(filepath);
+      const config = await utils.loadConfig(filepath);
       config.should.deepEqual({
         applicationId: '5b9297591fefb200072e554d',
         apiToken: 'token',
         file: filepath
       });
     });
-    it('.saveConfig', () => {
+    it('.saveConfig', async () => {
       const config = {
         applicationId: '5b9297591fefb200072e554d',
         apiToken: 'token'
       };
       const file = './fixtures/save-config.yaml';
-      utils.saveConfig(file, config);
-      const result = utils.loadConfig(file);
+      await utils.saveConfig(file, config);
+      const result = await utils.loadConfig(file);
       result.should.deepEqual(merge(config, { file }));
     });
   });
   describe('Meta Data', () => {
-    it('should save and load meta data', () => {
+    it('should save and load meta data', async () => {
       // to do clean up after this test create a file.
       const meta = {
         file1: 'abcde1234',
@@ -48,7 +48,7 @@ describe('utils', () => {
         file3: 'efghi12345'
       };
       utils.saveLocalMeta('files', meta);
-      const result = utils.loadLocalMeta('files');
+      const result = await utils.loadLocalMeta('files');
       result.should.deepEqual(meta);
     });
   });
@@ -60,13 +60,13 @@ describe('utils', () => {
         file = null;
       }
     });
-    it('should return false if it does not exist', () => {
-      utils.isFileNewer('some-file-that-does-not-exist.yaml').should.equal(false);
+    it('should return false if it does not exist', async () => {
+      (await utils.isFileNewer('some-file-that-does-not-exist.yaml')).should.equal(false);
     });
     it('should return true if the file was created after the date', async () => {
       file = './new-file.yaml';
       await writeFile(file, 'hello world');
-      utils.isFileNewer(file, new Date(Date.now() - 24 * 60 * 60 * 1000)).should.be.true();
+      (await utils.isFileNewer(file, new Date(Date.now() - 24 * 60 * 60 * 1000))).should.be.true();
     });
   });
   describe('Checksum', () => {

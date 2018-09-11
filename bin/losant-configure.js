@@ -2,8 +2,7 @@
 
 const program = require('commander');
 const c = require('chalk');
-const { saveConfig } = require('../lib/utils');
-const { logError, logResult, setDir } = require('../lib/utils');
+const { saveConfig, logError, logResult, setDir } = require('../lib/utils');
 
 program
   .description('Configure the command line tool')
@@ -25,7 +24,7 @@ if (!program.token) {
 try {
   setDir(program);
   const config = { applicationId: program.app, apiToken: program.token };
-  const file = saveConfig(program.config, config);
+  const file = await saveConfig(program.config, config);
   logResult('success', `configuration written to ${c.bold(file)}`, 'green');
 } catch (e) {
   logError(`failed to write configuration: ${c.bold(e.message)}`);
