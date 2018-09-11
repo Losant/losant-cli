@@ -21,11 +21,12 @@ if (!program.token) {
   process.exit(1);
 }
 
-try {
-  setDir(program);
-  const config = { applicationId: program.app, apiToken: program.token };
-  const file = await saveConfig(program.config, config);
-  logResult('success', `configuration written to ${c.bold(file)}`, 'green');
-} catch (e) {
-  logError(`failed to write configuration: ${c.bold(e.message)}`);
-}
+setDir(program);
+const config = { applicationId: program.app, apiToken: program.token };
+saveConfig(program.config, config)
+  .then((file) => {
+    logResult('success', `configuration written to ${c.bold(file)}`, 'green');
+  })
+  .catch((e) => {
+    logError(`failed to write configuration: ${c.bold(e.message)}`);
+  });

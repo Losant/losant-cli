@@ -1,20 +1,13 @@
-const { rmDir } = require('../common');
-const utils     = require('../../lib/utils');
-const { buildDirectories, writeFile, fileExists } = require('../../lib/promise-fs');
-const nock      = require('nock');
-const getStatusFunc = require('../../lib/get-status-func');
-const sinon     = require('sinon');
-const log       = require('single-line-log');
-const c = require('chalk');
-const pad = require('pad');
+const { nock, sinon } = require('../common');
+const getStatusFunc   = require('../../lib/get-status-func');
+const log             = require('single-line-log');
+const c               = require('chalk');
+const pad             = require('pad');
+const {
+  buildDirectories,
+  writeFile
+} = require('../../lib/promise-fs');
 
-const deleteFakeData = () => {
-  return Promise.all(['views', 'files'].map(async (folder) => {
-    if (await fileExists(`./${folder}`)) {
-      return rmDir(`./${folder}`);
-    }
-  }));
-};
 
 const API_TYPE = 'experienceViews';
 const COMMAND_TYPE = 'views';
@@ -22,18 +15,6 @@ const LOCAL_STATUS_PARAMS = [ '/**/*.hbs' ];
 const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // eslint-disable-line no-template-curly-in-string
 
 describe('#getStatusFunc', () => {
-  before(() => {
-    // TODO MOVE THIS TO A COMMON TEST FILE THAT IS RUN ANY TIME THE TESTS START
-    utils.setDir({ dir: './test' });
-  });
-  beforeEach(async () => {
-    await deleteFakeData();
-    sinon.restore();
-    nock.disableNetConnect();
-  });
-  after(async () => {
-    await deleteFakeData();
-  });
   it('should log out that there are no local files found', async () => {
     const spy = sinon.spy(log, 'stdout');
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -115,7 +96,7 @@ describe('#getStatusFunc', () => {
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
-        count: 6,
+        count: 1,
         items: [
           {
             name: 'Example Layout',
@@ -174,7 +155,7 @@ describe('#getStatusFunc', () => {
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
-        count: 6,
+        count: 1,
         items: [
           {
             name: 'Example Layout',
