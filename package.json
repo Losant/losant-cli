@@ -1,6 +1,18 @@
 {
   "name": "losant-cli",
   "version": "1.0.0",
+  "description": "Losant Command Line Interface",
+  "license": "MIT",
+  "homepage": "https://github.com/Losant/losant-cli#readme",
+  "author": "Losant <hello@losant.com>",
+  "bugs": {
+    "url": "https://github.com/Losant/losant-cli/issues"
+  },
+  "keywords": [
+    "IoT",
+    "platform",
+    "CLI"
+  ],
   "bin": {
     "losant": "./bin/losant.js",
     "losant-configure": "./bin/losant-configure.js",
@@ -8,8 +20,7 @@
     "losant-files": "./bin/losant-files.js"
   },
   "engines": {
-    "node": "8.12.0",
-    "yarn": "^1.9.4"
+    "node": ">=8.3"
   },
   "scripts": {
     "lint": "esw . --ext .js",
@@ -17,6 +28,10 @@
     "lint:watch": "yarn lint --watch",
     "test": "mocha ./test",
     "reinstall": "rm -rf nodes_modules && yarn install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Losant/losant-cli.git"
   },
   "dependencies": {
     "@rjhilgefort/export-dir": "^1.1.0",
@@ -50,9 +65,6 @@
     "sinon": "^6.1.5"
   },
   "eslintConfig": {
-    "extends": "@losant/eslint-config-losant/env/node",
-    "rules": {
-      "no-shadow": "error"
-    }
+    "extends": "@losant/eslint-config-losant/env/node"
   }
 }

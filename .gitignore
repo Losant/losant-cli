@@ -3,9 +3,9 @@ losant.yml
 /views/*
 /files/*
 example
-.node-version
 /.losant
 *.log
+package-lock.json
 # Optional npm cache directory
 .npm
 # Dependency directories
