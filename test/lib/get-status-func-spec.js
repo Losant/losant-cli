@@ -44,7 +44,7 @@ describe('#getStatusFunc', () => {
         '*',
         'Strict-Transport-Security',
         'max-age=31536000' ]);
-    const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS);
+    const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     const command = {
       config: './fixtures/losant.yaml'
@@ -81,7 +81,7 @@ describe('#getStatusFunc', () => {
         '*',
         'Strict-Transport-Security',
         'max-age=31536000' ]);
-    const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS);
+    const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     const command = {
       config: './fixtures/losant.yaml',
@@ -137,7 +137,7 @@ describe('#getStatusFunc', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS);
+    const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     const command = {
       config: './fixtures/losant.yaml',
@@ -195,7 +195,7 @@ describe('#getStatusFunc', () => {
         '*',
         'Strict-Transport-Security',
         'max-age=31536000' ]);
-    const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS);
+    const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     const command = { config: './fixtures/losant.yaml' };
     await getStatus(command);

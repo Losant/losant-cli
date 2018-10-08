@@ -105,24 +105,29 @@ describe('#getDownloader', () => {
         '*',
         'Strict-Transport-Security',
         'max-age=31536000' ]);
-    const downloader = getDownloader(
-      API_TYPE,
-      COMMAND_TYPE,
-      LOCAL_STATUS_PARAMS,
-      REMOTE_STATUS_PARAMS,
-      (view) => { return view.body; },
-      curry((pattern, view) => {
+    const downloader = getDownloader({
+      apiType: API_TYPE,
+      commandType: COMMAND_TYPE,
+      localStatusParams: LOCAL_STATUS_PARAMS,
+      remoteStatusParams: REMOTE_STATUS_PARAMS,
+      getData: (view) => { return view.body; },
+      curriedFilterFunc: curry((pattern, view) => {
         return minimatch(view.name, pattern);
       }),
-      (item, itemLocalStatus, newLocalFiles) => {
+      isConflictDetected: (item, itemLocalStatus, newLocalFiles) => {
         return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
       }
-    );
+    });
     downloader.should.be.a.Function();
     const command = { config: './fixtures/losant.yaml' };
     await downloader(null, command);
     spy.withArgs(`${pad(c.green('downloaded'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
-    const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS);
+    const getStatus = getStatusFunc({
+      apiType: API_TYPE,
+      commandType: COMMAND_TYPE,
+      localStatusParams: LOCAL_STATUS_PARAMS,
+      remoteStatusParams: REMOTE_STATUS_PARAMS
+    });
     await getStatus(command);
     spy.withArgs(`${pad(c.gray('unmodified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await writeFile('./views/layouts/Example Layout.hbs', 'write something else to make it modified...');

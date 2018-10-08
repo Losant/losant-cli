@@ -6,7 +6,7 @@ const request = require('sync-request');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
 const { curry } = require('omnibelt');
-const { readFile, writeFileSync } = require('fs-extra');
+const { readFile } = require('fs-extra');
 const {
   utils: { log, checksum },
   watchFiles,
@@ -34,7 +34,14 @@ const curriedFilterDownloadFunc = curry((pattern, file) => {
   return minimatch(file.parentDirectory + file.name, pattern);
 });
 
-const downloader = getDownloader(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, downloaderGetData, curriedFilterDownloadFunc);
+const downloader = getDownloader({
+  apiType: API_TYPE,
+  commandType: COMMAND_TYPE,
+  localStatusParams: LOCAL_STATUS_PARAMS,
+  remoteStatusParams: REMOTE_STATUS_PARAMS,
+  getData: downloaderGetData,
+  curriedFilterFunc: curriedFilterDownloadFunc
+});
 
 const uploadConflictDetect = null; // todo
 
@@ -98,9 +105,25 @@ const updateMeta = async (result, meta, item) => {
   };
 };
 
-const uploader = getUploader('file', COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, uploadConflictDetect, getDeleteQuery, getPatchData, getPostData, updateMeta);
+const uploader = getUploader({
+  apiType: 'file',
+  commandType: COMMAND_TYPE,
+  localStatusParams: LOCAL_STATUS_PARAMS,
+  remoteStatusParams: REMOTE_STATUS_PARAMS,
+  isConflictDetected: uploadConflictDetect,
+  getDeleteQuery,
+  getPatchData,
+  getPostData,
+  postUpsertUpdateMeta: updateMeta
+});
 
-const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, (item) => { return item.type === 'file'; });
+const getStatus = getStatusFunc({
+  apiType: API_TYPE,
+  commandType: COMMAND_TYPE,
+  localStatusParams: LOCAL_STATUS_PARAMS,
+  remoteStatusParams: REMOTE_STATUS_PARAMS,
+  filterFunc: (item) => { return item.type === 'file'; }
+});
 
 program
   .description('Manage Losant Files from the command line');

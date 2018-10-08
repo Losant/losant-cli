@@ -33,7 +33,14 @@ const curriedFilterDownloadFunc = curry((pattern, file) => {
   return minimatch(file.parentDirectory + file.name, pattern);
 });
 
-const downloader = getDownloader(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, downloaderGetData, curriedFilterDownloadFunc);
+const downloader = getDownloader({
+  apitType: API_TYPE,
+  commandType: COMMAND_TYPE,
+  localStatusParams: LOCAL_STATUS_PARAMS,
+  remoteStatusParams: REMOTE_STATUS_PARAMS,
+  getData: downloaderGetData,
+  curriedFilterFunc: curriedFilterDownloadFunc
+});
 
 const uploadConflictDetect = (item, remoteStatus) => {
   return remoteStatus && remoteStatus.status !== 'unmodified';
@@ -77,20 +84,19 @@ const updateMeta = async (view, meta, item) => {
   };
 };
 
-const uploader = getUploader(
-  'experienceView',
-  COMMAND_TYPE,
-  LOCAL_STATUS_PARAMS,
-  REMOTE_STATUS_PARAMS,
-  uploadConflictDetect,
+const uploader = getUploader({
+  apiType: 'experienceView',
+  commandType: COMMAND_TYPE,
+  localStatusParams: LOCAL_STATUS_PARAMS,
+  remoteStatusParams: REMOTE_STATUS_PARAMS,
+  isConflictDetected: uploadConflictDetect,
   getDeleteQuery,
   getPatchData,
   getPostData,
-  updateMeta
-);
+  postUpsertUpdateMeta: updateMeta
+});
 
-program
-  .description('Manage Losant Experience Views from the command line');
+program.description('Manage Losant Experience Views from the command line');
 
 program
   .command('download [pattern]')
@@ -113,7 +119,12 @@ program
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action(getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS));
+  .action(getStatusFunc({
+    apiType: API_TYPE,
+    commandType: COMMAND_TYPE,
+    localStatusParams: LOCAL_STATUS_PARAMS,
+    remoteStatusParams: REMOTE_STATUS_PARAMS
+  }));
 
 program
   .command('watch')
