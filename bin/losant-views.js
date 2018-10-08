@@ -3,15 +3,13 @@ const program = require('commander');
 const path = require('path');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
+const { readFile } = require('fs-extra');
 const {
   utils: { checksum, log },
   watchFiles,
   getStatusFunc,
   getDownloader,
-  getUploader,
-  promiseFs: {
-    readFile
-  }
+  getUploader
 } = require('../lib');
 
 const COMMAND_TYPE = 'views';

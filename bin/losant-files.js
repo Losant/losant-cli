@@ -6,15 +6,13 @@ const request = require('sync-request');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
 const { curry } = require('omnibelt');
+const { readFile } = require('fs-extra');
 const {
   utils: { log, checksum },
   watchFiles,
   getStatusFunc,
   getDownloader,
-  getUploader,
-  promiseFs: {
-    readFile
-  }
+  getUploader
 } = require('../lib');
 
 const COMMAND_TYPE = 'files';
