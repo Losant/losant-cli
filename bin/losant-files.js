@@ -6,7 +6,7 @@ const request = require('sync-request');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
 const { curry } = require('omnibelt');
-const { readFile } = require('fs-extra');
+const { readFile, writeFileSync } = require('fs-extra');
 const {
   utils: { log, checksum },
   watchFiles,
@@ -20,6 +20,88 @@ const API_TYPE = 'files';
 const LOCAL_STATUS_PARAMS = [ '/**/*.*' ];
 const REMOTE_STATUS_PARAMS = [ 'files${parentDirectory}${name}' ]; // eslint-disable-line no-template-curly-in-string
 
+const downloaderGetData = async (file, item) => {
+  const res = await request('GET', file.url);
+  if (res.statusCode !== 200) {
+    throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
+  }
+  return res.getBody();
+};
+
+const curriedFilterDownloadFunc = curry((pattern, file) => {
+  if (file.type === 'directory') { return false; }
+  if (!pattern) { return true; }
+  return minimatch(file.parentDirectory + file.name, pattern);
+});
+
+const downloader = getDownloader(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, downloaderGetData, curriedFilterDownloadFunc);
+
+const uploadConflictDetect = null; // todo
+
+const getDeleteQuery = (item, config) => {
+  return { applicationId: config.applicationId,  fileId: item.id };
+};
+
+const getPatchData = (item, config) => {
+  return {
+    applicationId: config.applicationId,
+    fileId: item.id,
+    file:  {
+      fileSize: item.size
+    }
+  };
+};
+
+const getPostData = (item, config) => {
+  const pathParts = item.file.split(path.sep);
+  return {
+    applicationId: config.applicationId,
+    file: {
+      name: item.name,
+      parentDirectory: pathParts.slice(1, -1).join(path.sep),
+      type: 'file',
+      fileSize: item.size,
+      contentType: mimeTypes.lookup(item.file)
+    }
+  };
+};
+
+const updateMeta = async (result, meta, item) => {
+  const body = await readFile(item.file);
+  const promise = new Promise((resolve, reject) => {
+    const fd = new FormData();
+    Object.keys(result.upload.fields).forEach((key) => {
+      if (key !== 'bucket') {
+        fd.append(key, result.upload.fields[key]);
+      }
+    });
+    fd.append('file', body);
+    fd.submit(result.upload.url, (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      res.on('data', (chunk) => {
+        body.push(chunk);
+      });
+      res.on('end', () => {
+        return resolve(result);
+      });
+    });
+  });
+  const file = await promise;
+  const mtime = new Date(file.lastUpdated);
+  meta[item.file] = {
+    id: file.id,
+    md5: checksum(body),
+    remoteTime: mtime.getTime(),
+    localTime: item.localModTime * 1000
+  };
+};
+
+const uploader = getUploader('file', COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, uploadConflictDetect, getDeleteQuery, getPatchData, getPostData, updateMeta);
+
+const getStatus = getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, (item) => { return item.type === 'file'; });
+
 program
   .description('Manage Losant Files from the command line');
 
@@ -29,24 +111,7 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(getDownloader(
-    API_TYPE,
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
-    async (file, item) => {
-      const res = await request('GET', file.url);
-      if (res.statusCode !== 200) {
-        throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
-      }
-      return res.getBody();
-    },
-    curry((pattern, file) => {
-      if (file.type === 'directory') { return false; }
-      if (!pattern) { return true; }
-      return minimatch(file.parentDirectory + file.name, pattern);
-    })
-  ));
+  .action(downloader);
 
 program
   .command('upload [pattern]')
@@ -54,84 +119,14 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(getUploader(
-    'file',
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
-    null, // TODO
-    (item, config) => {
-      return { applicationId: config.applicationId,  fileId: item.id };
-    },
-    (item, config) => {
-      return {
-        applicationId: config.applicationId,
-        fileId: item.id,
-        file:  {
-          fileSize: item.size
-        }
-      };
-    },
-    (item, config) => {
-      const pathParts = item.file.split(path.sep);
-      return {
-        applicationId: config.applicationId,
-        file: {
-          name: item.name,
-          parentDirectory: pathParts.slice(1, -1).join(path.sep),
-          type: 'file',
-          fileSize: item.size,
-          contentType: mimeTypes.lookup(item.file)
-        }
-      };
-    },
-    async (result, meta, item) => {
-      const body = await readFile(item.file);
-      const promise = new Promise((resolve, reject) => {
-        const fd = new FormData();
-        Object.keys(result.upload.fields).forEach((key) => {
-          if (key !== 'bucket') {
-            fd.append(key, result.upload.fields[key]);
-          }
-        });
-        fd.append('file', body);
-        fd.submit(result.upload.url, (err, res) => {
-          // const body = [];
-          if (err) {
-            return reject(err);
-          }
-          res.on('data', (chunk) => {
-            body.push(chunk);
-          });
-          res.on('end', () => {
-            return resolve(result);
-          });
-        });
-      });
-      const file = await promise;
-      const mtime = new Date(file.lastUpdated);
-      //fs.writeFileSync(item.file, body)
-      meta[item.file] = {
-        id: file.id,
-        md5: checksum(body),
-        remoteTime: mtime.getTime(),
-        localTime: item.localModTime * 1000
-      };
-    }
-  ));
+  .action(uploader);
 
 program
   .command('status')
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action(getStatusFunc(
-    API_TYPE,
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
-    (item) => { return item.type === 'file'; }
-  ));
+  .action(getStatus);
 
 program
   .command('watch')

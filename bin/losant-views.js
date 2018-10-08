@@ -11,11 +11,83 @@ const {
   getDownloader,
   getUploader
 } = require('../lib');
+const request = require('request');
 
 const COMMAND_TYPE = 'views';
 const API_TYPE = 'experienceViews';
 const LOCAL_STATUS_PARAMS = [ '/**/*.hbs' ];
 const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // eslint-disable-line no-template-curly-in-string
+
+
+const downloaderGetData = async (file, item) => {
+  const res = await request('GET', file.url);
+  if (res.statusCode !== 200) {
+    throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
+  }
+  return res.getBody();
+};
+
+const curriedFilterDownloadFunc = curry((pattern, file) => {
+  if (file.type === 'directory') { return false; }
+  if (!pattern) { return true; }
+  return minimatch(file.parentDirectory + file.name, pattern);
+});
+
+const downloader = getDownloader(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS, downloaderGetData, curriedFilterDownloadFunc);
+
+const uploadConflictDetect = (item, remoteStatus) => {
+  return remoteStatus && remoteStatus.status !== 'unmodified';
+};
+
+const getDeleteQuery = (item, config) => {
+  return { applicationId: config.applicationId,  experienceViewId: item.id };
+};
+
+const getPatchData = async (item, config) => {
+  const body = await readFile(item.file);
+  return {
+    applicationId: config.applicationId,
+    experienceViewId: item.id,
+    experienceView:  { body: body.toString() }
+  };
+};
+
+const getPostData = async (item, config) => {
+  const body = await readFile(item.file);
+  const pathParts = item.file.split(path.sep);
+  return {
+    applicationId: config.applicationId,
+    experienceView: {
+      viewType: pathParts[1].slice(0, -1),
+      name: item.name,
+      body: body.toString()
+    }
+  };
+};
+
+const updateMeta = async (view, meta, item) => {
+  const mtime = new Date(view.lastUpdated);
+  // mkdirp.sync(path.dirname(item.file))
+  // fs.writeFileSync(item.file, view.body)
+  meta[item.file] = {
+    id: view.id,
+    md5: checksum(view.body),
+    remoteTime: mtime.getTime(),
+    localTime: item.localModTime * 1000
+  };
+};
+
+const uploader = getUploader(
+  'experienceView',
+  COMMAND_TYPE,
+  LOCAL_STATUS_PARAMS,
+  REMOTE_STATUS_PARAMS,
+  uploadConflictDetect,
+  getDeleteQuery,
+  getPatchData,
+  getPostData,
+  updateMeta
+);
 
 program
   .description('Manage Losant Experience Views from the command line');
@@ -26,19 +98,7 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(getDownloader(
-    API_TYPE,
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
-    (view) => { return view.body; },
-    curry((pattern, view) => {
-      return minimatch(view.name, pattern);
-    }),
-    (item, itemLocalStatus, newLocalFiles) => {
-      return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
-    }
-  ));
+  .action(downloader);
 
 program
   .command('upload [pattern]')
@@ -46,63 +106,14 @@ program
   .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")')
   .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
   .option('--dry-run', 'display actions but do not perform them')
-  .action(getUploader(
-    'experienceView',
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS,
-    (item, remoteStatus) => {
-      return remoteStatus && remoteStatus.status !== 'unmodified';
-    },
-    (item, config) => {
-      return { applicationId: config.applicationId,  experienceViewId: item.id };
-    },
-    async (item, config) => {
-      // TODO remove sync part and make promisified
-      const body = await readFile(item.file);
-      return {
-        applicationId: config.applicationId,
-        experienceViewId: item.id,
-        experienceView:  { body: body.toString() }
-      };
-    },
-    async (item, config) => {
-      // TODO remove sync part and make promisified
-      const body = await readFile(item.file);
-      const pathParts = item.file.split(path.sep);
-      return {
-        applicationId: config.applicationId,
-        experienceView: {
-          viewType: pathParts[1].slice(0, -1),
-          name: item.name,
-          body: body.toString()
-        }
-      };
-    },
-    async (view, meta, item) => {
-      const mtime = new Date(view.lastUpdated);
-      // mkdirp.sync(path.dirname(item.file))
-      // fs.writeFileSync(item.file, view.body)
-      meta[item.file] = {
-        id: view.id,
-        md5: checksum(view.body),
-        remoteTime: mtime.getTime(),
-        localTime: item.localModTime * 1000
-      };
-    }
-  ));
+  .action(uploader);
 
 program
   .command('status')
   .option('-c, --config <file>', 'config file to run the command with')
   .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
   .option('-r, --remote', 'show remote file status')
-  .action(getStatusFunc(
-    API_TYPE,
-    COMMAND_TYPE,
-    LOCAL_STATUS_PARAMS,
-    REMOTE_STATUS_PARAMS
-  ));
+  .action(getStatusFunc(API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS));
 
 program
   .command('watch')
