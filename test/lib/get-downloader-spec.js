@@ -4,7 +4,7 @@ const minimatch = require('minimatch');
 const utils = require('../../lib/utils');
 const getDownloader = require('../../lib/get-downloader');
 const getStatusFunc = require('../../lib/get-status-func');
-const { writeFile, deleteFile } = require('../../lib/promise-fs');
+const { writeFile, remove } = require('fs-extra');
 const c = require('chalk');
 const pad = require('pad');
 const API_TYPE = 'experienceViews';
@@ -128,7 +128,7 @@ describe('#getDownloader', () => {
     await writeFile('./views/layouts/Example Layout.hbs', 'write something else to make it modified...');
     await getStatus(command);
     spy.withArgs(`${pad(c.yellow('modified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
-    await deleteFile('./views/layouts/Example Layout.hbs');
+    await remove('./views/layouts/Example Layout.hbs');
     await getStatus(command);
     spy.withArgs(`${pad(c.red('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
   });

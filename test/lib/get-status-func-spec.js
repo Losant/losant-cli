@@ -4,9 +4,9 @@ const log             = require('single-line-log');
 const c               = require('chalk');
 const pad             = require('pad');
 const {
-  buildDirectories,
+  ensureDir,
   writeFile
-} = require('../../lib/promise-fs');
+} = require('fs-extra');
 
 
 const API_TYPE = 'experienceViews';
@@ -148,7 +148,7 @@ describe('#getStatusFunc', () => {
     spy.withArgs(`${pad(c.green('added'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
   });
   it('should log out that there are added local files', async () => {
-    await buildDirectories('./views/layouts');
+    await ensureDir('./views/layouts');
     await writeFile('./views/layouts/Example Layout.hbs', 'body');
     const spy = sinon.spy(log, 'stdout');
     nock('https://api.losant.com:443', { encodedQueryParams: true })

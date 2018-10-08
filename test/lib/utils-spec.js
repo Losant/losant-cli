@@ -1,7 +1,7 @@
 require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
-const { writeFile, deleteFile } = require('../../lib/promise-fs');
+const { writeFile, remove } = require('fs-extra');
 
 describe('utils', () => {
   describe('logging', () => {
@@ -57,7 +57,7 @@ describe('utils', () => {
     let file;
     afterEach(async () => {
       if (file) {
-        await deleteFile(file);
+        await remove(file);
         file = null;
       }
     });

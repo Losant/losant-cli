@@ -4,11 +4,11 @@ const nock = require('nock');
 const { promisify } = require('util');
 const rimraf = require('rimraf');
 const rmDir = promisify(rimraf);
-const { fileExists } = require('../lib/promise-fs');
+const { pathExists } = require('fs-extra');
 
 const deleteFakeData = () => {
   return Promise.all(['views', 'files', '.losant'].map(async (folder) => {
-    if (await fileExists(`./${folder}`)) {
+    if (await pathExists(`./${folder}`)) {
       return rmDir(`./${folder}`);
     }
   }));
