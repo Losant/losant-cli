@@ -36,6 +36,7 @@
   "dependencies": {
     "@rjhilgefort/export-dir": "^1.1.0",
     "chalk": "^2.3.0",
+    "cli-table3": "^0.5.1",
     "commander": "^2.11.0",
     "form-data": "^2.3.2",
     "fs-extra": "^7.0.0",
@@ -43,7 +44,7 @@
     "inquirer": "^3.3.0",
     "js-yaml": "^3.10.0",
     "lodash-template": "^1.0.0",
-    "losant-rest": "^2.1.0",
+    "losant-rest": "losant/losant-rest-js#develop",
     "mime-types": "^2.1.18",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",

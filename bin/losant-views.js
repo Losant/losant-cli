@@ -98,6 +98,8 @@ const uploader = getUploader({
 
 program.description('Manage Losant Experience Views from the command line');
 
+// TODO updated downloader to handle a version write the version name to the file.
+// TODO ADD .option('-v, --version <version>', 'version of the experience view you would like to checkout. (default: develop)')
 program
   .command('download [pattern]')
   .option('-f, --force', 'force all changes by ignoring modification checking')
@@ -106,6 +108,9 @@ program
   .option('--dry-run', 'display actions but do not perform them')
   .action(downloader);
 
+// TODO ADD :: .option('-o, --overwrite', 'overwrite develop forcibly')
+// TODO ensure expierence views are being saved a "develop" versions
+// when the next upload happens save the version if it is not "develop" that was "checkedout" on the they will have to pass the overwrite develop
 program
   .command('upload [pattern]')
   .option('-f, --force', 'force all changes by ignoring modification checking')
@@ -125,6 +130,12 @@ program
     localStatusParams: LOCAL_STATUS_PARAMS,
     remoteStatusParams: REMOTE_STATUS_PARAMS
   }));
+
+program
+  .command('version [version]')
+  .option('-l, --list <pattern>', 'list all versions like this pattern')
+  .option('-d, --description <description>', 'a description to attach to this version')
+  .action(require('../lib/experience-version'));
 
 program
   .command('watch')
