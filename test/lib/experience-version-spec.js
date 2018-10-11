@@ -18,7 +18,10 @@ describe('#ExperienceVersion', function() {
     }
   });
   it('should print a table of versions', async () => {
-    spy = sinon.spy(ssLog, 'stdout');
+    let message;
+    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+        message = _message
+    });
     nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/versions')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -71,8 +74,7 @@ describe('#ExperienceVersion', function() {
     const command = { config: './fixtures/losant.yaml' };
 
     await versionCommand(null, command);
-    spy.calledOnce.should.equal(true);
-    spy.calledWith(printTable(
+    message.should.equal(printTable(
       [ 'version', 'endpointDefaultCors', 'attachedDomains', 'attachedSlugs', 'creationDate', 'lastUpdated' ],
       [ [ 'develop',
           true,
@@ -88,10 +90,14 @@ describe('#ExperienceVersion', function() {
           '2018-09-18T21:49:00.195Z'
         ]
       ]
-    )).should.be.true();
+    ));
   });
 
   it('should create a new version', async () => {
+    let message;
+    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+        message = _message
+    });
     const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/experience/versions')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
