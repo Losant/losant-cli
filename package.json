@@ -43,7 +43,7 @@
     "inquirer": "^3.3.0",
     "js-yaml": "^3.10.0",
     "lodash-template": "^1.0.0",
-    "losant-rest": "^2.1.0",
+    "losant-rest": "losant/losant-rest-js#develop",
     "mime-types": "^2.1.18",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
