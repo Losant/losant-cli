@@ -48,7 +48,7 @@ describe('utils', () => {
         file2: '1234abdcde',
         file3: 'efghi12345'
       };
-      utils.saveLocalMeta('files', meta);
+      await utils.saveLocalMeta('files', meta);
       const result = await utils.loadLocalMeta('files');
       result.should.deepEqual(meta);
     });
