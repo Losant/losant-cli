@@ -1,5 +1,5 @@
 const { fromFiles } = require('@rjhilgefort/export-dir');
-const commands = Object.values(fromFiles(null, __dirname));
+const commands = Object.values(fromFiles(null, __dirname)).join(Object.values(fromFiles(null, '../common')));
 const program = require('commander');
 const { log } = require('../../lib/utils');
 

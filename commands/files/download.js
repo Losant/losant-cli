@@ -1,13 +1,13 @@
+const request = require('sync-request');
 const minimatch = require('minimatch');
-const request = require('request');
+const { curry } = require('omnibelt');
 const {
   constants: {
-    experience: {
+    files: {
       COMMAND_TYPE, API_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS
     }
   }
 } = require('../../lib');
-const { curry } = require('omnibelt');
 
 const downloaderGetData = async (file, item) => {
   const res = await request('GET', file.url);
@@ -24,7 +24,7 @@ const curriedFilterDownloadFunc = curry((pattern, file) => {
 });
 
 const params = {
-  apitType: API_TYPE,
+  apiType: API_TYPE,
   commandType: COMMAND_TYPE,
   localStatusParams: LOCAL_STATUS_PARAMS,
   remoteStatusParams: REMOTE_STATUS_PARAMS,
