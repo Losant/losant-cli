@@ -3,7 +3,7 @@ const path = require('path');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
 const uploadConflictDetect = null; // todo
-const { utils: { checksum } } = require('../../lib');
+const { utils: { checksum }, constants: { files: { apiType, commandType, localStatusParams, remoteStatusParams } } } = require('../../lib');
 
 const getDeleteQuery = (item, config) => {
   return { applicationId: config.applicationId,  fileId: item.id };
@@ -64,6 +64,10 @@ const updateMeta = async (result, meta, item) => {
   };
 };
 const params = {
+  apiType,
+  commandType,
+  localStatusParams,
+  remoteStatusParams,
   isConflictDetected: uploadConflictDetect,
   getDeleteQuery,
   getPatchData,
@@ -71,5 +75,5 @@ const params = {
   postUpsertUpdateMeta: updateMeta
 };
 module.export = (program) => {
-  require('../utils/upload')(program, 'files',  params);
+  require('../utils/upload')(program,  params);
 };

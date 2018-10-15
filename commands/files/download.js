@@ -1,7 +1,7 @@
 const request   = require('sync-request');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
-
+const { file: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 const getData = async (file, item) => {
   const res = await request('GET', file.url);
   if (res.statusCode !== 200) {
@@ -17,5 +17,7 @@ const curriedFilterFunc = curry((pattern, file) => {
 });
 
 module.exports = (program) => {
-  require('../utils/download')(program, 'files', { getData, curriedFilterFunc });
+  require('../utils/download')(program, {
+    apiType, commandType, localStatusParams, remoteStatusParams, getData, curriedFilterFunc
+  });
 };

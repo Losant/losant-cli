@@ -1,8 +1,8 @@
 const path = require('path');
 const { readFile } = require('fs-extra');
-const { utils: { checksum }, constants: { experience: { API_TYPE, COMMAND_TYPE, LOCAL_STATUS_PARAMS, REMOTE_STATUS_PARAMS } } } = require('../../lib');
+const { utils: { checksum }, constants: { experience: { apiType, commandType, localStatusParams, remoteStatusParams } } } = require('../../lib');
 
-const uploadConflictDetect = (item, remoteStatus) => {
+const isConflictDetected = (item, remoteStatus) => {
   return remoteStatus && remoteStatus.status !== 'unmodified';
 };
 
@@ -43,11 +43,11 @@ const updateMeta = async (view, meta, item) => {
 };
 
 const params = {
-  apiType: API_TYPE,
-  commandType: COMMAND_TYPE,
-  localStatusParams: LOCAL_STATUS_PARAMS,
-  remoteStatusParams: REMOTE_STATUS_PARAMS,
-  isConflictDetected: uploadConflictDetect,
+  apiType,
+  commandType,
+  localStatusParams,
+  remoteStatusParams,
+  isConflictDetected,
   getDeleteQuery,
   getPatchData,
   getPostData,

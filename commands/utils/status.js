@@ -1,11 +1,6 @@
-const {
-  getStatusFunc,
-  constants
-} = require('../../lib');
-const { merge } = require('omnibelt');
+const { getStatusFunc } = require('../../lib');
 
-module.exports = (program, type, params = {}) => {
-  params = merge(constants[type], params);
+module.exports = (program, params = {}) => {
   program
     .command('status')
     .option('-c, --config <file>', 'config file to run the command with')

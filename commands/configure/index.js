@@ -22,7 +22,7 @@ module.exports = (() => {
       setDir(command);
       const config = { applicationId: command.app, apiToken: command.token };
       try {
-        const file = await saveConfig(command.config, config)
+        const file = await saveConfig(command.config, config);
         logResult('success', `configuration written to ${c.bold(file)}`, 'green');
       } catch (e) {
         logError(`failed to write configuration: ${c.bold(e.message)}`);

@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../commands/configure').parse(process.argv)
+require('../commands/configure').parse(process.argv);
