@@ -14,10 +14,7 @@
     "CLI"
   ],
   "bin": {
-    "losant": "./bin/losant.js",
-    "losant-configure": "./bin/losant-configure.js",
-    "losant-views": "./bin/losant-views.js",
-    "losant-files": "./bin/losant-files.js"
+    "losant": "./bin/losant.js"
   },
   "engines": {
     "node": ">=8.3"
