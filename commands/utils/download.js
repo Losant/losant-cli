@@ -1,7 +1,14 @@
+const { merge } = require('omnibelt');
 const {
-  getDownloader
+  getDownloader,
+  constants
 } = require('../../lib');
-module.exports = (program, params) => {
+
+
+module.exports = (program, type, params = {}) => {
+
+  params = merge(constants[type], params);
+
   program
     .command('download [pattern]')
     .option('-f, --force', 'force all changes by ignoring modification checking')

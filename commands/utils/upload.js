@@ -1,5 +1,11 @@
-const { getUploader } = require('../../lib');
-module.exports = (program, params) => {
+const { merge } = require('omnibelt');
+const {
+  getUploader,
+  constants
+} = require('../../lib');
+
+module.exports = (program, type, params) => {
+  params = merge(constants[type], params);
   program
     .command('upload [pattern]')
     .option('-f, --force', 'force all changes by ignoring modification checking')
