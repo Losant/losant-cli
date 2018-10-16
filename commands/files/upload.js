@@ -2,10 +2,17 @@ const { readFile } = require('fs-extra');
 const path = require('path');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
-const { checksum } = require('../../lib/utils');
 const  { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 
-const uploadConflictDetect = null; // todo
+const uploadConflictDetect = (localStat, remoteStat) => {
+  return remoteStat && remoteStat.status !== 'unmodified';
+  // TODO all these tests...
+  // 1. remoteStat does not exist , new file added fere
+  // 2. remoteStat does exist and it does not match local stat
+  // 3. remoteStat does not exist but local stat does exist meaning it was previously deleted.
+  // return remoteStat && stat.s3etag !== remoteStat.md5;
+};
+
 const getDeleteQuery = (item, config) => {
   return { applicationId: config.applicationId,  fileId: item.id };
 };
@@ -25,7 +32,7 @@ const getPostData = (item, config) => {
     applicationId: config.applicationId,
     file: {
       name: item.name,
-      parentDirectory: pathParts.slice(1, -1).join(path.sep),
+      parentDirectory: pathParts.length > 1 ? pathParts.slice(1, -1).join(path.sep) : '/',
       type: 'file',
       fileSize: item.size,
       contentType: mimeTypes.lookup(item.file)
@@ -33,9 +40,10 @@ const getPostData = (item, config) => {
   };
 };
 
-const updateMeta = async (result, meta, item) => {
+const postUpsertUpdateMeta = async (result, meta, item) => {
   const body = await readFile(item.file);
-  const promise = new Promise((resolve, reject) => {
+  let s3etag;
+  await new Promise((resolve, reject) => {
     const fd = new FormData();
     Object.keys(result.upload.fields).forEach((key) => {
       if (key !== 'bucket') {
@@ -44,19 +52,16 @@ const updateMeta = async (result, meta, item) => {
     });
     fd.append('file', body);
     fd.submit(result.upload.url, (err, res) => {
-      if (err) {
-        return reject(err);
-      }
-      res.on('end', () => {
-        return resolve(result);
-      });
+      if (err) { return reject(err); }
+      s3etag = (res.headers.etag).replace(/"/g, '');
+      res.resume();
+      res.on('end', () => { return resolve(); });
     });
   });
-  const file = await promise;
-  const mtime = new Date(file.lastUpdated);
+  const mtime = new Date(result.lastUpdated);
   meta[item.file] = {
-    id: file.id,
-    md5: checksum(body),
+    id: result.id,
+    md5: s3etag,
     remoteTime: mtime.getTime(),
     localTime: item.localModTime * 1000
   };
@@ -70,8 +75,8 @@ const params = {
   getDeleteQuery,
   getPatchData,
   getPostData,
-  postUpsertUpdateMeta: updateMeta
+  postUpsertUpdateMeta
 };
-module.export = (program) => {
+module.exports = (program) => {
   require('../utils/upload')(program,  params);
 };

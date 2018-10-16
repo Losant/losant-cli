@@ -1,7 +1,7 @@
 const request   = require('sync-request');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
-const { file: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
+const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 const getData = async (file, item) => {
   const res = await request('GET', file.url);
   if (res.statusCode !== 200) {

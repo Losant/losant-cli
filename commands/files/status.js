@@ -1,4 +1,4 @@
-const { file: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
+const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 const params = {
   apiType,
   commandType,
