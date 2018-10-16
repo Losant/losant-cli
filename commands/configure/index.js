@@ -1,14 +1,15 @@
 const program = require('commander');
 const c = require('chalk');
 const { saveConfig, logError, logResult, setDir } = require('../../lib/utils');
+const { options } = require('../../lib/constants');
 
 module.exports = (() => {
   program
     .description('Configure the command line tool')
+    .option(...options.directory)
+    .option(...options.config)
     .option('-a, --app <id>', 'set the application id')
     .option('-t, --token <token>', 'set the api token')
-    .option('-c, --config <file>', 'config file to run the command with. (default: "losant.yml")', 'losant.yml')
-    .option('-d, --dir <dir>', 'directory to run the command in. (default: current directory)')
     .action(async (command) => {
       if (!command.app) {
         logError('application id is required');

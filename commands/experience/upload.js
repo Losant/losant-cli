@@ -1,6 +1,7 @@
-const path = require('path');
+const path         = require('path');
 const { readFile } = require('fs-extra');
-const { utils: { checksum }, constants: { experience: { apiType, commandType, localStatusParams, remoteStatusParams } } } = require('../../lib');
+const { checksum } = require('../../lib/utils');
+const { experience: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 
 const isConflictDetected = (item, remoteStatus) => {
   return remoteStatus && remoteStatus.status !== 'unmodified';
@@ -21,7 +22,7 @@ const getPatchData = async (item, config) => {
 
 const getPostData = async (item, config) => {
   const body = await readFile(item.file);
-  const pathParts = item.file.split(path.sep);
+  const pathParts = path.parse(item.file);
   return {
     applicationId: config.applicationId,
     experienceView: {

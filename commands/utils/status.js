@@ -1,10 +1,11 @@
 const { getStatusFunc } = require('../../lib');
+const { options } = require('../../lib/constants');
 
 module.exports = (program, params = {}) => {
   program
     .command('status')
-    .option('-c, --config <file>', 'config file to run the command with')
-    .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
+    .option(...options.directory)
+    .option(...options.config)
     .option('-r, --remote', 'show remote file status')
     .action(getStatusFunc(params));
 };

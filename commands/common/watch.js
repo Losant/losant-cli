@@ -1,7 +1,8 @@
+const { options } = require('../../lib/constants');
 module.exports = (program) => {
   program
     .command('watch')
-    .option('-c, --config <file>', 'config file to run the command with')
-    .option('-d, --dir <dir>', 'directory to run the command in. (default current directory)')
+    .option(...options.directory)
+    .option(...options.config)
     .action(require('../../lib/watch-files'));
 };

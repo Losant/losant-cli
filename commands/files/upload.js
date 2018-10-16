@@ -2,9 +2,10 @@ const { readFile } = require('fs-extra');
 const path = require('path');
 const FormData = require('form-data');
 const mimeTypes = require('mime-types');
-const uploadConflictDetect = null; // todo
-const { utils: { checksum }, constants: { files: { apiType, commandType, localStatusParams, remoteStatusParams } } } = require('../../lib');
+const { checksum } = require('../../lib/utils');
+const  { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 
+const uploadConflictDetect = null; // todo
 const getDeleteQuery = (item, config) => {
   return { applicationId: config.applicationId,  fileId: item.id };
 };
@@ -19,7 +20,7 @@ const getPatchData = (item, config) => {
 };
 
 const getPostData = (item, config) => {
-  const pathParts = item.file.split(path.sep);
+  const pathParts = path.parse(item.file);
   return {
     applicationId: config.applicationId,
     file: {
@@ -46,9 +47,6 @@ const updateMeta = async (result, meta, item) => {
       if (err) {
         return reject(err);
       }
-      res.on('data', (chunk) => {
-        body.push(chunk);
-      });
       res.on('end', () => {
         return resolve(result);
       });
