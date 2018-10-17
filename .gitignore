@@ -2,7 +2,7 @@ losant.yaml
 losant.yml
 /views/*
 /files/*
-example
+example*
 /.losant
 *.log
 package-lock.json
