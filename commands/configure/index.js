@@ -1,10 +1,9 @@
 const program = require('commander');
-const losant = require('losant-rest');
+const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const { saveConfig, logError, logResult, setDir } = require('../../lib/utils');
 const { options } = require('../../lib/constants');
 const inquirer = require('inquirer');
-const { trim } = require('omnibelt');
 
 program
   .description('Configure the command line tool')
@@ -15,16 +14,8 @@ program
       { type: 'password', name: 'password', message: 'Enter Losant password' },
       { type: 'input', name: 'filter', message: 'Enter an Application Name' }
     ]);
-    let token;
-    const api = losant.createClient();
-    try {
-      const results = await api.auth.authenticateUser({ credentials: { email: trim(email), password }, tokenTTL: 0 });
-      token = results.token;
-    } catch (e) {
-      return logError(`Failed to authenticate with Losant: ${e.message}`);
-    }
-    api.setOption('accessToken', token);
-
+    const api = await getApi({ email, password });
+    if (!api) { return; }
     const applications = await api.applications.get({ filterField: 'name', filter });
     let applicationId, applicationName;
     if (!applications.count) {
@@ -40,7 +31,7 @@ program
     }
 
     setDir(command);
-    const config = { applicationId, apiToken: token };
+    const config = { applicationId, apiToken: api.getOption('accessToken') };
     try {
       const file = await saveConfig(command.config, config);
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
