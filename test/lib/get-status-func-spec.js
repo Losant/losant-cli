@@ -17,7 +17,7 @@ const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // es
 describe('#getStatusFunc', () => {
   it('should log out that there are no local files found', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -54,7 +54,7 @@ describe('#getStatusFunc', () => {
   });
   it('should log out that there are no remote files found', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -88,11 +88,12 @@ describe('#getStatusFunc', () => {
       remote: true
     };
     await getStatus(command);
+    console.log(spy);
     spy.withArgs('No remote views found').calledOnce.should.equal(true);
   });
   it('should log out that there are new remote files', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -151,7 +152,7 @@ describe('#getStatusFunc', () => {
     await ensureDir('./views/layouts');
     await writeFile('./views/layouts/Example Layout.hbs', 'body');
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {

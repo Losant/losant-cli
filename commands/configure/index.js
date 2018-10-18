@@ -19,9 +19,10 @@ program
     const applications = await api.applications.get({ filterField: 'name', filter });
     let applicationId, applicationName;
     if (!applications.count) {
-      logError(`Failed to find any applications with the name ${filter}`);
+      return logError(`Failed to find any applications with the name ${filter}`);
     } else if (applications.count === 1) {
       applicationId = applications.items[0].id;
+      applicationName = applications.items[0].name;
     } else {
       const nameToId = {};
       applications.items.forEach(({ id, name }) => { nameToId[name] = id; });

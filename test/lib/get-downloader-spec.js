@@ -16,7 +16,7 @@ describe('#getDownloader', () => {
   it('should try to download', async () => {
     const spy = sinon.spy(utils, 'log');
     for (let i = 0; i < 3; i++) {
-      nock('https://api.losant.com:443', { encodedQueryParams: true })
+      nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/experience/views')
         .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
         .reply(200, {
@@ -61,7 +61,7 @@ describe('#getDownloader', () => {
           'Strict-Transport-Security',
           'max-age=31536000' ]);
     }
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {

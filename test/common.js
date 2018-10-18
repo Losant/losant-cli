@@ -4,15 +4,18 @@ const nock = require('nock');
 const { promisify } = require('util');
 const rimraf = require('rimraf');
 const rmDir = promisify(rimraf);
-const { pathExists } = require('fs-extra');
+const { pathExists, remove } = require('fs-extra');
+process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
 const deleteFakeData = () => {
-  return Promise.all(['views', 'files', '.losant'].map(async (folder) => {
+  return Promise.all(['experience', 'files', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
-      return rmDir(`./${folder}`);
+      return remove(`./${folder}`);
     }
   }));
 };
+
+sandbox = sinon.createSandbox();
 
 before(() => {
   utils.setDir({ dir: './test' });
@@ -20,12 +23,17 @@ before(() => {
 
 beforeEach(async () => {
   await deleteFakeData();
-  sinon.restore();
+  await sandbox.restore();
   nock.disableNetConnect();
+  nock.cleanAll();
 });
+
+afterEach(() => {
+  nock.restore();
+})
 
 module.exports = {
   rmDir,
   nock,
-  sinon
+  sinon: sandbox
 };
