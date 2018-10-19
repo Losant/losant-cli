@@ -2,12 +2,8 @@ const request   = require('request-promise');
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
 const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
-const getData = async (file, item) => {
-  const res = await request.get(file.url);
-  if (res.statusCode !== 200) {
-    throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);
-  }
-  return res.getBody();
+const getData = (file) => {
+  return request({ method: 'GET', uri: file.url, encoding: null });
 };
 
 const curriedFilterFunc = curry((pattern, file) => {
