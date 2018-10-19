@@ -28,10 +28,6 @@ beforeEach(async () => {
   nock.cleanAll();
 });
 
-afterEach(() => {
-  nock.restore();
-});
-
 module.exports = {
   rmDir,
   nock,

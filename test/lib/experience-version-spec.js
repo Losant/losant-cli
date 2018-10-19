@@ -12,7 +12,7 @@ const versionCommand = require('../../lib/experience-version');
 const c = require('chalk');
 const pad = require('pad');
 
-describe.only('#ExperienceVersion', function() {
+describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
     let message;
     sinon.stub(ssLog, 'stdout').callsFake((_message) => {
