@@ -58,11 +58,15 @@
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "^1.3.4",
+    "lint-staged": "^7.3.0",
     "mocha": "^5.2.0",
     "nock": "^9.6.1",
     "rimraf": "^2.6.2",
     "should": "^13.2.3",
     "sinon": "^6.1.5"
+  },
+  "lint-staged": {
+    "*.js": "esw"
   },
   "eslintConfig": {
     "extends": "@losant/eslint-config-losant/env/node"
