@@ -3,8 +3,6 @@ const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
 const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 const getData = async (file, item) => {
-  console.log('trying to request file from AWS...');
-  console.log(file.url);
   const res = await request.get(file.url);
   if (res.statusCode !== 200) {
     throw new Error(`${item.file} (${res.statusCode}: ${file.url})`);

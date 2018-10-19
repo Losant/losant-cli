@@ -13,10 +13,9 @@ const c = require('chalk');
 const pad = require('pad');
 
 describe.only('#ExperienceVersion', function() {
-  let spy;
   it('should print a table of versions', async () => {
     let message;
-    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+    sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;
     });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
@@ -96,7 +95,7 @@ describe.only('#ExperienceVersion', function() {
 
   it('should create a new version', async () => {
     let message;
-    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+    sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;
     });
     const createCall = nock('https://api.losant.space:443', { encodedQueryParams: true })

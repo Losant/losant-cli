@@ -88,7 +88,6 @@ describe('#getStatusFunc', () => {
       remote: true
     };
     await getStatus(command);
-    console.log(spy);
     spy.withArgs('No remote views found').calledOnce.should.equal(true);
   });
   it('should log out that there are new remote files', async () => {

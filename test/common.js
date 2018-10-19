@@ -15,7 +15,7 @@ const deleteFakeData = () => {
   }));
 };
 
-sandbox = sinon.createSandbox();
+const sandbox = sinon.createSandbox();
 
 before(() => {
   utils.setDir({ dir: './test' });
@@ -30,7 +30,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   nock.restore();
-})
+});
 
 module.exports = {
   rmDir,

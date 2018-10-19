@@ -1,6 +1,6 @@
 losant.yaml
 losant.yml
-/views/*
+/experience/*
 /files/*
 example*
 /.losant
