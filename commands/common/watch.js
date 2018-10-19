@@ -1,8 +1,8 @@
 const { options } = require('../../lib/constants');
-module.exports = (program) => {
+module.exports = (nameOfCommand, program) => {
   program
     .command('watch')
     .option(...options.directory)
     .option(...options.config)
-    .action(require('../../lib/watch-files'));
+    .action(require('../../lib/watch-files')(nameOfCommand));
 };

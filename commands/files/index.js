@@ -1,10 +1,12 @@
 const { fromFiles } = require('@rjhilgefort/export-dir');
-const commands = Object.values(fromFiles(null, __dirname)).concat(Object.values(require('../common')));
+const commands = Object.values(fromFiles(null, __dirname));
+const commonCommands = Object.values(require('../common'));
 const program = require('commander');
 const { log } = require('../../lib/utils');
 program.description('Manage Losant Files from the command line');
 
 commands.forEach((command) => { command(program); });
+commonCommands.forEach((command) => { command('files', program); });
 
 program.on('--help', () => {
   log('');

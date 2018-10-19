@@ -8,7 +8,7 @@ const { pathExists, remove } = require('fs-extra');
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
 const deleteFakeData = () => {
-  return Promise.all(['experience', 'files', '.losant', 'losant.yml'].map(async (folder) => {
+  return Promise.all(['experience', 'files', 'views', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
       return remove(`./${folder}`);
     }
