@@ -28,6 +28,10 @@ beforeEach(async () => {
   nock.cleanAll();
 });
 
+after(() => {
+  return deleteFakeData();
+});
+
 module.exports = {
   rmDir,
   nock,
