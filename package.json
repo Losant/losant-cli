@@ -23,6 +23,7 @@
     "lint": "esw . --ext .js",
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
+    "precommit": "lint-staged",
     "test": "mocha ./test",
     "reinstall": "rm -rf nodes_modules && yarn install"
   },

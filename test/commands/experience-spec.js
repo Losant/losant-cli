@@ -11,7 +11,7 @@ const { remove, writeFile } = require('fs-extra');
 const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
 const unmodifiedLog = (msg) => { return `${`${pad(c.gray('unmodified'), 13)}\t${msg}`}`; };
 const modifiedLog = (msg) => { return `${`${pad(c.yellow('modified'), 13)}\t${msg}`}`; };
-const deletedLog = (msg) => { return `${`${pad(c.red('deleted'), 13)}\t${msg}`}`; };
+const deletedLog = (msg) => { return `${`${pad(c.redBright('deleted'), 13)}\t${msg}`}`; };
 
 describe('Experiene Commands', () => {
 
@@ -27,7 +27,7 @@ describe('Experiene Commands', () => {
       'status'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal(`${c.red('Error')} Configuration file losant.yml does not exist, run losant configure to generate this file.`);
+    msg.should.equal(`${c.redBright('Error')} Configuration file losant.yml does not exist, run losant configure to generate this file.`);
   });
   it('should run get status', async () => {
     await utils.saveConfig('losant.yml',
@@ -189,8 +189,6 @@ describe('Experiene Commands', () => {
     ]);
     await statusDeferred.promise;
     statusMessages.sort().should.deepEqual([
-      deletedLog('experience/components/errorAlert.hbs'),
-      deletedLog('experience/components/gaTracking.hbs'),
       modifiedLog('experience/pages/dash.hbs'),
       unmodifiedLog('experience/components/userIndicator.hbs'),
       unmodifiedLog('experience/layouts/Example Layout.hbs'),
@@ -198,7 +196,9 @@ describe('Experiene Commands', () => {
       unmodifiedLog('experience/pages/Dashboard Transferred.hbs'),
       unmodifiedLog('experience/pages/Home Page.hbs'),
       unmodifiedLog('experience/pages/Log In.hbs'),
-      unmodifiedLog('experience/pages/default auto set.hbs')
+      unmodifiedLog('experience/pages/default auto set.hbs'),
+      deletedLog('experience/components/errorAlert.hbs'),
+      deletedLog('experience/components/gaTracking.hbs')
     ]);
   });
 });

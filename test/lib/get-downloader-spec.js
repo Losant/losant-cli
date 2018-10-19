@@ -135,6 +135,6 @@ describe('#getDownloader', () => {
     spy.withArgs(`${pad(c.yellow('modified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await remove('./views/layouts/Example Layout.hbs');
     await getStatus(command);
-    spy.withArgs(`${pad(c.red('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    spy.withArgs(`${pad(c.redBright('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
   });
 });
