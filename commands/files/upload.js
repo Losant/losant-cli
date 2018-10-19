@@ -6,11 +6,6 @@ const  { files: { apiType, commandType, localStatusParams, remoteStatusParams } 
 
 const uploadConflictDetect = (localStat, remoteStat) => {
   return remoteStat && remoteStat.status !== 'unmodified';
-  // TODO all these tests...
-  // 1. remoteStat does not exist , new file added fere
-  // 2. remoteStat does exist and it does not match local stat
-  // 3. remoteStat does not exist but local stat does exist meaning it was previously deleted.
-  // return remoteStat && stat.s3etag !== remoteStat.md5;
 };
 
 const getDeleteQuery = (item, config) => {

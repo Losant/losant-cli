@@ -1,5 +1,4 @@
 const { getDownloader } = require('../../lib');
-// const { values, forEach } = require('omnibelt');
 const { options } = require('../../lib/constants');
 
 module.exports = (program, params = {}) => {

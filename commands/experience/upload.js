@@ -16,7 +16,7 @@ const getPatchData = async (item, config) => {
   return {
     applicationId: config.applicationId,
     experienceViewId: item.id,
-    experienceView:  { body: body.toString() }
+    experienceView: { body: body.toString() }
   };
 };
 
