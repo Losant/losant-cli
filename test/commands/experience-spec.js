@@ -1,21 +1,22 @@
 const path = require('path');
 const ssLog = require('single-line-log');
-const c = require('chalk');
-const pad = require('pad');
-const { sinon, nock } = require('../common');
+const {
+  sinon,
+  nock,
+  downloadLog,
+  uplaodedLog,
+  unmodifiedLog,
+  modifiedLog,
+  deletedLog,
+  deletedUploadLog,
+  processingLog,
+  conflictLog,
+  errorLog
+} = require('../common');
 const utils = require('../../lib/utils');
 const { defer } = require('omnibelt');
 let spy;
 const { remove, writeFile } = require('fs-extra');
-
-const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
-const uplaodedLog = (msg) => { return `${pad(c.green('uploaded'), 13)}\t${msg}`; };
-const unmodifiedLog = (msg) => { return `${`${pad(c.gray('unmodified'), 13)}\t${msg}`}`; };
-const modifiedLog = (msg) => { return `${`${pad(c.yellow('modified'), 13)}\t${msg}`}`; };
-const deletedLog = (msg) => { return `${`${pad(c.redBright('deleted'), 13)}\t${msg}`}`; };
-const deletedUploadLog = (msg) => { return `${`${pad(c.yellow('deleted'), 13)}\t${msg}`}`; };
-const processingLog = (msg) => { return `${`${pad(c.gray('processing'), 13)}\t${msg}`}`; };
-const conflictLog = (msg) => { return `${`${pad(c.redBright('conflict'), 13)}\t${msg}`}`; };
 
 describe('Experiene Commands', () => {
 
@@ -31,13 +32,13 @@ describe('Experiene Commands', () => {
       'status'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal(`${c.redBright('Error')} Configuration file losant.yml does not exist, run losant configure to generate this file.`);
+    msg.should.equal(errorLog('Configuration file losant.yml does not exist, run losant configure to generate this file.'));
   });
   it('should run get status', async () => {
     await utils.saveConfig('losant.yml',
       {
         applicationId: '568beedeb436ab01007be53d',
-        apiToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1OWE1OGNmOWU4ZmM5YTAwMDc1NTk4ODkiLCJzdWJ0eXBlIjoidXNlciIsInNjb3BlIjpbImFsbC5Vc2VyIl0sImlhdCI6MTUzOTgwODQ1NSwiaXNzIjoiYXBpLmxvc2FudC5zcGFjZSJ9.YMqAa5u4FOsIas4Wy0q3ZWZIf-P0vHzpA8kkZbTKARs'
+        apiToken: 'token'
       }
     );
     const deferred = defer();
@@ -116,7 +117,7 @@ describe('Experiene Commands', () => {
     await utils.saveConfig('losant.yml',
       {
         applicationId: '568beedeb436ab01007be53d',
-        apiToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1OWE1OGNmOWU4ZmM5YTAwMDc1NTk4ODkiLCJzdWJ0eXBlIjoidXNlciIsInNjb3BlIjpbImFsbC5Vc2VyIl0sImlhdCI6MTUzOTgwODQ1NSwiaXNzIjoiYXBpLmxvc2FudC5zcGFjZSJ9.YMqAa5u4FOsIas4Wy0q3ZWZIf-P0vHzpA8kkZbTKARs'
+        apiToken: 'token'
       }
     );
     const deferred = defer();
