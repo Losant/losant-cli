@@ -8,13 +8,18 @@ const {
   unmodifiedLog,
   processingLog,
   errorLog,
-  addedLog
+  addedLog,
+  resetCommander
 } = require('../common');
 const utils = require('../../lib/utils');
 const { defer } = require('omnibelt');
 const { writeFile } = require('fs-extra');
 
 describe('Files Commands', () => {
+
+  before(() => {
+    resetCommander();
+  });
 
   it('should log an error if configure was not run first', async function() {
     const deferred = defer();

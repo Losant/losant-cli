@@ -35,6 +35,13 @@ before(() => {
 });
 
 beforeEach(async () => {
+  await deleteFakeData();
+  await sandbox.restore();
+  nock.disableNetConnect();
+  nock.cleanAll();
+});
+
+const resetCommander = () => {
   // in order to get a clean commander start every time.
   program.commands = [];
   program.options = [];
@@ -48,11 +55,7 @@ beforeEach(async () => {
   delete program._events;
   delete program._argsDescription;
   delete program._eventsCount;
-  await deleteFakeData();
-  await sandbox.restore();
-  nock.disableNetConnect();
-  nock.cleanAll();
-});
+};
 
 after(async () => {
   await deleteFakeData();
@@ -72,5 +75,6 @@ module.exports = {
   processingLog,
   conflictLog,
   errorLog,
-  addedLog
+  addedLog,
+  resetCommander
 };

@@ -55,7 +55,6 @@ describe('Experiene Commands', () => {
     msg.should.equal('No local experiences found');
   });
   it('should run get status, download, upload, and version', async function() {
-    this.timeout(10000);
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/568beedeb436ab01007be53d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
