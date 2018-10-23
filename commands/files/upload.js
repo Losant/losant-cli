@@ -23,11 +23,13 @@ const getPatchData = (item, config) => {
 
 const getPostData = (item, config) => {
   const pathParts = path.parse(item.file);
+  let parentDirectory = pathParts.dir.replace('files', '');
+  if (!parentDirectory) { parentDirectory = '/'; }
   return {
     applicationId: config.applicationId,
     file: {
       name: item.name,
-      parentDirectory: pathParts.length > 1 ? pathParts.slice(1, -1).join(path.sep) : '/',
+      parentDirectory,
       type: 'file',
       fileSize: item.size,
       contentType: mimeTypes.lookup(item.file)
@@ -48,9 +50,9 @@ const postUpsertUpdateMeta = async (result, meta, item) => {
     fd.append('file', body);
     fd.submit(result.upload.url, (err, res) => {
       if (err) { return reject(err); }
-      s3etag = (res.headers.etag).replace(/"/g, '');
+      s3etag = res.headers.etag.replace(/"/g, '');
+      res.on('end', resolve);
       res.resume();
-      res.on('end', () => { return resolve(); });
     });
   });
   const mtime = new Date(result.lastUpdated);

@@ -9,11 +9,13 @@ const {
   processingLog,
   errorLog,
   addedLog,
-  resetCommander
+  resetCommander,
+  unlockConfigFiles
 } = require('../common');
 const utils = require('../../lib/utils');
 const { defer } = require('omnibelt');
 const { writeFile } = require('fs-extra');
+const CONFIG_FILE = './losant.yml';
 
 describe('Files Commands', () => {
 
@@ -36,7 +38,7 @@ describe('Files Commands', () => {
     msg.should.equal(errorLog('Configuration file losant.yml does not exist, run losant configure to generate this file.'));
   });
   it('should run get status', async function() {
-    await utils.saveConfig('losant.yml',
+    await utils.saveConfig(CONFIG_FILE,
       {
         applicationId: '568beedeb436ab01007be53d',
         apiToken: 'token'
@@ -219,8 +221,8 @@ describe('Files Commands', () => {
         'AmazonS3',
         'Connection',
         'close' ]);
-    this.timeout(10000);
-    await utils.saveConfig('losant.yml',
+    // this.timeout(10000);
+    await utils.saveConfig(CONFIG_FILE,
       {
         applicationId: '568beedeb436ab01007be53d',
         apiToken: 'token'
@@ -235,14 +237,13 @@ describe('Files Commands', () => {
         downloadDefer.resolve();
       }
     });
-
     require('../../commands/files').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-files.js'),
       'download'
     ]);
-
     await downloadDefer.promise;
+    await unlockConfigFiles(CONFIG_FILE);
     spy.restore();
     downloadMessages.length.should.equal(2);
     downloadMessages.sort().should.deepEqual([
@@ -258,13 +259,13 @@ describe('Files Commands', () => {
         statusDefer.resolve();
       }
     });
-
     require('../../commands/files').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-files.js'),
       'status'
     ]);
     await statusDefer.promise;
+    await unlockConfigFiles(CONFIG_FILE);
 
     statusMessages.length.should.equal(2);
     statusMessages.sort().should.deepEqual([
@@ -288,6 +289,7 @@ describe('Files Commands', () => {
       'status'
     ]);
     await statusDefer.promise;
+    await unlockConfigFiles(CONFIG_FILE);
 
     statusMessages.length.should.equal(3);
     statusMessages.sort().should.deepEqual([

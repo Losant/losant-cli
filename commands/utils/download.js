@@ -6,7 +6,7 @@ module.exports = (program, params = {}) => {
     .command('download [pattern]')
     .option(...options.directory)
     .option(...options.config)
-    .option('-f, --force', 'force all changes by ignoring modification checking')
-    .option('--dry-run', 'display actions but do not perform them')
+    .option(...options.force)
+    .option(...options.dryRun)
     .action(getDownloader(params));
 };

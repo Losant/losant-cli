@@ -1,4 +1,4 @@
-const { nock, sinon } = require('../common');
+const { nock, sinon, unlockConfigFiles } = require('../common');
 const { curry } = require('omnibelt');
 const minimatch = require('minimatch');
 const utils = require('../../lib/utils');
@@ -121,6 +121,7 @@ describe('#getDownloader', () => {
     downloader.should.be.a.Function();
     const command = { config: './fixtures/losant.yaml' };
     await downloader(null, command);
+    await unlockConfigFiles('./fixtures/losant.yaml');
     spy.withArgs(`${pad(c.green('downloaded'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     const getStatus = getStatusFunc({
       apiType: API_TYPE,
@@ -129,12 +130,15 @@ describe('#getDownloader', () => {
       remoteStatusParams: REMOTE_STATUS_PARAMS
     });
     await getStatus(command);
+    await unlockConfigFiles('./fixtures/losant.yaml');
     spy.withArgs(`${pad(c.gray('unmodified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await writeFile('./views/layouts/Example Layout.hbs', 'write something else to make it modified...');
     await getStatus(command);
+    await unlockConfigFiles('./fixtures/losant.yaml');
     spy.withArgs(`${pad(c.yellow('modified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await remove('./views/layouts/Example Layout.hbs');
     await getStatus(command);
+    await unlockConfigFiles('./fixtures/losant.yaml');
     spy.withArgs(`${pad(c.redBright('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
   });
 });

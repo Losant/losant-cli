@@ -9,7 +9,7 @@ const getData = (file) => {
 const curriedFilterFunc = curry((pattern, file) => {
   if (file.type === 'directory') { return false; }
   if (!pattern) { return true; }
-  return minimatch(file.parentDirectory + file.name, pattern);
+  return minimatch(`${file.parentDirectory}${file.name}`, pattern);
 });
 
 module.exports = (program) => {

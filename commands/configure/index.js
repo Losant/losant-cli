@@ -1,7 +1,7 @@
 const program = require('commander');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
-const { saveConfig, logError, logResult, setDir } = require('../../lib/utils');
+const { saveConfig, logError, logResult, setDir, lockConfig } = require('../../lib/utils');
 const { options } = require('../../lib/constants');
 const inquirer = require('inquirer');
 
@@ -9,6 +9,9 @@ program
   .description('Configure the command line tool')
   .option(...options.directory)
   .action(async (command) => {
+    setDir(command);
+    if (!(await lockConfig(command.config))) { return; }
+
     const { email, password, filter } = await inquirer.prompt([
       { type: 'input', name: 'email', message: 'Enter Losant email' },
       { type: 'password', name: 'password', message: 'Enter Losant password' },
@@ -31,7 +34,7 @@ program
       applicationName = name;
     }
 
-    setDir(command);
+
     const config = { applicationId, apiToken: api.getOption('accessToken') };
     try {
       const file = await saveConfig(command.config, config);

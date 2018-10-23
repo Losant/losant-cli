@@ -7,6 +7,7 @@ const { promisify } = require('util');
 const rimraf = require('rimraf');
 const program = require('commander');
 const rmDir = promisify(rimraf);
+const locker = require('proper-lockfile');
 const { pathExists, remove } = require('fs-extra');
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
@@ -28,6 +29,13 @@ const deleteFakeData = () => {
   }));
 };
 
+const unlockConfigFiles = (files) => {
+  if (!Array.isArray(files)) { files = [ files ]; }
+  return Promise.all(files.map(async (file) => {
+    if ((await pathExists(file)) && locker.checkSync(file)) { locker.unlockSync(file); }
+  }));
+};
+
 const sandbox = sinon.createSandbox();
 
 before(() => {
@@ -35,6 +43,7 @@ before(() => {
 });
 
 beforeEach(async () => {
+  await unlockConfigFiles(['./losant.yml', './fixtures/losant.yaml']);
   await deleteFakeData();
   await sandbox.restore();
   nock.disableNetConnect();
@@ -43,6 +52,7 @@ beforeEach(async () => {
 
 const resetCommander = () => {
   // in order to get a clean commander start every time.
+  // #theMKway
   program.commands = [];
   program.options = [];
   program._execs = {};
@@ -76,5 +86,6 @@ module.exports = {
   conflictLog,
   errorLog,
   addedLog,
-  resetCommander
+  resetCommander,
+  unlockConfigFiles
 };

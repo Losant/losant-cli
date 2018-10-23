@@ -4,8 +4,8 @@ const params = {
   commandType,
   localStatusParams,
   remoteStatusParams,
-  filterFunc: (item) => { return item.type === 'file'; }
+  getQuery: { type: 'file' }
 };
 module.exports = (program) => {
-  require('../utils/status')(program, params);
+  require('../utils/status')(program, 'files', params);
 };

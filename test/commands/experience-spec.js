@@ -11,12 +11,15 @@ const {
   deletedUploadLog,
   processingLog,
   conflictLog,
-  errorLog
+  errorLog,
+  unlockConfigFiles
 } = require('../common');
 const utils = require('../../lib/utils');
 const { defer } = require('omnibelt');
 let spy;
 const { remove, writeFile } = require('fs-extra');
+
+const CONFIG_FILE = './losant.yml';
 
 describe('Experiene Commands', () => {
 
@@ -35,7 +38,7 @@ describe('Experiene Commands', () => {
     msg.should.equal(errorLog('Configuration file losant.yml does not exist, run losant configure to generate this file.'));
   });
   it('should run get status', async () => {
-    await utils.saveConfig('losant.yml',
+    await utils.saveConfig(CONFIG_FILE,
       {
         applicationId: '568beedeb436ab01007be53d',
         apiToken: 'token'
@@ -113,12 +116,13 @@ describe('Experiene Commands', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    await utils.saveConfig('losant.yml',
+    await utils.saveConfig(CONFIG_FILE,
       {
         applicationId: '568beedeb436ab01007be53d',
         apiToken: 'token'
       }
     );
+    await unlockConfigFiles(CONFIG_FILE);
     const deferred = defer();
     const messages = [];
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
@@ -133,6 +137,7 @@ describe('Experiene Commands', () => {
       path.resolve(__dirname, '/bin/losant-experience.js'),
       'download'
     ]);
+    await unlockConfigFiles(CONFIG_FILE);
     const msgs = await deferred.promise;
     msgs.length.should.equal(10);
     msgs.sort().should.deepEqual([
@@ -161,6 +166,7 @@ describe('Experiene Commands', () => {
       path.resolve(__dirname, '/bin/losant-experience.js'),
       'status'
     ]);
+    await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
     statusMessages.sort().should.deepEqual([
       unmodifiedLog('experience/components/errorAlert.hbs'),
@@ -193,6 +199,7 @@ describe('Experiene Commands', () => {
       path.resolve(__dirname, '/bin/losant-experience.js'),
       'status'
     ]);
+    await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
     statusMessages.sort().should.deepEqual([
       modifiedLog('experience/pages/Dashboard Stream Only.hbs'),
@@ -360,7 +367,7 @@ describe('Experiene Commands', () => {
       path.resolve(__dirname, '/bin/losant-experience.js'),
       'upload'
     ]);
-
+    await unlockConfigFiles(CONFIG_FILE);
     await uploadDeferred.promise;
     uploadMessages.length.should.equal(20);
     uploadMessages.sort().should.deepEqual([

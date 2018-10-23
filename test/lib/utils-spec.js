@@ -1,4 +1,4 @@
-require('../common');
+const { unlockConfigFiles } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
 const { writeFile, remove } = require('fs-extra');
@@ -23,6 +23,7 @@ describe('utils', () => {
     it('.loadConfig', async () => {
       const filepath = './fixtures/save-config.yaml';
       const config = await utils.loadConfig(filepath);
+      await unlockConfigFiles(filepath);
       config.should.deepEqual({
         applicationId: '5b9297591fefb200072e554d',
         apiToken: 'token',
