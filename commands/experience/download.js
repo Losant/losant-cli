@@ -1,6 +1,7 @@
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
 const { experience: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
+
 const getData = async (view) => {
   return view.body;
 };
@@ -14,7 +15,8 @@ const helpLines = [
   '$ losant experience download',
   'Download component views',
   '$ losant experience download components/*',
-  'Force a download of all views overwriting local modifications'
+  'Force a download of all views overwriting local modifications',
+  '$ losant experience download -f'
 ];
 
 
@@ -22,6 +24,5 @@ module.exports = (program) => {
   require('../utils/download')(program, {
     getData, curriedFilterFunc, apiType, commandType, localStatusParams, remoteStatusParams
   });
-
-  return helpLines;
+  return { helpLines };
 };

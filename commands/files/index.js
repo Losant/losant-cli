@@ -2,33 +2,18 @@ const { fromFiles } = require('@rjhilgefort/export-dir');
 const commands = Object.values(fromFiles(null, __dirname));
 const commonCommands = Object.values(require('../common'));
 const program = require('commander');
-const { log } = require('../../lib/utils');
+const printHelp = require('../../lib/print-help');
 program.description('Manage Losant Files from the command line');
-
-commands.forEach((command) => { command(program); });
-commonCommands.forEach((command) => { command('files', program); });
-
-program.on('--help', () => {
-  log('');
-  log('  Examples:');
-  log('');
-  log('    Download all files');
-  log('     $ losant files download \n');
-  log('    Download files in images directory');
-  log('     $ losant files download images/* \n');
-  log('    Force a download of all files overwriting local modifications');
-  log('     $ losant files download -f \n');
-  log('    Check local modification status');
-  log('     $ losant files status \n');
-  log('    Check remote modification status');
-  log('     $ losant files status -r \n');
-  log('    Upload all files');
-  log('     $ losant files upload \n');
-  log('    Upload files in images directory');
-  log('     $ losant files upload images/* \n');
-  log('    Force an upload of all files overwriting remote modifications');
-  log('     $ losant files upload -f \n');
-  log('');
+const help = [];
+commands.forEach((command) => {
+  const { helpLines } = command(program);
+  help.push(...helpLines);
 });
+commonCommands.forEach((command) => {
+  const { helpLines } = command('files', program);
+  help.push(...helpLines);
+});
+
+printHelp(program, help);
 
 module.exports = program;

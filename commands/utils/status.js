@@ -8,4 +8,11 @@ module.exports = (program, type, params = {}) => {
     .option(...options.config)
     .option('-r, --remote', `show remote ${type} status`)
     .action(getStatusFunc(params));
+  const helpLines = [
+    'Check local modification status',
+    `$ losant ${type} status`,
+    'Check remote modification status',
+    `$ losant ${type} status -r`
+  ];
+  return { helpLines };
 };

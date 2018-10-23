@@ -7,5 +7,5 @@ const params = {
   getQuery: { type: 'file' }
 };
 module.exports = (program) => {
-  require('../utils/status')(program, 'files', params);
+  return require('../utils/status')(program, 'files', params);
 };
