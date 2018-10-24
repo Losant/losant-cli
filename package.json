@@ -34,6 +34,7 @@
   "dependencies": {
     "@rjhilgefort/export-dir": "^1.1.0",
     "chalk": "^2.3.0",
+    "chokidar": "^2.0.4",
     "cli-table3": "^0.5.1",
     "commander": "^2.11.0",
     "death": "^1.1.0",
