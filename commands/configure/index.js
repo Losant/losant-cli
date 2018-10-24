@@ -1,5 +1,6 @@
 const error = require('error/typed');
-const program = require('commander');
+const p = require('commander');
+const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const {
@@ -83,7 +84,6 @@ const printRetry = (err) => {
   log('Please try again');
   return false;
 };
-
 
 program
   .description('Configure the command line tool')

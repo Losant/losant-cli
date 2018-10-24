@@ -75,5 +75,6 @@
   },
   "eslintConfig": {
     "extends": "@losant/eslint-config-losant/env/node"
-  }
+  },
+  "files": [ "./bin/*", "./lib/*", "./commands/*", "README.md", "LICSENSE"]
 }

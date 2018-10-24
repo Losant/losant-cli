@@ -1,7 +1,8 @@
 const { fromFiles } = require('@rjhilgefort/export-dir');
 const commands = Object.values(fromFiles(null, __dirname));
 const commonCommands = Object.values(require('../common'));
-const program = require('commander');
+const p = require('commander');
+const program = new p.Command('losant files');
 const printHelp = require('../../lib/print-help');
 program.description('Manage Losant Files from the command line');
 const help = [];
