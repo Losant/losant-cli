@@ -2,18 +2,18 @@
 const program = require('commander');
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');
-
-program
+const pgm = program
   .version(pkg.version)
-  .description('Losant CLI is a command line tool to aid developers while creating custom applications on top of the Losant Platform.')
+  .description('Losant CLI is a command line tool to help manage your Losant Application and its resources.')
   .command('configure', 'Configure the command line tool for a specific directory')
-  .command('experience', 'Manage Experiences on Losant for your Application')
-  .command('files', 'Manage Files on Losant for your Application')
-  // .on('command:*', function () {
-  //   console.log(program.args);
-  //   console.error('Invalid command: %s\nRun losant --help for a list of available commands.', program.args.join(' '));
-  //   process.exit(1);
-  // })
-  .parse(process.argv);
+  .command('experience', 'Manages your Losant Application\'s Experience Views, and Versions from the command line')
+  .command('files', 'Manage Files on Losant for your Application');
+
+const results = pgm.parse(process.argv);
+
+if (results) {
+  console.error('Unknown command: %s\n', results.args.join(' '));
+  pgm.help();
+}
 
 updateNotifier({ pkg }).notify();

@@ -4,7 +4,7 @@ const commonCommands = Object.values(require('../common'));
 const p = require('commander');
 const program = new p.Command('losant files');
 const printHelp = require('../../lib/print-help');
-program.description('Manage Losant Files from the command line');
+program.description('Manage Files on Losant for your Application');
 const help = [];
 commands.forEach((command) => {
   const { helpLines } = command(program);

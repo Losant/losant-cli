@@ -86,7 +86,7 @@ const printRetry = (err) => {
 };
 
 program
-  .description('Configure the command line tool')
+  .description('Configure the command line tool for a specific directory')
   .action(async (command) => {
     setDir(command);
     if (!(await lockConfig(command.config))) { return; }
