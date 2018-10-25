@@ -9,7 +9,7 @@ const helpLines = [
   '$ losant files upload -f'
 ];
 module.exports = (program) => {
-  let subProgram = require('../utils/upload')(program,  params);
+  const subProgram = require('../utils/upload')(program,  params);
   printHelp(subProgram, helpLines);
   return { helpLines };
 };
