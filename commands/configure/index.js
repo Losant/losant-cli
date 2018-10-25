@@ -24,12 +24,12 @@ const retryP = async (funcToRetry, stopRetryFunc, isRetry = false) => {
 
 const signIn = async (isRetry) => {
   if (isRetry) {
-    logError('Authenticateion failed please try again...');
+    logError('Authentication failed please try again...');
   }
   const { email, password, twoFactorCode } = await inquirer.prompt([
-    { type: 'input', name: 'email', message: 'Enter Losant email' },
-    { type: 'password', name: 'password', message: 'Enter Losant password' },
-    { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable)' }
+    { type: 'input', name: 'email', message: 'Enter Losant email:' },
+    { type: 'password', name: 'password', message: 'Enter Losant password:' },
+    { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
   ]);
   return getApi({ email, password, twoFactorCode });
 };
@@ -41,7 +41,7 @@ const isLockedError = (err) => {
 const getApplicationFunc = (api) => {
   return async () => {
     const { filter } = await  inquirer.prompt([
-      { type: 'input', name: 'filter', message: 'Enter an Application Name' }
+      { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
     ]);
     let applicationId, applicationName;
     const applications = await api.applications.get({ filterField: 'name', filter });
@@ -54,7 +54,7 @@ const getApplicationFunc = (api) => {
       applicationName = applications.items[0].name;
     } else {
       const nameToId = {};
-      applications.items.forEach(({ id, name }) => { nameToId[name] = id; });
+      applications.items.forEach(({ id, name }) => { nameToId[`${name} https://app.losant.com/applications/${id}`] = id; });
       const choices = Object.keys(nameToId);
       choices.push('none of these, search again');
       const { name } = await inquirer.prompt([{
@@ -76,12 +76,13 @@ const getApplicationFunc = (api) => {
 const printRetry = (err) => {
   if (err.type === 'ForceRetry') {
     log('Please try a different application name.');
+  } else {
+    if (!err.type) { return true; }
+    if (err.message) {
+      log(err.message);
+    }
+    log('Please try again');
   }
-  if (!err.type) { return true; }
-  if (err.message) {
-    log(err.message);
-  }
-  log('Please try again');
   return false;
 };
 

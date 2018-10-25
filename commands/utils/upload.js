@@ -4,7 +4,6 @@ const { options } = require('../../lib/constants');
 module.exports = (program, params) => {
   program
     .command('upload [pattern]')
-    .option(...options.directory)
     .option(...options.config)
     .option(...options.force)
     .option(...options.dryRun)

@@ -38,6 +38,15 @@ const unlockConfigFiles = (files) => {
 
 const sandbox = sinon.createSandbox();
 
+const buildConfig = async () => {
+  const config = {
+    applicationId: '5b9297591fefb200072e554d',
+    apiToken: 'token'
+  };
+  const file = '.losant.yml';
+  return utils.saveConfig(file, config);
+};
+
 before(() => {
   utils.setDir({ dir: './test' });
 });
@@ -87,5 +96,6 @@ module.exports = {
   errorLog,
   addedLog,
   resetCommander,
-  unlockConfigFiles
+  unlockConfigFiles,
+  buildConfig
 };

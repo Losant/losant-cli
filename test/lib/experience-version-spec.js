@@ -1,4 +1,4 @@
-const { nock, sinon } = require('../common');
+const { nock, sinon, buildConfig } = require('../common');
 const ssLog = require('single-line-log');
 const Table = require('cli-table3');
 const printTable = (headers, columns) => {
@@ -71,24 +71,24 @@ describe('#ExperienceVersion', function() {
          }
       }
       );
-    const command = { config: './fixtures/losant.yaml' };
 
-    await versionCommand(null, command);
+    await buildConfig();
+
+    await versionCommand(null, {});
     message.should.equal(printTable(
-      [ 'version', 'endpointDefaultCors', 'attachedDomains', 'attachedSlugs', 'creationDate', 'lastUpdated' ],
+      [ 'Version Name', 'Default Cors', 'Attached Domains', 'Attached Slugs', 'Creation Date', 'Last Updated' ],
       [ [ 'develop',
         true,
-        'mycustomguy.com, anotherCustomMan.com',
-        'embree',
-        '2018-09-18T21:49:00.170Z',
-        '2018-09-18T21:49:00.195Z' ],
+        'http://mycustomguy.com\nhttp://anotherCustomMan.com',
+        'https://embree.onlosant.com',
+        'Sep 18 2018 17:49',
+        'Sep 18 2018 17:49' ],
       [ 'v1.0.0',
         false,
-        'domain.com, domaain1.com, *wildcard.com',
+        'http://domain.com\nhttp://domaain1.com\nhttp://*wildcard.com',
         '',
-        '2018-09-18T21:49:00.170Z',
-        '2018-09-18T21:49:00.195Z'
-      ]
+        'Sep 18 2018 17:49',
+        'Sep 18 2018 17:49' ]
       ]
     ));
   });
@@ -119,8 +119,8 @@ describe('#ExperienceVersion', function() {
       .reply(200, {
         items: []
       });
-
-    const command = { config: './fixtures/losant.yaml', description: 'The first version'  };
+    await buildConfig();
+    const command = { description: 'The first version'  };
 
     await versionCommand('v1.0.0', command);
 

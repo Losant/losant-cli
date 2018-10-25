@@ -1,4 +1,4 @@
-const { nock, sinon } = require('../common');
+const { nock, sinon, buildConfig } = require('../common');
 const getStatusFunc   = require('../../lib/get-status-func');
 const log             = require('single-line-log');
 const c               = require('chalk');
@@ -46,9 +46,8 @@ describe('#getStatusFunc', () => {
         'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
-    const command = {
-      config: './fixtures/losant.yaml'
-    };
+    await buildConfig();
+    const command = { };
     await getStatus(command);
     spy.withArgs('No local views found').calledOnce.should.equal(true);
   });
@@ -83,8 +82,8 @@ describe('#getStatusFunc', () => {
         'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
+    await buildConfig();
     const command = {
-      config: './fixtures/losant.yaml',
       remote: true
     };
     await getStatus(command);
@@ -139,8 +138,8 @@ describe('#getStatusFunc', () => {
 
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
+    await buildConfig();
     const command = {
-      config: './fixtures/losant.yaml',
       remote: true
     };
     await getStatus(command);
@@ -197,7 +196,8 @@ describe('#getStatusFunc', () => {
         'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
-    const command = { config: './fixtures/losant.yaml' };
+    await buildConfig();
+    const command = {};
     await getStatus(command);
     spy.callCount.should.equal(1);
     spy.withArgs(`${pad(c.green('added'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);

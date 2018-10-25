@@ -49,6 +49,7 @@
     "mime-types": "^2.1.18",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
+    "moment": "^2.22.2",
     "omnibelt": "^1.2.0",
     "opener": "^1.4.3",
     "pad": "^2.0.3",
@@ -76,5 +77,10 @@
   "eslintConfig": {
     "extends": "@losant/eslint-config-losant/env/node"
   },
-  "files": [ "bin/*", "lib/*", "commands/*", "README.md" ]
+  "files": [
+    "bin/*",
+    "lib/*",
+    "commands/*",
+    "README.md"
+  ]
 }

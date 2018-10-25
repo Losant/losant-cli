@@ -1,10 +1,7 @@
-const { options } = require('../../lib/constants');
 const { capitalize } = require('omnibelt');
 module.exports = (nameOfCommand, program) => {
   program
     .command('watch')
-    .option(...options.directory)
-    .option(...options.config)
     .action(require('../../lib/watch-files')(nameOfCommand));
 
   return {
