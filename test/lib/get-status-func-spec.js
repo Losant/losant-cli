@@ -1,4 +1,4 @@
-const { nock, sinon } = require('../common');
+const { nock, sinon, buildConfig } = require('../common');
 const getStatusFunc   = require('../../lib/get-status-func');
 const log             = require('single-line-log');
 const c               = require('chalk');
@@ -8,7 +8,6 @@ const {
   writeFile
 } = require('fs-extra');
 
-
 const API_TYPE = 'experienceViews';
 const COMMAND_TYPE = 'views';
 const LOCAL_STATUS_PARAMS = [ '/**/*.hbs' ];
@@ -17,46 +16,18 @@ const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // es
 describe('#getStatusFunc', () => {
   it('should log out that there are no local files found', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
-      .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
-      .reply(200, {
-        count: 0, items: [], applicationId: '5b9297591fefb200072e554d', perPage: 100, page: 0, sortField: 'name', sortDirection: 'asc', totalCount: 0, _type: 'experienceViews', _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views' } }
-      }, [ 'Date',
-        'Mon, 10 Sep 2018 16:44:05 GMT',
-        'Content-Type',
-        'application/json',
-        'Content-Length',
-        '12528',
-        'Connection',
-        'close',
-        'Pragma',
-        'no-cache',
-        'Cache-Control',
-        'no-cache, no-store, must-revalidate',
-        'X-Content-Type-Options',
-        'nosniff',
-        'X-XSS-Protection',
-        '1; mode=block',
-        'Content-Security-Policy',
-        'default-src \'none\'; style-src \'unsafe-inline\'',
-        'Access-Control-Allow-Origin',
-        '*',
-        'Strict-Transport-Security',
-        'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
-    const command = {
-      config: './fixtures/losant.yaml'
-    };
+    await buildConfig();
+    const command = { };
     await getStatus(command);
     spy.withArgs('No local views found').calledOnce.should.equal(true);
   });
   it('should log out that there are no remote files found', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
       .reply(200, {
         count: 0, items: [], applicationId: '5b9297591fefb200072e554d', perPage: 100, page: 0, sortField: 'name', sortDirection: 'asc', totalCount: 0, _type: 'experienceViews', _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views' } }
       }, [ 'Date',
@@ -83,8 +54,8 @@ describe('#getStatusFunc', () => {
         'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
+    await buildConfig();
     const command = {
-      config: './fixtures/losant.yaml',
       remote: true
     };
     await getStatus(command);
@@ -92,9 +63,9 @@ describe('#getStatusFunc', () => {
   });
   it('should log out that there are new remote files', async () => {
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
       .reply(200, {
         count: 1,
         items: [
@@ -139,8 +110,8 @@ describe('#getStatusFunc', () => {
 
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
+    await buildConfig();
     const command = {
-      config: './fixtures/losant.yaml',
       remote: true
     };
     await getStatus(command);
@@ -151,9 +122,9 @@ describe('#getStatusFunc', () => {
     await ensureDir('./views/layouts');
     await writeFile('./views/layouts/Example Layout.hbs', 'body');
     const spy = sinon.spy(log, 'stdout');
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
       .reply(200, {
         count: 1,
         items: [
@@ -197,7 +168,8 @@ describe('#getStatusFunc', () => {
         'max-age=31536000' ]);
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
-    const command = { config: './fixtures/losant.yaml' };
+    await buildConfig();
+    const command = {};
     await getStatus(command);
     spy.callCount.should.equal(1);
     spy.withArgs(`${pad(c.green('added'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);

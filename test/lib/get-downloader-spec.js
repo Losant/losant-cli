@@ -1,4 +1,4 @@
-const { nock, sinon } = require('../common');
+const { nock, sinon, unlockConfigFiles, buildConfig } = require('../common');
 const { curry } = require('omnibelt');
 const minimatch = require('minimatch');
 const utils = require('../../lib/utils');
@@ -16,9 +16,9 @@ describe('#getDownloader', () => {
   it('should try to download', async () => {
     const spy = sinon.spy(utils, 'log');
     for (let i = 0; i < 3; i++) {
-      nock('https://api.losant.com:443', { encodedQueryParams: true })
+      nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/experience/views')
-        .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+        .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
         .reply(200, {
           count: 1,
           items: [
@@ -61,9 +61,9 @@ describe('#getDownloader', () => {
           'Strict-Transport-Security',
           'max-age=31536000' ]);
     }
-    nock('https://api.losant.com:443', { encodedQueryParams: true })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
       .reply(200, {
         count: 1,
         items: [
@@ -118,9 +118,11 @@ describe('#getDownloader', () => {
         return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
       }
     });
+    await buildConfig();
     downloader.should.be.a.Function();
-    const command = { config: './fixtures/losant.yaml' };
+    const command = {};
     await downloader(null, command);
+    await unlockConfigFiles('./.losant/.losant.yml');
     spy.withArgs(`${pad(c.green('downloaded'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     const getStatus = getStatusFunc({
       apiType: API_TYPE,
@@ -129,12 +131,15 @@ describe('#getDownloader', () => {
       remoteStatusParams: REMOTE_STATUS_PARAMS
     });
     await getStatus(command);
+    await unlockConfigFiles('./.losant/.losant.yml');
     spy.withArgs(`${pad(c.gray('unmodified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await writeFile('./views/layouts/Example Layout.hbs', 'write something else to make it modified...');
     await getStatus(command);
+    await unlockConfigFiles('./.losant/.losant.yml');
     spy.withArgs(`${pad(c.yellow('modified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
     await remove('./views/layouts/Example Layout.hbs');
     await getStatus(command);
-    spy.withArgs(`${pad(c.red('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    await unlockConfigFiles('./.losant//losant.yml');
+    spy.withArgs(`${pad(c.redBright('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
   });
 });
