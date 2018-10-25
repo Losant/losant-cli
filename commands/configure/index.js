@@ -53,8 +53,11 @@ const getApplicationFunc = (api) => {
       applicationName = applications.items[0].name;
     } else {
       const nameToId = {};
-      applications.items.forEach(({ id, name }) => { nameToId[`${name} https://app.losant.com/applications/${id}`] = id; });
-      const choices = Object.keys(nameToId);
+      const choices = applications.items.map(({ id, name }) => {
+        const key = `${name} https://app.losant.com/applications/${id}`;
+        nameToId[key] = id;
+        return key;
+      });
       choices.push('none of these, search again');
       const { name } = await inquirer.prompt([{
         type: 'list',

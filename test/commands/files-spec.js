@@ -112,7 +112,9 @@ describe('Files Commands', () => {
     for (let i = 0; i < 4; i++) {
       nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/files')
-        .query({ _actions: 'false', _links: 'true', _embedded: 'true', type: 'file' })
+        .query({
+          _actions: 'false', _links: 'true', _embedded: 'true', type: 'file', page: 0, perPage: 1000
+        })
         .reply(200, {
           count: 2,
           items: [{
