@@ -1,10 +1,10 @@
 const { getStatusFunc } = require('../../lib');
 const { options } = require('../../lib/constants');
+const printHelp = require('../../lib/print-help');
 
 module.exports = (program, type, params = {}) => {
-  program
+  let subProgram = program
     .command('status')
-    .option(...options.config)
     .option('-r, --remote', `show remote ${type} status`)
     .action(getStatusFunc(params));
   const helpLines = [
@@ -13,5 +13,6 @@ module.exports = (program, type, params = {}) => {
     'Check remote modification status',
     `$ losant ${type} status -r`
   ];
+  printHelp(subProgram, helpLines);
   return { helpLines };
 };

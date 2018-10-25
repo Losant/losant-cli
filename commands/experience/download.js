@@ -1,7 +1,7 @@
 const minimatch = require('minimatch');
 const { curry } = require('omnibelt');
 const { experience: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
-
+const printHelp = require('../../lib/print-help');
 const getData = async (view) => {
   return view.body;
 };
@@ -21,8 +21,9 @@ const helpLines = [
 
 
 module.exports = (program) => {
-  require('../utils/download')(program, {
+  const subProgram = require('../utils/download')(program, {
     getData, curriedFilterFunc, apiType, commandType, localStatusParams, remoteStatusParams
   });
+  printHelp(subProgram, helpLines);
   return { helpLines };
 };

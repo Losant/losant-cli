@@ -6,7 +6,6 @@ const c = require('chalk');
 const {
   saveConfig, logError, logResult, setDir, lockConfig, log
 } = require('../../lib/utils');
-const { options } = require('../../lib/constants');
 const inquirer = require('inquirer');
 
 const retryP = async (funcToRetry, stopRetryFunc, isRetry = false) => {
@@ -88,7 +87,6 @@ const printRetry = (err) => {
 
 program
   .description('Configure the command line tool')
-  .option(...options.directory)
   .action(async (command) => {
     setDir(command);
     if (!(await lockConfig(command.config))) { return; }

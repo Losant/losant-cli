@@ -21,13 +21,11 @@ const helpLines = [
 
 module.exports = (program) => {
 
-  program = require('../utils/download')(program, {
+  const subProgram = require('../utils/download')(program, {
     apiType, commandType, localStatusParams, remoteStatusParams, getData, curriedFilterFunc, extraQuery: { type: 'file' }
   });
 
-  program._name = 'losant files download';
-
-  printHelp(program, helpLines);
+  printHelp(subProgram, helpLines);
 
   return { helpLines };
 };
