@@ -30,6 +30,9 @@ const signIn = async (isRetry) => {
     { type: 'password', name: 'password', message: 'Enter Losant password:' },
     { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
   ]);
+  if (!email && !password) {
+    throw error({ type: 'Required' });
+  }
   return getApi({ email, password, twoFactorCode });
 };
 
