@@ -29,7 +29,7 @@ const isLockedError = (err) => {
 };
 
 program
-  .description('Log in and create your user configuration to use the other commandline tools.')
+  .description('Log in and create your user configuration to use the other commands.')
   .action(async () => {
     let api;
     try {
