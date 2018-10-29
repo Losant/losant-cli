@@ -14,14 +14,10 @@ const {
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
-  'files',
-  'experience/pages',
-  'experience/layout',
-  'experience/components'
+  'files'
 ];
 
 const LOCAL_META_FILES = [
-  'experience',
   'files'
 ];
 
@@ -93,8 +89,6 @@ program
     try {
       const file = await saveConfig(command.config, config);
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
-      await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
-      await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);
     }
@@ -111,6 +105,9 @@ program
       if (canDownloadFiles) {
         await filesDownload(null, {}, config);
         logResult('success', 'downaloaded all of files!', 'green');
+      } else {
+        await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
+        await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
       }
     } catch (e) {
       console.error(e);
