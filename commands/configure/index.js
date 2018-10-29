@@ -4,9 +4,23 @@ const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const retryP = require('../../lib/retryP');
+const { ensureDir } = require('fs-extra');
 const {
-  saveConfig, logError, logResult, log, loadUserConfig
+  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta
 } = require('../../lib/utils');
+
+const DIRECTORIES_TO_GENERATE = [
+  'files',
+  'experience/pages',
+  'experience/layout',
+  'experience/components'
+];
+
+const LOCAL_META_FILES = [
+  'experience',
+  'files'
+];
+
 const inquirer = require('inquirer');
 
 const getApplicationFunc = (api) => {
@@ -74,6 +88,8 @@ program
     const config = { applicationId, applicationName };
     try {
       const file = await saveConfig(command.config, config);
+      await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
+      await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);
