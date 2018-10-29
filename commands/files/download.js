@@ -4,7 +4,7 @@ const { curry } = require('omnibelt');
 const printHelp = require('../../lib/print-help');
 const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
 const getData = (file) => {
-  return request({ method: 'GET', uri: file.url, encoding: null });
+  return request({ method: 'GET', uri: file.url, encoding: null, sslStrict: (process.env.LOSANT_API_URL === 'https://api.losant.space') });
 };
 
 const curriedFilterFunc = curry((pattern, file) => {
