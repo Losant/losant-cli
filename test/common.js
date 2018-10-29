@@ -50,12 +50,15 @@ const buildConfig = async () => {
 };
 
 before(() => {
-  utils.setDir({ dir: './test' });
+  process.chdir('./test');
 });
 
 beforeEach(async () => {
   await unlockConfigFiles(['.losant.yml']);
   await deleteFakeData();
+  if (await pathExists('../.losant')) {
+    return remove('../.losant');
+  }
   await sandbox.restore();
   nock.disableNetConnect();
   nock.cleanAll();

@@ -5,7 +5,7 @@ const p = require('commander');
 const program = new p.Command('losant experience');
 const printHelp = require('../../lib/print-help');
 
-program.description('Manages your Losant Application\'s Experience Views, and Versions from the command line');
+program.description('Manages your Losant Application\'s Experience Views, and Versions from the command line.');
 
 const help =  [];
 commands.forEach((command) => {

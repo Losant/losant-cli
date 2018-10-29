@@ -3,39 +3,11 @@ const p = require('commander');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
+const retryP = require('../../lib/retryP');
 const {
-  saveConfig, saveUserConfig, logError, logResult, setDir, lockConfig, log
+  saveConfig, logError, logResult, log, loadUserConfig
 } = require('../../lib/utils');
 const inquirer = require('inquirer');
-
-const retryP = async (funcToRetry, stopRetryFunc, isRetry = false) => {
-  let result;
-  try {
-    result = await funcToRetry(isRetry);
-  } catch (e) {
-    if (!(await stopRetryFunc(e))) {
-      return retryP(funcToRetry, stopRetryFunc, true);
-    }
-    throw e;
-  }
-  return result;
-};
-
-const signIn = async (isRetry) => {
-  if (isRetry) {
-    logError('Authentication failed please try again...');
-  }
-  const { email, password, twoFactorCode } = await inquirer.prompt([
-    { type: 'input', name: 'email', message: 'Enter Losant email:' },
-    { type: 'password', name: 'password', message: 'Enter Losant password:' },
-    { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
-  ]);
-  return getApi({ email, password, twoFactorCode });
-};
-
-const isLockedError = (err) => {
-  return err.type === 'AccountLocked';
-};
 
 const getApplicationFunc = (api) => {
   return async () => {
@@ -89,23 +61,18 @@ const printRetry = (err) => {
 };
 
 program
-  .description('Configure the command line tool for a specific directory')
+  .description('Configure the command line tool for a specific directory.')
   .action(async (command) => {
-    setDir(command);
-    if (!(await lockConfig(command.config))) { return; }
-    let api;
-    try {
-      api = await retryP(signIn, isLockedError);
-    } catch (e) {
-      return;
+    const userConfig = await loadUserConfig() || {};
+    if (!userConfig.apiToken) {
+      return logError('Must run losant sign-in before running losant configure.');
     }
+    const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
     const { applicationId, applicationName } = await retryP(getApplication, printRetry);
 
-    const config = { applicationId };
+    const config = { applicationId, applicationName };
     try {
-      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
-      logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
       const file = await saveConfig(command.config, config);
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {
