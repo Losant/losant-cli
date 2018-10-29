@@ -80,7 +80,7 @@ program
   .action(async (command) => {
     const userConfig = await loadUserConfig() || {};
     if (!userConfig.apiToken) {
-      return logError('Must run losant sign-in before running losant configure.');
+      return logError('Must run losant login before running losant configure.');
     }
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
