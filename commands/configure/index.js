@@ -4,7 +4,7 @@ const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const {
-  saveConfig, logError, logResult, setDir, lockConfig, log
+  saveConfig, saveUserConfig, logError, logResult, setDir, lockConfig, log
 } = require('../../lib/utils');
 const inquirer = require('inquirer');
 
@@ -102,8 +102,10 @@ program
     const getApplication = getApplicationFunc(api);
     const { applicationId, applicationName } = await retryP(getApplication, printRetry);
 
-    const config = { applicationId, apiToken: api.getOption('accessToken') };
+    const config = { applicationId };
     try {
+      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
+      logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
       const file = await saveConfig(command.config, config);
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {

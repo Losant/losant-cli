@@ -15,7 +15,7 @@ const {
 } = require('../common');
 const { defer } = require('omnibelt');
 const { writeFile } = require('fs-extra');
-const CONFIG_FILE = './.losant/.losant.yml';
+const CONFIG_FILE = '.losant.yml';
 
 describe('Files Commands', () => {
 

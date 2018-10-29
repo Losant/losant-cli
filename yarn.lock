@@ -1240,6 +1240,10 @@ fill-range@^4.0.0:
     repeat-string "^1.6.1"
     to-regex-range "^2.1.0"
 
+find-file-recursively-up@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/find-file-recursively-up/-/find-file-recursively-up-1.0.0.tgz#7be5c240b34e9852802ecc173b9e27a617c35532"
+
 find-parent-dir@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/find-parent-dir/-/find-parent-dir-0.3.0.tgz#33c44b429ab2b2f0646299c5f9f718f376ff8d54"
