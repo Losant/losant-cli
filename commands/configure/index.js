@@ -1,5 +1,6 @@
 const error = require('error/typed');
 const p = require('commander');
+const { merge } = require('omnibelt');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
@@ -92,9 +93,9 @@ program
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);
     }
-
+    const loadedConfig = merge(userConfig, config);
     try {
-      await experienceDownload(null, {}, config);
+      await experienceDownload(null, {}, loadedConfig);
       logResult('success', 'downloaded all of experience!', 'green');
     } catch (e) {
       console.error(e);
@@ -103,7 +104,7 @@ program
     try {
       const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
       if (canDownloadFiles) {
-        await filesDownload(null, {}, config);
+        await filesDownload(null, {}, loadedConfig);
         logResult('success', 'downaloaded all of files!', 'green');
       } else {
         await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
