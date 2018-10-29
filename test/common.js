@@ -9,6 +9,7 @@ const program = require('commander');
 const rmDir = promisify(rimraf);
 const locker = require('proper-lockfile');
 const { pathExists, remove } = require('fs-extra');
+const path = require('path');
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
 const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
@@ -32,6 +33,7 @@ const deleteFakeData = () => {
 const unlockConfigFiles = (files) => {
   if (!Array.isArray(files)) { files = [ files ]; }
   return Promise.all(files.map(async (file) => {
+    file = path.resolve(__dirname, '.losant', file);
     if ((await pathExists(file)) && locker.checkSync(file)) { locker.unlockSync(file); }
   }));
 };
@@ -40,10 +42,10 @@ const sandbox = sinon.createSandbox();
 
 const buildConfig = async () => {
   const config = {
-    applicationId: '5b9297591fefb200072e554d',
-    apiToken: 'token'
+    applicationId: '5b9297591fefb200072e554d'
   };
   const file = '.losant.yml';
+  await utils.saveUserConfig({ apiToken: 'token' });
   return utils.saveConfig(file, config);
 };
 
@@ -52,7 +54,7 @@ before(() => {
 });
 
 beforeEach(async () => {
-  await unlockConfigFiles(['./losant.yml', './fixtures/losant.yaml']);
+  await unlockConfigFiles(['.losant.yml']);
   await deleteFakeData();
   await sandbox.restore();
   nock.disableNetConnect();

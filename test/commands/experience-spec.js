@@ -18,7 +18,7 @@ const {
 const { defer } = require('omnibelt');
 let spy;
 const { remove, writeFile } = require('fs-extra');
-const CONFIG_FILE = './.losant/.losant.yml';
+const CONFIG_FILE = '.losant.yml';
 
 describe('Experiene Commands', () => {
 
@@ -34,7 +34,7 @@ describe('Experiene Commands', () => {
       'status'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal(errorLog('Configuration file losant.yml does not exist, run losant configure to generate this file.'));
+    msg.should.equal(errorLog('Configuration file missing for this directory, run losant configure to generate this file.'));
   });
   it('should run get status', async () => {
     await buildConfig();

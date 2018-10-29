@@ -39,6 +39,7 @@
     "commander": "^2.11.0",
     "death": "^1.1.0",
     "error": "^7.0.2",
+    "find-file-recursively-up": "^1.0.0",
     "form-data": "^2.3.2",
     "fs-extra": "^7.0.0",
     "glob": "^7.1.2",
