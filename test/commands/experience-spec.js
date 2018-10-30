@@ -18,7 +18,7 @@ const {
 const { defer } = require('omnibelt');
 let spy;
 const { remove, writeFile } = require('fs-extra');
-const CONFIG_FILE = '.losant.yml';
+const CONFIG_FILE = '.application.yml';
 
 describe('Experiene Commands', () => {
 

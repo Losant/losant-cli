@@ -1,44 +1,28 @@
 const error = require('error/typed');
 const p = require('commander');
+const { merge } = require('omnibelt');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
+const retryP = require('../../lib/retryP');
+const { ensureDir } = require('fs-extra');
+const params = require('../../lib/get-download-params');
+const getDownloader = require('../../lib/get-downloader');
+const experienceDownload = getDownloader(params.experience);
+const filesDownload = getDownloader(params.files);
 const {
-  saveConfig, saveUserConfig, logError, logResult, setDir, lockConfig, log
+  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta
 } = require('../../lib/utils');
+
+const DIRECTORIES_TO_GENERATE = [
+  'files'
+];
+
+const LOCAL_META_FILES = [
+  'files'
+];
+
 const inquirer = require('inquirer');
-
-const retryP = async (funcToRetry, stopRetryFunc, isRetry = false) => {
-  let result;
-  try {
-    result = await funcToRetry(isRetry);
-  } catch (e) {
-    if (!(await stopRetryFunc(e))) {
-      return retryP(funcToRetry, stopRetryFunc, true);
-    }
-    throw e;
-  }
-  return result;
-};
-
-const signIn = async (isRetry) => {
-  if (isRetry) {
-    logError('Authentication failed please try again...');
-  }
-  const { email, password, twoFactorCode } = await inquirer.prompt([
-    { type: 'input', name: 'email', message: 'Enter Losant email:' },
-    { type: 'password', name: 'password', message: 'Enter Losant password:' },
-    { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
-  ]);
-  if (!email && !password) {
-    throw error({ type: 'Required' });
-  }
-  return getApi({ email, password, twoFactorCode });
-};
-
-const isLockedError = (err) => {
-  return err.type === 'AccountLocked';
-};
 
 const getApplicationFunc = (api) => {
   return async () => {
@@ -72,7 +56,7 @@ const getApplicationFunc = (api) => {
         throw error({ type: 'ForceRetry', message: 'user typed in wrong filter' });
       }
       applicationId = nameToId[name];
-      applicationName = name;
+      applicationName = name.replace(`https://app.losant.com/applications/${applicationId}`, '').trim();
     }
     return { applicationId, applicationName };
   };
@@ -92,28 +76,45 @@ const printRetry = (err) => {
 };
 
 program
-  .description('Configure the command line tool for a specific directory')
+  .description('Configure the command line tool for a specific directory.')
   .action(async (command) => {
-    setDir(command);
-    if (!(await lockConfig(command.config))) { return; }
-    let api;
-    try {
-      api = await retryP(signIn, isLockedError);
-    } catch (e) {
-      return;
+    const userConfig = await loadUserConfig() || {};
+    if (!userConfig.apiToken) {
+      return logError('Must run losant login before running losant configure.');
     }
+    const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
     const { applicationId, applicationName } = await retryP(getApplication, printRetry);
 
-    const config = { applicationId };
+    const config = { applicationId, applicationName };
     try {
-      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
-      logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
       const file = await saveConfig(command.config, config);
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);
     }
+    const loadedConfig = merge(userConfig, config);
+    try {
+      await experienceDownload(null, {}, loadedConfig);
+      logResult('success', 'downloaded all of experience!', 'green');
+    } catch (e) {
+      console.error(e);
+      logError('faild to download experience.');
+    }
+    try {
+      const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
+      if (canDownloadFiles) {
+        await filesDownload(null, {}, loadedConfig);
+        logResult('success', 'downaloaded all of files!', 'green');
+      } else {
+        await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
+        await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
+      }
+    } catch (e) {
+      console.error(e);
+      logError('file to download files');
+    }
+    log('Configuration completed! :D');
   });
 
 module.exports = program;
