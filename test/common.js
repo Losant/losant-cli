@@ -44,9 +44,8 @@ const buildConfig = async () => {
   const config = {
     applicationId: '5b9297591fefb200072e554d'
   };
-  const file = '.losant.yml';
   await utils.saveUserConfig({ apiToken: 'token' });
-  return utils.saveConfig(file, config);
+  return utils.saveConfig(undefined, config); // let it default
 };
 
 before(() => {
