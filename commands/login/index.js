@@ -1,3 +1,4 @@
+const error = require('error/typed');
 const p = require('commander');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
@@ -17,6 +18,9 @@ const signIn = async (isRetry) => {
     { type: 'password', name: 'password', message: 'Enter Losant password:' },
     { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
   ]);
+  if (!email || !password) {
+    throw error({ type: 'Required' });
+  }
   return getApi({ email, password, twoFactorCode });
 };
 
@@ -25,7 +29,7 @@ const isLockedError = (err) => {
 };
 
 program
-  .description('Sign in and create your user configuration to use the other commandline tools.')
+  .description('Log in and create your user configuration to use the other commands.')
   .action(async () => {
     let api;
     try {

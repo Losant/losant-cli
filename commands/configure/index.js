@@ -1,23 +1,24 @@
 const error = require('error/typed');
 const p = require('commander');
+const { merge } = require('omnibelt');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const retryP = require('../../lib/retryP');
 const { ensureDir } = require('fs-extra');
+const params = require('../../lib/get-download-params');
+const getDownloader = require('../../lib/get-downloader');
+const experienceDownload = getDownloader(params.experience);
+const filesDownload = getDownloader(params.files);
 const {
   saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
-  'files',
-  'experience/pages',
-  'experience/layout',
-  'experience/components'
+  'files'
 ];
 
 const LOCAL_META_FILES = [
-  'experience',
   'files'
 ];
 
@@ -55,7 +56,7 @@ const getApplicationFunc = (api) => {
         throw error({ type: 'ForceRetry', message: 'user typed in wrong filter' });
       }
       applicationId = nameToId[name];
-      applicationName = name;
+      applicationName = name.replace(`https://app.losant.com/applications/${applicationId}`, '').trim();
     }
     return { applicationId, applicationName };
   };
@@ -79,7 +80,7 @@ program
   .action(async (command) => {
     const userConfig = await loadUserConfig() || {};
     if (!userConfig.apiToken) {
-      return logError('Must run losant sign-in before running losant configure.');
+      return logError('Must run losant login before running losant configure.');
     }
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
@@ -88,12 +89,32 @@ program
     const config = { applicationId, applicationName };
     try {
       const file = await saveConfig(command.config, config);
-      await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
-      await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
       logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);
     }
+    const loadedConfig = merge(userConfig, config);
+    try {
+      await experienceDownload(null, {}, loadedConfig);
+      logResult('success', 'downloaded all of experience!', 'green');
+    } catch (e) {
+      console.error(e);
+      logError('faild to download experience.');
+    }
+    try {
+      const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
+      if (canDownloadFiles) {
+        await filesDownload(null, {}, loadedConfig);
+        logResult('success', 'downaloaded all of files!', 'green');
+      } else {
+        await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
+        await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
+      }
+    } catch (e) {
+      console.error(e);
+      logError('file to download files');
+    }
+    log('Configuration completed! :D');
   });
 
 module.exports = program;
