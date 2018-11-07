@@ -245,11 +245,11 @@ describe('Files Commands', () => {
 
     let statusDefer = defer();
     let statusMessages = [];
+
+
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       statusMessages.push(message);
-      if (statusMessages.length >= 2) {
-        statusDefer.resolve();
-      }
+      statusDefer.resolve();
     });
     require('../../commands/files').parse([
       '/bin/node',
@@ -271,9 +271,7 @@ describe('Files Commands', () => {
     spy.restore();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       statusMessages.push(message);
-      if (statusMessages.length >= 3) {
-        statusDefer.resolve();
-      }
+      statusDefer.resolve();
     });
     require('../../commands/files').parse([
       '/bin/node',
