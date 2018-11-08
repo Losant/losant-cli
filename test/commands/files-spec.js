@@ -8,13 +8,14 @@ const {
   unmodifiedLog,
   processingLog,
   errorLog,
-  addedLog,
   resetCommander,
   unlockConfigFiles,
-  buildConfig
+  buildConfig,
+  printTable
 } = require('../common');
 const { defer } = require('omnibelt');
 const { writeFile } = require('fs-extra');
+const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
 describe('Files Commands', () => {
@@ -40,6 +41,43 @@ describe('Files Commands', () => {
   it('should run get status', async function() {
     await buildConfig();
     const deferred = defer();
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d/files')
+      .query({
+        _actions: 'false', _links: 'true', _embedded: 'true', type: 'file', page: 0, perPage: 1000
+      })
+      .reply(200, {
+        count: 0,
+        items: [],
+        perPage: 100,
+        page: 0,
+        sortField: 'lastUpdated',
+        sortDirection: 'asc',
+        totalCount: 2,
+        _type: 'files',
+        _links: { application: { href: '/applications/' }, self: { href: '/applications//files' } }
+      }, [ 'Date',
+        'Fri, 19 Oct 2018 20:24:18 GMT',
+        'Content-Type',
+        'application/json',
+        'Content-Length',
+        '1642',
+        'Connection',
+        'close',
+        'Pragma',
+        'no-cache',
+        'Cache-Control',
+        'no-cache, no-store, must-revalidate',
+        'X-Content-Type-Options',
+        'nosniff',
+        'X-XSS-Protection',
+        '1; mode=block',
+        'Content-Security-Policy',
+        'default-src \'none\'; style-src \'unsafe-inline\'',
+        'Access-Control-Allow-Origin',
+        '*',
+        'Strict-Transport-Security',
+        'max-age=31536000' ]);
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       deferred.resolve(message);
     });
@@ -50,7 +88,7 @@ describe('Files Commands', () => {
       'status'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal('No local files found');
+    msg.should.equal('No files found.');
   });
 
   it('should run get status, download, upload', async function() {
@@ -151,7 +189,6 @@ describe('Files Commands', () => {
           '*',
           'Strict-Transport-Security',
           'max-age=31536000' ]);
-      i++;
     }
 
     nock('https://api.losant.space:443', { encodedQueryParams: true })
@@ -244,11 +281,11 @@ describe('Files Commands', () => {
     ]);
 
     let statusDefer = defer();
-    let statusMessages = [];
+    let statusMessage = '';
 
 
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
-      statusMessages.push(message);
+      statusMessage = message;
       statusDefer.resolve();
     });
     require('../../commands/files').parse([
@@ -259,18 +296,20 @@ describe('Files Commands', () => {
     await statusDefer.promise;
     await unlockConfigFiles(CONFIG_FILE);
 
-    statusMessages.length.should.equal(2);
-    statusMessages.sort().should.deepEqual([
-      unmodifiedLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
-      unmodifiedLog('files/7c_iLKJn.jpg')
-    ]);
+    statusMessage.should.equal(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['7c_iLKJn.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+      ]
+    ));
 
     await writeFile('./files/newFile.txt', 'hello world');
     statusDefer = defer();
-    statusMessages = [];
+    statusMessage = '';
     spy.restore();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
-      statusMessages.push(message);
+      statusMessage = message;
       statusDefer.resolve();
     });
     require('../../commands/files').parse([
@@ -280,13 +319,14 @@ describe('Files Commands', () => {
     ]);
     await statusDefer.promise;
     await unlockConfigFiles(CONFIG_FILE);
-
-    statusMessages.length.should.equal(3);
-    statusMessages.sort().should.deepEqual([
-      addedLog('files/newFile.txt'),
-      unmodifiedLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
-      unmodifiedLog('files/7c_iLKJn.jpg')
-    ]);
+    statusMessage.should.equal(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['7c_iLKJn.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['newFile.txt', c.green('added'), c.blue('missing'), c.gray('false')]
+      ]
+    ));
     spy.restore();
 
     const uploadDefer = defer();

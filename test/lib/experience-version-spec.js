@@ -1,13 +1,5 @@
-const { nock, sinon, buildConfig } = require('../common');
+const { nock, sinon, buildConfig, printTable } = require('../common');
 const ssLog = require('single-line-log');
-const Table = require('cli-table3');
-const printTable = (headers, columns) => {
-  const table = new Table({ head: headers });
-
-  table.push(...columns);
-
-  return table.toString();
-};
 const versionCommand = require('../../lib/experience-version');
 const c = require('chalk');
 const pad = require('pad');

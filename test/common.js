@@ -1,4 +1,5 @@
 const utils = require('../lib/utils');
+const Table = require('cli-table3');
 const sinon = require('sinon');
 const nock = require('nock');
 const c = require('chalk');
@@ -28,6 +29,14 @@ const deleteFakeData = () => {
       return remove(`./${folder}`);
     }
   }));
+};
+
+const printTable = (headers, columns) => {
+  const table = new Table({ head: headers });
+
+  table.push(...columns);
+
+  return table.toString();
 };
 
 const unlockConfigFiles = (files) => {
@@ -101,5 +110,6 @@ module.exports = {
   addedLog,
   resetCommander,
   unlockConfigFiles,
-  buildConfig
+  buildConfig,
+  printTable
 };

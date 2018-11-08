@@ -66,4 +66,86 @@ describe('utils', () => {
       utils.checksum('helloworld').should.equal('fc5e038d38a57032085441e7fe7010b0');
     });
   });
+  describe('getComparativeStatus', () => {
+    it('should return unmodified for both and conflict false', () => {
+      const remoteInfo = { status: 'unmodified' };
+      const localInfo = { status: 'unmodified' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('unmodified');
+      remoteStatus.should.equal('unmodified');
+      conflict.should.equal(false);
+    });
+    it('should return missing for local and conflict false', () => {
+      const remoteInfo = { status: 'added' };
+      const localInfo = {};
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('missing');
+      remoteStatus.should.equal('added');
+      conflict.should.equal(false);
+    });
+    it('should return missing for remote and conflict false', () => {
+      const remoteInfo = {};
+      const localInfo = { status: 'added' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('added');
+      remoteStatus.should.equal('missing');
+      conflict.should.equal(false);
+    });
+    it('should return deleted for both and conflict false', () => {
+      const remoteInfo = { status: 'deleted' };
+      const localInfo = { status: 'deleted' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('deleted');
+      remoteStatus.should.equal('deleted');
+      conflict.should.equal(false);
+    });
+    it('should return conflict true, when deleted remotely and modified locally', () => {
+      const remoteInfo = { status: 'deleted' };
+      const localInfo = { status: 'modified' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('modified');
+      remoteStatus.should.equal('deleted');
+      conflict.should.equal(true);
+    });
+    it('should return conflict true, when deleted locally and modified remotely', () => {
+      const remoteInfo = { status: 'modified' };
+      const localInfo = { status: 'deleted' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('deleted');
+      remoteStatus.should.equal('modified');
+      conflict.should.equal(true);
+    });
+    it('should return conflict true, when both are modified and md5 does not match', () => {
+      const remoteInfo = { status: 'modified', remoteMd5: 'abc' };
+      const localInfo = { status: 'modified', localMd5: 'cde' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('modified');
+      remoteStatus.should.equal('modified');
+      conflict.should.equal(true);
+    });
+    it('should return conflict true, when both are added and md5 does not match', () => {
+      const remoteInfo = { status: 'added', remoteMd5: 'abc' };
+      const localInfo = { status: 'added', localMd5: 'cde' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('added');
+      remoteStatus.should.equal('added');
+      conflict.should.equal(true);
+    });
+    it('should return conflict false, when both are added and md5 does match', () => {
+      const remoteInfo = { status: 'added', md5: 'abc' };
+      const localInfo = { status: 'added', md5: 'abc' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('added');
+      remoteStatus.should.equal('added');
+      conflict.should.equal(false);
+    });
+    it('should return conflict false, when both are modified and md5 does match', () => {
+      const remoteInfo = { status: 'modified', md5: 'abc' };
+      const localInfo = { status: 'modified', md5: 'abc' };
+      const { localStatus, remoteStatus, conflict } = utils.getComparativeStatus(localInfo, remoteInfo);
+      localStatus.should.equal('modified');
+      remoteStatus.should.equal('modified');
+      conflict.should.equal(false);
+    });
+  });
 });
