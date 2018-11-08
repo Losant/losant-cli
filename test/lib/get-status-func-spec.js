@@ -1,8 +1,7 @@
-const { nock, sinon, buildConfig } = require('../common');
+const { nock, sinon, buildConfig, printTable } = require('../common');
 const getStatusFunc   = require('../../lib/get-status-func');
 const log             = require('single-line-log');
 const c               = require('chalk');
-const pad             = require('pad');
 const {
   ensureDir,
   writeFile
@@ -15,16 +14,6 @@ const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // es
 
 describe('#getStatusFunc', () => {
   it('should log out that there are no local files found', async () => {
-    const spy = sinon.spy(log, 'stdout');
-    const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
-    getStatus.should.be.a.Function();
-    await buildConfig();
-    const command = { };
-    await getStatus(command);
-    spy.withArgs('No local views found').calledOnce.should.equal(true);
-  });
-  it('should log out that there are no remote files found', async () => {
-    const spy = sinon.spy(log, 'stdout');
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
@@ -52,14 +41,13 @@ describe('#getStatusFunc', () => {
         '*',
         'Strict-Transport-Security',
         'max-age=31536000' ]);
+    const spy = sinon.spy(log, 'stdout');
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     await buildConfig();
-    const command = {
-      remote: true
-    };
+    const command = { };
     await getStatus(command);
-    spy.withArgs('No remote views found').calledOnce.should.equal(true);
+    spy.withArgs('No views found.').calledOnce.should.equal(true);
   });
   it('should log out that there are new remote files', async () => {
     const spy = sinon.spy(log, 'stdout');
@@ -111,12 +99,12 @@ describe('#getStatusFunc', () => {
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     await buildConfig();
-    const command = {
-      remote: true
-    };
-    await getStatus(command);
+    await getStatus();
     spy.callCount.should.equal(1);
-    spy.withArgs(`${pad(c.green('added'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    spy.withArgs(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', c.blue('missing'), c.green('added'), c.gray('false') ]]
+    )).calledOnce.should.equal(true);
   });
   it('should log out that there are added local files', async () => {
     await ensureDir('./views/layouts');
@@ -169,10 +157,12 @@ describe('#getStatusFunc', () => {
     const getStatus = getStatusFunc({ apiType: API_TYPE, commandType: COMMAND_TYPE, localStatusParams: LOCAL_STATUS_PARAMS, remoteStatusParams: REMOTE_STATUS_PARAMS });
     getStatus.should.be.a.Function();
     await buildConfig();
-    const command = {};
-    await getStatus(command);
+    await getStatus();
     spy.callCount.should.equal(1);
-    spy.withArgs(`${pad(c.green('added'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    spy.withArgs(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', c.green('added'), c.green('added'), c.redBright('true') ]]
+    )).calledOnce.should.equal(true);
   });
 
 });

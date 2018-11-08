@@ -1,7 +1,7 @@
-const { nock, sinon, unlockConfigFiles, buildConfig } = require('../common');
-const { curry } = require('omnibelt');
+const { nock, sinon, unlockConfigFiles, buildConfig, printTable } = require('../common');
+const ssLog = require('single-line-log');
+const { curry, defer } = require('omnibelt');
 const minimatch = require('minimatch');
-const utils = require('../../lib/utils');
 const getDownloader = require('../../lib/get-downloader');
 const getStatusFunc = require('../../lib/get-status-func');
 const { writeFile, remove } = require('fs-extra');
@@ -14,7 +14,7 @@ const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // es
 
 describe('#getDownloader', () => {
   it('should try to download', async () => {
-    const spy = sinon.spy(utils, 'log');
+
     for (let i = 0; i < 3; i++) {
       nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/experience/views')
@@ -118,12 +118,26 @@ describe('#getDownloader', () => {
         return (itemLocalStatus && itemLocalStatus.status !== 'unmodified') || newLocalFiles.has(item.file);
       }
     });
+    let deferred = defer();
     await buildConfig();
     downloader.should.be.a.Function();
+    let message = '';
+    let spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+      deferred.resolve();
+    });
     const command = {};
     await downloader(null, command);
     await unlockConfigFiles('.application.yml');
-    spy.withArgs(`${pad(c.green('downloaded'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    await deferred.promise;
+    message.should.equal(`${pad(c.green('downloaded'), 13)}\tviews/layouts/Example Layout.hbs`);
+    spy.restore();
+    deferred = defer();
+    message = '';
+    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+      deferred.resolve();
+    });
     const getStatus = getStatusFunc({
       apiType: API_TYPE,
       commandType: COMMAND_TYPE,
@@ -132,14 +146,40 @@ describe('#getDownloader', () => {
     });
     await getStatus(command);
     await unlockConfigFiles('.application.yml');
-    spy.withArgs(`${pad(c.gray('unmodified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    await deferred.promise;
+    message.should.equal(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false') ]]
+    ));
+    spy.restore();
+    deferred = defer();
+    message = '';
+    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+      deferred.resolve();
+    });
     await writeFile('./views/layouts/Example Layout.hbs', 'write something else to make it modified...');
     await getStatus(command);
     await unlockConfigFiles('.application.yml');
-    spy.withArgs(`${pad(c.yellow('modified'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    await deferred.promise;
+    message.should.equal(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', c.yellow('modified'), c.gray('unmodified'), c.gray('false') ]]
+    ));
+    spy.restore();
     await remove('./views/layouts/Example Layout.hbs');
+    deferred = defer();
+    message = '';
+    spy = sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+      deferred.resolve();
+    });
     await getStatus(command);
     await unlockConfigFiles('.application.yml');
-    spy.withArgs(`${pad(c.redBright('deleted'), 13)}\tviews/layouts/Example Layout.hbs`).calledOnce.should.equal(true);
+    await deferred.promise;
+    message.should.equal(printTable(
+      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', c.red('deleted'), c.gray('unmodified'), c.gray('false') ]]
+    ));
   });
 });
