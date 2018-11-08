@@ -8,7 +8,8 @@ const {
   errorLog,
   unlockConfigFiles,
   buildConfig,
-  printTable
+  printTable,
+  processingLog
 } = require('../common');
 const { defer } = require('omnibelt');
 let spy;
@@ -185,7 +186,7 @@ describe('Experiene Commands', () => {
     const messages = [];
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
-      if (messages.length === 10) {
+      if (messages.length === 20) {
         deferred.resolve(messages);
       }
     });
@@ -197,7 +198,7 @@ describe('Experiene Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     const msgs = await deferred.promise;
-    msgs.length.should.equal(10);
+    msgs.length.should.equal(20);
     msgs.sort().should.deepEqual([
       downloadLog('experience/components/errorAlert.hbs'),
       downloadLog('experience/components/gaTracking.hbs'),
@@ -208,7 +209,17 @@ describe('Experiene Commands', () => {
       downloadLog('experience/pages/Home Page.hbs'),
       downloadLog('experience/pages/Log In.hbs'),
       downloadLog('experience/pages/dash.hbs'),
-      downloadLog('experience/pages/default auto set.hbs')
+      downloadLog('experience/pages/default auto set.hbs'),
+      processingLog('experience/components/errorAlert.hbs'),
+      processingLog('experience/components/gaTracking.hbs'),
+      processingLog('experience/components/userIndicator.hbs'),
+      processingLog('experience/layouts/Example Layout.hbs'),
+      processingLog('experience/pages/Dashboard Stream Only.hbs'),
+      processingLog('experience/pages/Dashboard Transferred.hbs'),
+      processingLog('experience/pages/Home Page.hbs'),
+      processingLog('experience/pages/Log In.hbs'),
+      processingLog('experience/pages/dash.hbs'),
+      processingLog('experience/pages/default auto set.hbs')
     ]);
     await spy.restore();
     let statusDeferred = defer();

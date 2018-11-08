@@ -262,7 +262,7 @@ describe('Files Commands', () => {
     const downloadMessages = [];
     let spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       downloadMessages.push(message);
-      if (downloadMessages.length >= 2) {
+      if (downloadMessages.length >= 4) {
         downloadDefer.resolve();
       }
     });
@@ -274,10 +274,12 @@ describe('Files Commands', () => {
     await downloadDefer.promise;
     await unlockConfigFiles(CONFIG_FILE);
     spy.restore();
-    downloadMessages.length.should.equal(2);
+    downloadMessages.length.should.equal(4);
     downloadMessages.sort().should.deepEqual([
       downloadLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
-      downloadLog('files/7c_iLKJn.jpg')
+      downloadLog('files/7c_iLKJn.jpg'),
+      processingLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
+      processingLog('files/7c_iLKJn.jpg')
     ]);
 
     let statusDefer = defer();
