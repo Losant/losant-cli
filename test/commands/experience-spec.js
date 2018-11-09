@@ -4,15 +4,12 @@ const {
   sinon,
   nock,
   downloadLog,
-  uplaodedLog,
-  unmodifiedLog,
-  deletedUploadLog,
-  processingLog,
   conflictLog,
   errorLog,
   unlockConfigFiles,
   buildConfig,
-  printTable
+  printTable,
+  processingLog
 } = require('../common');
 const { defer } = require('omnibelt');
 let spy;
@@ -189,7 +186,7 @@ describe('Experiene Commands', () => {
     const messages = [];
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
-      if (messages.length === 10) {
+      if (messages.length === 20) {
         deferred.resolve(messages);
       }
     });
@@ -201,7 +198,7 @@ describe('Experiene Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     const msgs = await deferred.promise;
-    msgs.length.should.equal(10);
+    msgs.length.should.equal(20);
     msgs.sort().should.deepEqual([
       downloadLog('experience/components/errorAlert.hbs'),
       downloadLog('experience/components/gaTracking.hbs'),
@@ -212,7 +209,17 @@ describe('Experiene Commands', () => {
       downloadLog('experience/pages/Home Page.hbs'),
       downloadLog('experience/pages/Log In.hbs'),
       downloadLog('experience/pages/dash.hbs'),
-      downloadLog('experience/pages/default auto set.hbs')
+      downloadLog('experience/pages/default auto set.hbs'),
+      processingLog('experience/components/errorAlert.hbs'),
+      processingLog('experience/components/gaTracking.hbs'),
+      processingLog('experience/components/userIndicator.hbs'),
+      processingLog('experience/layouts/Example Layout.hbs'),
+      processingLog('experience/pages/Dashboard Stream Only.hbs'),
+      processingLog('experience/pages/Dashboard Transferred.hbs'),
+      processingLog('experience/pages/Home Page.hbs'),
+      processingLog('experience/pages/Log In.hbs'),
+      processingLog('experience/pages/dash.hbs'),
+      processingLog('experience/pages/default auto set.hbs')
     ]);
     await spy.restore();
     let statusDeferred = defer();
@@ -278,9 +285,7 @@ describe('Experiene Commands', () => {
     const uploadMessages = [];
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       uploadMessages.push(message);
-      if (uploadMessages.length >= 20) {
-        uploadDeferred.resolve();
-      }
+      uploadDeferred.resolve();
     });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .delete('/applications/5b9297591fefb200072e554d/experience/views/59f201edf21ee00007a93a96')
@@ -429,28 +434,8 @@ describe('Experiene Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await uploadDeferred.promise;
-    uploadMessages.length.should.equal(20);
     uploadMessages.sort().should.deepEqual([
-      uplaodedLog('experience/pages/dash.hbs'),
-      deletedUploadLog('experience/components/errorAlert.hbs'),
-      deletedUploadLog('experience/components/gaTracking.hbs'),
-      processingLog('experience/components/errorAlert.hbs'),
-      processingLog('experience/components/gaTracking.hbs'),
-      processingLog('experience/components/userIndicator.hbs'),
-      processingLog('experience/layouts/Example Layout.hbs'),
-      processingLog('experience/pages/Dashboard Stream Only.hbs'),
-      processingLog('experience/pages/Dashboard Transferred.hbs'),
-      processingLog('experience/pages/Home Page.hbs'),
-      processingLog('experience/pages/Log In.hbs'),
-      processingLog('experience/pages/dash.hbs'),
-      processingLog('experience/pages/default auto set.hbs'),
-      unmodifiedLog('experience/components/userIndicator.hbs'),
-      unmodifiedLog('experience/layouts/Example Layout.hbs'),
-      unmodifiedLog('experience/pages/Dashboard Transferred.hbs'),
-      unmodifiedLog('experience/pages/Home Page.hbs'),
-      unmodifiedLog('experience/pages/Log In.hbs'),
-      unmodifiedLog('experience/pages/default auto set.hbs'),
-      conflictLog('experience/pages/Dashboard Stream Only.hbs')
+      conflictLog('You are in a state of conflict cannot upload until resolved.')
     ]);
   });
 });

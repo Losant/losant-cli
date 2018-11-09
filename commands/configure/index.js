@@ -8,6 +8,7 @@ const retryP = require('../../lib/retryP');
 const { ensureDir } = require('fs-extra');
 const params = require('../../lib/get-download-params');
 const getDownloader = require('../../lib/get-downloader');
+const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
 const {
@@ -21,8 +22,6 @@ const DIRECTORIES_TO_GENERATE = [
 const LOCAL_META_FILES = [
   'files'
 ];
-
-const inquirer = require('inquirer');
 
 const getApplicationFunc = (api) => {
   return async () => {
