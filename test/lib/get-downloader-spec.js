@@ -15,7 +15,7 @@ const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // es
 describe('#getDownloader', () => {
   it('should try to download', async () => {
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/experience/views')
         .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
@@ -61,50 +61,6 @@ describe('#getDownloader', () => {
           'Strict-Transport-Security',
           'max-age=31536000' ]);
     }
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .get('/applications/5b9297591fefb200072e554d/experience/views')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
-      .reply(200, {
-        count: 1,
-        items: [
-          {
-            name: 'Example Layout',
-            description: 'description',
-            viewType: 'layout',
-            body: 'something changed on the server side',
-            applicationId: '5b9297591fefb200072e554d',
-            creationDate: '2018-09-07T15:21:01.223Z',
-            lastUpdated: '2018-09-07T15:21:01.234Z',
-            viewTags: {},
-            experienceViewId: '5b92975dc2f8de0006e2ca93',
-            id: '5b92975dc2f8de0006e2ca93',
-            _type: 'experienceView',
-            _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca93' } }
-          }
-        ]
-      },
-      [ 'Date',
-        'Tue, 11 Sep 2018 13:54:18 GMT',
-        'Content-Type',
-        'application/json',
-        'Content-Length',
-        '12528',
-        'Connection',
-        'close',
-        'Pragma',
-        'no-cache',
-        'Cache-Control',
-        'no-cache, no-store, must-revalidate',
-        'X-Content-Type-Options',
-        'nosniff',
-        'X-XSS-Protection',
-        '1; mode=block',
-        'Content-Security-Policy',
-        'default-src \'none\'; style-src \'unsafe-inline\'',
-        'Access-Control-Allow-Origin',
-        '*',
-        'Strict-Transport-Security',
-        'max-age=31536000' ]);
     const downloader = getDownloader({
       apiType: API_TYPE,
       commandType: COMMAND_TYPE,
