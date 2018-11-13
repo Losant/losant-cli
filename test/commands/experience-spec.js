@@ -104,18 +104,18 @@ describe('Experiene Commands', () => {
     ]);
     const msg = await deferred.promise;
     msg.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['gaTracking', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['userIndicator', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Example Layout', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Dashboard Stream Only', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Dashboard Transferred', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Home Page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Log In', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['dash', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['default auto set', c.blue('missing'), c.green('added'), c.gray('false')]
+        ['errorAlert', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['gaTracking', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['userIndicator', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['Example Layout', 'layout', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['Dashboard Stream Only', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['Dashboard Transferred', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['Home Page', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['Log In', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['dash', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
+        ['default auto set', 'page', c.blue('missing'), c.green('added'), c.gray('false')]
       ]
     ));
   });
@@ -235,18 +235,18 @@ describe('Experiene Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
-    statusMessage.should.equal(printTable([ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+    statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['gaTracking', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['userIndicator', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Example Layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Stream Only', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Transferred', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Home Page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Log In', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['dash', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['default auto set', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['errorAlert', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['gaTracking', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Dashboard Stream Only', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['dash', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
       ]));
     await spy.restore();
 
@@ -267,18 +267,18 @@ describe('Experiene Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
-    statusMessage.should.equal(printTable([ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+    statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
-        ['gaTracking', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
-        ['userIndicator', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Example Layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Stream Only', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Transferred', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Home Page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Log In', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['dash', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
-        ['default auto set', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['errorAlert', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
+        ['gaTracking', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
+        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Dashboard Stream Only', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
+        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['dash', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
+        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
       ]));
     spy.restore();
     const uploadDeferred = defer();

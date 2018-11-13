@@ -299,10 +299,10 @@ describe('Files Commands', () => {
     await unlockConfigFiles(CONFIG_FILE);
 
     statusMessage.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['30442479_1804907812955173_2594707246956191799_n.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['7c_iLKJn.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
       ]
     ));
 
@@ -322,11 +322,11 @@ describe('Files Commands', () => {
     await statusDefer.promise;
     await unlockConfigFiles(CONFIG_FILE);
     statusMessage.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['30442479_1804907812955173_2594707246956191799_n.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['7c_iLKJn.jpg', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['newFile.txt', c.green('added'), c.blue('missing'), c.gray('false')]
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
+        ['newFile.txt', '/', c.green('added'), c.blue('missing'), c.gray('false')]
       ]
     ));
     spy.restore();

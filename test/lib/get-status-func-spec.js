@@ -102,8 +102,8 @@ describe('#getStatusFunc', () => {
     await getStatus();
     spy.callCount.should.equal(1);
     spy.withArgs(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', c.blue('missing'), c.green('added'), c.gray('false') ]]
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', 'layouts', c.blue('missing'), c.green('added'), c.gray('false') ]]
     )).calledOnce.should.equal(true);
   });
   it('should log out that there are added local files', async () => {
@@ -160,8 +160,8 @@ describe('#getStatusFunc', () => {
     await getStatus();
     spy.callCount.should.equal(1);
     spy.withArgs(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', c.green('added'), c.green('added'), c.redBright('true') ]]
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', 'layouts', c.green('added'), c.green('added'), c.redBright('true') ]]
     )).calledOnce.should.equal(true);
   });
 
