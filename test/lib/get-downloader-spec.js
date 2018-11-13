@@ -104,8 +104,8 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false') ]]
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', 'layouts', c.gray('unmodified'), c.gray('unmodified'), c.gray('false') ]]
     ));
     spy.restore();
     deferred = defer();
@@ -119,8 +119,8 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', c.yellow('modified'), c.gray('unmodified'), c.gray('false') ]]
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', 'layouts', c.yellow('modified'), c.gray('unmodified'), c.gray('false') ]]
     ));
     spy.restore();
     await remove('./views/layouts/Example Layout.hbs');
@@ -134,8 +134,8 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', c.red('deleted'), c.gray('unmodified'), c.gray('false') ]]
+      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      [[ 'Example Layout', 'layouts', c.red('deleted'), c.gray('unmodified'), c.gray('false') ]]
     ));
   });
 });
