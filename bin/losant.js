@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+
+// set rollbar key
+process.env.ROLLBAR_KEY = process.env.ROLLBAR_KEY || 'f16d3d7e486e4b2386fc5fb18264f9b6';
+
 const program = require('commander');
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');
