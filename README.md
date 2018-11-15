@@ -1,10 +1,20 @@
 # Losant CLI
 
+[![Build Status](https://travis-ci.org/Losant/losant-cli.svg?branch=master)](https://travis-ci.org/Losant/losant-cli) [![npm version](https://badge.fury.io/js/losant-cli.svg)](https://badge.fury.io/js/losant-cli)
+
 ## `losant`
 
 ### Description
 
-Losant CLI is a command line tool to aid developers while creating custom application on top of the Losant Platform
+The Losant CLI is a command line tool to aid developers in creating, developing, and maintaining Application Experiences on the Losant IoT Platform.
+
+### Installation
+
+The CLI requires [Node.js](https://nodejs.org/en/) version 8.3 or higher. The latest stable version is available in NPM and can be installed using:
+
+```bash
+npm install -g losant-cli
+```
 
 ### Usage: 
 
@@ -198,3 +208,9 @@ Force an upload of all files overwriting remote modifications
 ```
 $ losant files upload -f
 ```
+
+*****
+
+Copyright (c) 2018 Losant IoT, Inc
+
+<https://www.losant.com>
