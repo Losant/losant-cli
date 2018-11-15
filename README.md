@@ -2,13 +2,12 @@
 
 [![Build Status](https://travis-ci.org/Losant/losant-cli.svg?branch=master)](https://travis-ci.org/Losant/losant-cli) [![npm version](https://badge.fury.io/js/losant-cli.svg)](https://badge.fury.io/js/losant-cli)
 
-## `losant`
+## Description
 
-### Description
+Losant CLI is a command line tool to help manage your [Losant Application](https://docs.losant.com/applications/overview/) and its resources.
+It easily lets you manage [Experience Views](https://docs.losant.com/experiences/views/), [Experience Versions](https://docs.losant.com/experiences/versions/), and [Files](https://docs.losant.com/applications/files/) in your Applications.
 
-The Losant CLI is a command line tool to aid developers in creating, developing, and maintaining Application Experiences on the Losant IoT Platform.
-
-### Installation
+## Installation
 
 The CLI requires [Node.js](https://nodejs.org/en/) version 8.3 or higher. The latest stable version is available in NPM and can be installed using:
 
@@ -16,198 +15,93 @@ The CLI requires [Node.js](https://nodejs.org/en/) version 8.3 or higher. The la
 npm install -g losant-cli
 ```
 
-### Usage: 
+## Usage
 
-```
+```bash
 losant [options] [command]
 ```
 
-#### Options
+## Commands
 
-```
-  -V, --version  output the version number
-  -h, --help     output usage information
-```
+* [login]()
+* [configure]()
+* [experience]()
+* [files]()
 
-#### Commands
+### Login
 
-```
-  configure   Configure the command line tool
-  views       Manage experience views
-  help [cmd]  display help for [cmd]
-```
+Before you run any other commands, you will want to run `losant login` to authenticate with your Losant account.
+This will ask for the email address and password (and optionally your 2 factor code) for your Losant account, and store
+an authentication token on your computer.
 
-## `losant-configure`
+### Configure
 
-### Description
+The `losant configure` command configures and links the current directory to one of your Losant Applications.
 
-Configure the command line tool options.
+### Experience
 
-### Usage: 
+The `losant experience` command is how you manage the Experience Views and Versions for a configured Application. It has the following subcommands:
 
-```
-losant-configure [options]
-```
+* download
+* status
+* upload
+* version
+* watch
 
-#### Options
+#### Experience Examples
 
-```
-  -a, --app <id>       set the application id
-  -t, --token <token>  set the api token
-  -c, --config <file>  config file to run the command with. (default: "losant.yml")
-  -d, --dir <dir>      directory to run the command in. (default: current directory)
-  -h, --help           output usage information
-```
+* Download all experience views (components, layouts and pages)  
+  `$ losant experience download`
+* Download component views  
+  `$ losant experience download --type components`
+* Download component views with names that start with error  
+  `$ losant experience download --type components error*`
+* Force a download of all views overwriting local modifications  
+  `$ losant experience download -f`
+* Check status of all experience files  
+  `$ losant experience status`
+* Upload all experience views  
+  `$ losant experience upload`
+* Upload only component views  
+  `$ losant experience upload --type components /*`
+* List all of your current experience versions  
+  `$ losant experience version`
+* List all of your experience versions that match a pattern  
+  `$ losant experience version -l v1.*`
+* Create a new experience version  
+  `$ losant experience version v1.0.0`
+* Create a new experience version with a description  
+  `$ losant experience version v1.0.1 -d "updated home page"`
+* Watch your Experience while you make changes and have them automatically uploaded  
+  `$ losant experience watch`
 
-## `losant-views`
+### Files
 
-### Description
+The `losant files` command is how you manage the files for a configured Application. It has the following subcommands:
 
-Manage Losant Experience Views from the command line.
+* download
+* status
+* upload
+* watch
 
-### Usage: 
+#### Files Examples
 
-```
-losant-views [options]
-```
-
-#### Options
-
-```
-  -h, --help           output usage information
-```
-
-#### Commands
-
-```
-  download [options] [pattern]
-  upload [options] [pattern]
-  status [options]
-```
-
-#### Examples
-
-Download all views
-```
-$ losant views download
-```
-
-Download component views
-
-```
-$ losant views download components/*
-```
-
-Force a download of all views overwriting local modifications
-
-```
-$ losant views download -f
-```
-
-Check local modification status
-
-```
-$ losant views status
-```
-
-Check remote modification status
-
-```
-$ losant views status -r
-```
-
-Upload all view
-
-```
-$ losant views upload
-```
-
-Upload component view
-
-```
-$ losant views upload components/*
-```
-
-Force an upload of all views overwriting remote modifications
-
-```
-$ losant views upload -f
-```
-
-## `losant-files`
-
-### Description
-
-Manage Losant Experience Files from the command line.
-
-### Usage: 
-
-```
-losant-files [options]
-```
-
-#### Options
-
-```
-  -h, --help           output usage information
-```
-
-#### Commands
-
-```
-  download [options] [pattern]
-  upload [options] [pattern]
-  status [options]
-```
-
-#### Examples
-
-Download all files
-```
-$ losant files download
-```
-
-Download files in images directory
-
-```
-$ losant files download images/*
-```
-
-Force a download of all files overwriting local modifications
-
-```
-$ losant files download -f
-```
-
-Check local modification status
-
-```
-$ losant files status
-```
-
-Check remote modification status
-
-```
-$ losant files status -r
-```
-
-Upload all files
-
-```
-$ losant files upload
-```
-
-Upload files in images directory
-
-```
-$ losant files upload images/*
-```
-
-Force an upload of all files overwriting remote modifications
-
-```
-$ losant files upload -f
-```
+* Download all files  
+  `$ losant files download`
+* Download files in images directory  
+  `$ losant files download images/*`
+* Force a download of all files overwriting local modifications  
+  `$ losant files download -f`
+* Check status of all experience files  
+  `$ losant files status`
+* Upload all files  
+  `$ losant files upload`
+* Upload files in images directory  
+  `$ losant files upload images/*`
+* Force an upload of all files overwriting remote modifications  
+  `$ losant files upload -f`
+* Watch your Files while you make changes and have them automatically uploaded  
+  `$ losant files watch`
 
 *****
 
