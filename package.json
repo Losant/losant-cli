@@ -33,43 +33,40 @@
   },
   "dependencies": {
     "@rjhilgefort/export-dir": "^1.1.0",
-    "chalk": "^2.3.0",
+    "chalk": "^2.4.1",
     "chokidar": "^2.0.4",
     "cli-table3": "^0.5.1",
-    "commander": "^2.11.0",
+    "commander": "^2.19.0",
     "death": "^1.1.0",
     "error": "^7.0.2",
     "find-file-recursively-up": "^1.0.0",
-    "form-data": "^2.3.2",
-    "fs-extra": "^7.0.0",
-    "glob": "^7.1.2",
+    "form-data": "^2.3.3",
+    "fs-extra": "^7.0.1",
+    "glob": "^7.1.3",
     "inquirer": "^6.2.0",
-    "js-yaml": "^3.10.0",
+    "js-yaml": "^3.12.0",
     "lodash-template": "^1.0.0",
-    "losant-rest": "losant/losant-rest-js#develop",
-    "mime-types": "^2.1.18",
+    "losant-rest": "^2.3.0",
+    "mime-types": "^2.1.21",
     "minimatch": "^3.0.4",
     "moment": "^2.22.2",
     "omnibelt": "^1.2.0",
-    "opener": "^1.4.3",
-    "pad": "^2.0.3",
+    "pad": "^2.2.1",
     "proper-lockfile": "^3.0.2",
-    "recursive-readdir": "^2.2.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "sanitize-filename": "^1.6.1",
     "single-line-log": "^1.1.2",
-    "sync-request": "^6.0.0",
     "update-notifier": "^2.3.0"
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "^1.3.4",
-    "lint-staged": "^7.3.0",
+    "husky": "^1.1.4",
+    "lint-staged": "^8.0.4",
     "mocha": "^5.2.0",
-    "nock": "^9.6.1",
+    "nock": "^10.0.2",
     "rimraf": "^2.6.2",
     "should": "^13.2.3",
-    "sinon": "^6.1.5"
+    "sinon": "^7.1.1"
   },
   "lint-staged": {
     "*.js": "esw"
@@ -82,5 +79,10 @@
     "lib/*",
     "commands/*",
     "README.md"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }
