@@ -23,10 +23,10 @@ losant [options] [command]
 
 ## Commands
 
-* [login]()
-* [configure]()
-* [experience]()
-* [files]()
+* [login](#login)
+* [configure](#configure)
+* [experience](#experience)
+* [files](#files)
 
 ### Login
 
