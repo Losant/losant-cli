@@ -88,30 +88,30 @@ program
     const config = { applicationId, applicationName };
     try {
       const file = await saveConfig(command.config, config);
-      logResult('success', `configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
+      logResult('success', `Configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
     } catch (e) {
-      logError(`failed to write configuration: ${c.bold(e.message)}`);
+      logError(`Failed to write configuration: ${c.bold(e.message)}`);
     }
     const loadedConfig = merge(userConfig, config);
     try {
       await experienceDownload(null, {}, loadedConfig);
-      logResult('success', 'downloaded all of experience!', 'green');
+      logResult('success', 'Downloaded all experience resources!', 'green');
     } catch (e) {
       console.error(e);
-      logError('faild to download experience.');
+      logError('Failed to download experience.');
     }
     try {
       const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
       if (canDownloadFiles) {
         await filesDownload(null, {}, loadedConfig);
-        logResult('success', 'downaloaded all of files!', 'green');
+        logResult('success', 'Downloaded all of files!', 'green');
       } else {
         await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
         await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
       }
     } catch (e) {
       console.error(e);
-      logError('file to download files');
+      logError('Failed to download files.');
     }
     log('Configuration completed! :D');
   });

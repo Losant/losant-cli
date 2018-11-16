@@ -2,7 +2,6 @@ const { nock, sinon, buildConfig, printTable } = require('../common');
 const ssLog = require('single-line-log');
 const versionCommand = require('../../lib/experience-version');
 const c = require('chalk');
-const pad = require('pad');
 
 describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
@@ -119,6 +118,6 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${pad(c.gray('CREATED : '), 13)}\tv1.0.0`);
+    message.should.equal(`${c.green('created')}\tv1.0.0`);
   });
 });
