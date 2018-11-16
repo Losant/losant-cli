@@ -62,6 +62,9 @@ const getApplicationFunc = (api) => {
 };
 
 const printRetry = (err) => {
+  if (err.message === 'Invalid access token') {
+    return true;
+  }
   if (err.type === 'ForceRetry') {
     log('Please try a different application name.');
   } else {
@@ -83,8 +86,16 @@ program
     }
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
-    const { applicationId, applicationName } = await retryP(getApplication, printRetry);
-
+    let appInfo;
+    try {
+      appInfo = await retryP(getApplication, printRetry);
+    } catch (e) {
+      if (e.message === 'Invalid access token') {
+        return log('Invalid access token, please re-login in by running "losant login".');
+      }
+      throw e;
+    }
+    const { applicationId, applicationName } = appInfo;
     const config = { applicationId, applicationName };
     try {
       const file = await saveConfig(command.config, config);

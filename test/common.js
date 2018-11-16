@@ -1,3 +1,4 @@
+process.env.NODE_ENV = 'test';
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
 const sinon = require('sinon');
@@ -11,7 +12,6 @@ const rmDir = promisify(rimraf);
 const locker = require('proper-lockfile');
 const { pathExists, remove } = require('fs-extra');
 const path = require('path');
-process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
 const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
