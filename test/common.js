@@ -15,7 +15,7 @@ process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
 
 const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
-const uplaodedLog = (msg) => { return `${pad(c.green('uploaded'), 13)}\t${msg}`; };
+const uploadedLog = (msg) => { return `${pad(c.green('uploaded'), 13)}\t${msg}`; };
 const unmodifiedLog = (msg) => { return `${`${pad(c.gray('unmodified'), 13)}\t${msg}`}`; };
 const modifiedLog = (msg) => { return `${`${pad(c.yellow('modified'), 13)}\t${msg}`}`; };
 const deletedLog = (msg) => { return `${`${pad(c.redBright('deleted'), 13)}\t${msg}`}`; };
@@ -100,7 +100,7 @@ module.exports = {
   nock,
   sinon: sandbox,
   downloadLog,
-  uplaodedLog,
+  uploadedLog,
   unmodifiedLog,
   modifiedLog,
   deletedLog,

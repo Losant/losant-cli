@@ -4,7 +4,7 @@ const {
   sinon,
   nock,
   downloadLog,
-  uplaodedLog,
+  uploadedLog,
   unmodifiedLog,
   processingLog,
   errorLog,
@@ -347,7 +347,7 @@ describe('Files Commands', () => {
     await uploadDefer.promise;
     uploadMessages.length.should.equal(6);
     uploadMessages.sort().should.deepEqual([
-      uplaodedLog('files/newFile.txt'),
+      uploadedLog('files/newFile.txt'),
       processingLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
       processingLog('files/7c_iLKJn.jpg'),
       processingLog('files/newFile.txt'),

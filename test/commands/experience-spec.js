@@ -17,7 +17,7 @@ const { remove, writeFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
-describe('Experiene Commands', () => {
+describe('Experience Commands', () => {
 
   it('should log an error if configure was not run first', async () => {
     const deferred = defer();
