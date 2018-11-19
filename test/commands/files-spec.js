@@ -11,7 +11,8 @@ const {
   resetCommander,
   unlockConfigFiles,
   buildConfig,
-  printTable
+  printTable,
+  statusFilesHeaders
 } = require('../common');
 const { defer } = require('omnibelt');
 const { writeFile } = require('fs-extra');
@@ -299,7 +300,7 @@ describe('Files Commands', () => {
     await unlockConfigFiles(CONFIG_FILE);
 
     statusMessage.should.equal(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [
         ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')]
@@ -322,7 +323,7 @@ describe('Files Commands', () => {
     await statusDefer.promise;
     await unlockConfigFiles(CONFIG_FILE);
     statusMessage.should.equal(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [
         ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],

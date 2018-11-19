@@ -112,5 +112,7 @@ module.exports = {
   resetCommander,
   unlockConfigFiles,
   buildConfig,
-  printTable
+  printTable,
+  statusExpHeaders: [  c.magentaBright('Name'),  c.magentaBright('View Type'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ],
+  statusFilesHeaders: [  c.magentaBright('Name'),  c.magentaBright('Directory'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ]
 };

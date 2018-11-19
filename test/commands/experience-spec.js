@@ -9,7 +9,8 @@ const {
   unlockConfigFiles,
   buildConfig,
   printTable,
-  processingLog
+  processingLog,
+  statusExpHeaders
 } = require('../common');
 const { defer } = require('omnibelt');
 let spy;
@@ -104,7 +105,7 @@ describe('Experience Commands', () => {
     ]);
     const msg = await deferred.promise;
     msg.should.equal(printTable(
-      [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusExpHeaders,
       [
         ['errorAlert', 'component', c.blue('missing'), c.green('added'), c.gray('no')],
         ['gaTracking', 'component', c.blue('missing'), c.green('added'), c.gray('no')],
@@ -235,7 +236,7 @@ describe('Experience Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
-    statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
+    statusMessage.should.equal(printTable(statusExpHeaders,
       [
         ['errorAlert', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['gaTracking', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
@@ -267,7 +268,7 @@ describe('Experience Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await statusDeferred.promise;
-    statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
+    statusMessage.should.equal(printTable(statusExpHeaders,
       [
         ['errorAlert', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('no')],
         ['gaTracking', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('no')],

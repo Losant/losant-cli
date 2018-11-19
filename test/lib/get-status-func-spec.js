@@ -1,4 +1,4 @@
-const { nock, sinon, buildConfig, printTable } = require('../common');
+const { nock, sinon, buildConfig, printTable, statusFilesHeaders } = require('../common');
 const getStatusFunc   = require('../../lib/get-status-func');
 const log             = require('single-line-log');
 const c               = require('chalk');
@@ -102,7 +102,7 @@ describe('#getStatusFunc', () => {
     await getStatus();
     spy.callCount.should.equal(1);
     spy.withArgs(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [[ 'Example Layout', 'layouts', c.blue('missing'), c.green('added'), c.gray('no') ]]
     )).calledOnce.should.equal(true);
   });
@@ -160,7 +160,7 @@ describe('#getStatusFunc', () => {
     await getStatus();
     spy.callCount.should.equal(1);
     spy.withArgs(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [[ 'Example Layout', 'layouts', c.green('added'), c.green('added'), c.redBright('yes') ]]
     )).calledOnce.should.equal(true);
   });

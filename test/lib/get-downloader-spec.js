@@ -1,4 +1,6 @@
-const { nock, sinon, unlockConfigFiles, buildConfig, printTable } = require('../common');
+const {
+  nock, sinon, unlockConfigFiles, buildConfig, printTable, statusFilesHeaders
+} = require('../common');
 const ssLog = require('single-line-log');
 const { curry, defer } = require('omnibelt');
 const minimatch = require('minimatch');
@@ -104,7 +106,7 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [[ 'Example Layout', 'layouts', c.gray('unmodified'), c.gray('unmodified'), c.gray('no') ]]
     ));
     spy.restore();
@@ -119,7 +121,7 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [[ 'Example Layout', 'layouts', c.yellow('modified'), c.gray('unmodified'), c.gray('no') ]]
     ));
     spy.restore();
@@ -134,7 +136,7 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     await deferred.promise;
     message.should.equal(printTable(
-      [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
+      statusFilesHeaders,
       [[ 'Example Layout', 'layouts', c.red('deleted'), c.gray('unmodified'), c.gray('no') ]]
     ));
   });
