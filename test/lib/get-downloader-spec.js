@@ -105,7 +105,7 @@ describe('#getDownloader', () => {
     await deferred.promise;
     message.should.equal(printTable(
       [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', 'layouts', c.gray('unmodified'), c.gray('unmodified'), c.gray('false') ]]
+      [[ 'Example Layout', 'layouts', c.gray('unmodified'), c.gray('unmodified'), c.gray('no') ]]
     ));
     spy.restore();
     deferred = defer();
@@ -120,7 +120,7 @@ describe('#getDownloader', () => {
     await deferred.promise;
     message.should.equal(printTable(
       [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', 'layouts', c.yellow('modified'), c.gray('unmodified'), c.gray('false') ]]
+      [[ 'Example Layout', 'layouts', c.yellow('modified'), c.gray('unmodified'), c.gray('no') ]]
     ));
     spy.restore();
     await remove('./views/layouts/Example Layout.hbs');
@@ -135,7 +135,7 @@ describe('#getDownloader', () => {
     await deferred.promise;
     message.should.equal(printTable(
       [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
-      [[ 'Example Layout', 'layouts', c.red('deleted'), c.gray('unmodified'), c.gray('false') ]]
+      [[ 'Example Layout', 'layouts', c.red('deleted'), c.gray('unmodified'), c.gray('no') ]]
     ));
   });
 });

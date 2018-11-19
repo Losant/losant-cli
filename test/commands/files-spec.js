@@ -301,8 +301,8 @@ describe('Files Commands', () => {
     statusMessage.should.equal(printTable(
       [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')]
       ]
     ));
 
@@ -324,9 +324,9 @@ describe('Files Commands', () => {
     statusMessage.should.equal(printTable(
       [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['newFile.txt', '/', c.green('added'), c.blue('missing'), c.gray('false')]
+        ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['newFile.txt', '/', c.green('added'), c.blue('missing'), c.gray('no')]
       ]
     ));
     spy.restore();

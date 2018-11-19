@@ -106,16 +106,16 @@ describe('Experience Commands', () => {
     msg.should.equal(printTable(
       [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['gaTracking', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['userIndicator', 'component', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Example Layout', 'layout', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Dashboard Stream Only', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Dashboard Transferred', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Home Page', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['Log In', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['dash', 'page', c.blue('missing'), c.green('added'), c.gray('false')],
-        ['default auto set', 'page', c.blue('missing'), c.green('added'), c.gray('false')]
+        ['errorAlert', 'component', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['gaTracking', 'component', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['userIndicator', 'component', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['Example Layout', 'layout', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['Dashboard Stream Only', 'page', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['Dashboard Transferred', 'page', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['Home Page', 'page', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['Log In', 'page', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['dash', 'page', c.blue('missing'), c.green('added'), c.gray('no')],
+        ['default auto set', 'page', c.blue('missing'), c.green('added'), c.gray('no')]
       ]
     ));
   });
@@ -237,16 +237,16 @@ describe('Experience Commands', () => {
     await statusDeferred.promise;
     statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['gaTracking', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Stream Only', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['dash', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['errorAlert', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['gaTracking', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Dashboard Stream Only', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['dash', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')]
       ]));
     await spy.restore();
 
@@ -269,16 +269,16 @@ describe('Experience Commands', () => {
     await statusDeferred.promise;
     statusMessage.should.equal(printTable([ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
       [
-        ['errorAlert', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
-        ['gaTracking', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('false')],
-        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Stream Only', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
-        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')],
-        ['dash', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('false')],
-        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('false')]
+        ['errorAlert', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('no')],
+        ['gaTracking', 'component', c.red('deleted'), c.gray('unmodified'), c.gray('no')],
+        ['userIndicator', 'component', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Example Layout', 'layout', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Dashboard Stream Only', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('no')],
+        ['Dashboard Transferred', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['dash', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('no')],
+        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')]
       ]));
     spy.restore();
     const uploadDeferred = defer();
