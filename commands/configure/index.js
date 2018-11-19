@@ -78,7 +78,7 @@ const printRetry = (err) => {
 };
 
 program
-  .description('Configure the command line tool for a specific directory.')
+  .description('Configures and associates a directory on disk to represent one of your Losant applications and its resources.')
   .action(async (command) => {
     const userConfig = await loadUserConfig() || {};
     if (!userConfig.apiToken) {

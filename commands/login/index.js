@@ -35,7 +35,7 @@ program
     try {
       api = await retryP(signIn, isLockedError);
     } catch (e) {
-      return;
+      return logError(e);
     }
     try {
       const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
