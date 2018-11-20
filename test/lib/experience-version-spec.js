@@ -1,4 +1,4 @@
-const { nock, sinon, buildConfig, printTable } = require('../common');
+const { nock, sinon, buildConfig } = require('../common');
 const ssLog = require('single-line-log');
 const versionCommand = require('../../lib/experience-version');
 const c = require('chalk');
@@ -66,22 +66,10 @@ describe('#ExperienceVersion', function() {
     await buildConfig();
 
     await versionCommand(null, {});
-    message.should.equal(printTable(
-      [ 'Version Name', 'Default Cors', 'Attached Domains', 'Attached Slugs', 'Creation Date', 'Last Updated' ],
-      [ [ 'develop',
-        true,
-        'http://mycustomguy.com\nhttp://anotherCustomMan.com',
-        'https://embree.onlosant.com',
-        'Sep 18 2018 17:49',
-        'Sep 18 2018 17:49' ],
-      [ 'v1.0.0',
-        false,
-        'http://domain.com\nhttp://domaain1.com\nhttp://*wildcard.com',
-        '',
-        'Sep 18 2018 17:49',
-        'Sep 18 2018 17:49' ]
-      ]
-    ));
+    let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.onlosant.commycustomguy.com\nanotherCustomMan.com\n`;
+    versionPrint += '---------------------------\n\n';
+    versionPrint += `Version Name: ${c.cyan.bold('v1.0.0')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\ndomain.com\ndomaain1.com\n*wildcard.com\n`;
+    message.should.equal(versionPrint);
   });
 
   it('should create a new version', async () => {
