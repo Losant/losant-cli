@@ -105,8 +105,10 @@ program
     }
     const loadedConfig = merge(userConfig, config);
     try {
-      await experienceDownload(null, {}, loadedConfig);
-      logResult('success', 'Downloaded all experience resources!', 'green');
+      const downloaded = await experienceDownload(null, {}, loadedConfig);
+      if (downloaded) {
+        logResult('success', 'Downloaded all experience resources!', 'green');
+      }
     } catch (e) {
       console.error(e);
       logError('Failed to download experience.');
@@ -114,8 +116,10 @@ program
     try {
       const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
       if (canDownloadFiles) {
-        await filesDownload(null, {}, loadedConfig);
-        logResult('success', 'Downloaded all of files!', 'green');
+        const downloadedFiles = await filesDownload(null, {}, loadedConfig);
+        if (downloadedFiles) {
+          logResult('success', 'Downloaded all of files!', 'green');
+        }
       } else {
         await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
         await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
