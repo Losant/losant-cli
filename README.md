@@ -4,7 +4,7 @@
 
 ## Description
 
-Losant CLI is a command line tool to help manage your [Losant Application](https://docs.losant.com/applications/overview/) and its resources.
+[Losant CLI](https://docs.losant.com/cli/overview) is a command line tool to help manage your [Losant Application](https://docs.losant.com/applications/overview/) and its resources.
 It easily lets you manage [Experience Views](https://docs.losant.com/experiences/views/), [Experience Versions](https://docs.losant.com/experiences/versions/), and [Files](https://docs.losant.com/applications/files/) in your Applications.
 
 ## Installation
