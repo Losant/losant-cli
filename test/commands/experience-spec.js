@@ -8,6 +8,7 @@ const {
   errorLog,
   unlockConfigFiles,
   buildConfig,
+  buildUserConfig,
   printTable,
   processingLog,
   statusExpHeaders
@@ -18,9 +19,10 @@ const { remove, writeFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
-describe.only('Experience Commands', () => {
+describe('Experience Commands', () => {
   console.log('about to run a test...'); // eslint-disable-line no-console
   it('should log an error if configure was not run first', async () => {
+    await buildUserConfig();
     console.log('first test...'); // eslint-disable-line no-console
     const deferred = defer();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {

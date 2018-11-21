@@ -51,11 +51,15 @@ const unlockConfigFiles = (files) => {
 
 const sandbox = sinon.createSandbox();
 
+const buildUserConfig = () => {
+  return utils.saveUserConfig({ apiToken: 'token' });
+};
+
 const buildConfig = async () => {
+  await buildUserConfig();
   const config = {
     applicationId: '5b9297591fefb200072e554d'
   };
-  await utils.saveUserConfig({ apiToken: 'token' });
   return utils.saveConfig(undefined, config); // let it default
 };
 
@@ -114,6 +118,7 @@ module.exports = {
   unlockConfigFiles,
   buildConfig,
   printTable,
+  buildUserConfig,
   statusExpHeaders: [  c.magentaBright('Name'),  c.magentaBright('View Type'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ],
   statusFilesHeaders: [  c.magentaBright('Name'),  c.magentaBright('Directory'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ]
 };

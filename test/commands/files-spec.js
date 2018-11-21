@@ -11,6 +11,7 @@ const {
   resetCommander,
   unlockConfigFiles,
   buildConfig,
+  buildUserConfig,
   printTable,
   statusFilesHeaders
 } = require('../common');
@@ -19,13 +20,14 @@ const { writeFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
-describe.skip('Files Commands', () => {
+describe('Files Commands', () => {
 
   before(() => {
     resetCommander();
   });
 
   it('should log an error if configure was not run first', async function() {
+    await buildUserConfig();
     const deferred = defer();
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       deferred.resolve(message);
