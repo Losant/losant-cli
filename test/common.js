@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
+process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
 const sinon = require('sinon');
