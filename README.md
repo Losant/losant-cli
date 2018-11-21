@@ -65,7 +65,7 @@ The `losant experience` command is how you manage the Experience Views and Versi
   `$ losant experience download --type components error*`
 * Force a download of all views overwriting local modifications  
   `$ losant experience download -f`
-* Check status of all experience files  
+* Check status of all experience views  
   `$ losant experience status`
 * Upload all experience views  
   `$ losant experience upload`
@@ -99,7 +99,7 @@ The `losant files` command is how you manage the files for a configured Applicat
   `$ losant files download images/*`
 * Force a download of all files overwriting local modifications  
   `$ losant files download -f`
-* Check status of all experience files  
+* Check status of all files  
   `$ losant files status`
 * Upload all files  
   `$ losant files upload`
