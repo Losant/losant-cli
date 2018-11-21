@@ -19,8 +19,9 @@ const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
 describe('Experience Commands', () => {
-
+  console.log('about to run a test...'); // eslint-disable-line no-console
   it('should log an error if configure was not run first', async () => {
+    console.log('first test...'); // eslint-disable-line no-console
     const deferred = defer();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
       deferred.resolve(message);
