@@ -8,6 +8,7 @@ const {
   errorLog,
   unlockConfigFiles,
   buildConfig,
+  buildUserConfig,
   printTable,
   processingLog,
   statusExpHeaders
@@ -19,13 +20,13 @@ const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
 describe('Experience Commands', () => {
-
   it('should log an error if configure was not run first', async () => {
+    await buildUserConfig();
     const deferred = defer();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
+
       deferred.resolve(message);
     });
-
     require('../../commands/experience').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-experience.js'),
