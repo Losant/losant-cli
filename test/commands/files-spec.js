@@ -19,7 +19,7 @@ const { writeFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
-describe('Files Commands', () => {
+describe.skip('Files Commands', () => {
 
   before(() => {
     resetCommander();
