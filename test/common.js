@@ -60,24 +60,18 @@ const buildConfig = async () => {
 };
 
 before(() => {
-  console.log('started before...'); // eslint-disable-line no-console
   process.chdir('./test');
-  console.log('finished before...'); // eslint-disable-line no-console
 });
 
 beforeEach(async () => {
-  console.log('started before each...'); // eslint-disable-line no-console
   await unlockConfigFiles(['.losant.yml']);
-  console.log('unlocked the config files...'); // eslint-disable-line no-console
   await deleteFakeData();
-  console.log('removed any fake data...'); // eslint-disable-line no-console
   if (await pathExists('../.losant')) {
     return remove('../.losant');
   }
   await sandbox.restore();
   nock.disableNetConnect();
   nock.cleanAll();
-  console.log('ended before each...'); // eslint-disable-line no-console
 });
 
 const resetCommander = () => {

@@ -18,12 +18,13 @@ const { remove, writeFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
-describe.skip('Experience Commands', () => {
+describe.only('Experience Commands', () => {
   console.log('about to run a test...'); // eslint-disable-line no-console
   it('should log an error if configure was not run first', async () => {
     console.log('first test...'); // eslint-disable-line no-console
     const deferred = defer();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
+      console.log('fake function called...'); // eslint-disable-line no-console
       deferred.resolve(message);
     });
     console.log('trying to kick off a command...'); // eslint-disable-line no-console
