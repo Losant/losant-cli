@@ -24,7 +24,7 @@
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
     "precommit": "lint-staged",
-    "test": "mocha ./test",
+    "test": "mocha test 2>&1",
     "reinstall": "rm -rf nodes_modules && yarn install"
   },
   "repository": {
