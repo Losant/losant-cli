@@ -20,24 +20,19 @@ const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
 describe('Experience Commands', () => {
-  console.log('about to run a test...'); // eslint-disable-line no-console
   it('should log an error if configure was not run first', async () => {
     await buildUserConfig();
-    console.log('first test...'); // eslint-disable-line no-console
     const deferred = defer();
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
-      console.log('fake function called...'); // eslint-disable-line no-console
+
       deferred.resolve(message);
     });
-    console.log('trying to kick off a command...'); // eslint-disable-line no-console
     require('../../commands/experience').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-experience.js'),
       'status'
     ]);
-    console.log('kicked off the command...'); // eslint-disable-line no-console
     const msg = await deferred.promise;
-    console.log('got the message'); // eslint-disable-line no-console
     msg.should.equal(errorLog('Configuration file missing for this directory, run losant configure to generate this file.'));
   });
   it('should run get status', async () => {
