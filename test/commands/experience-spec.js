@@ -15,7 +15,7 @@ const {
 } = require('../common');
 const { defer } = require('omnibelt');
 let spy;
-const { remove, writeFile } = require('fs-extra');
+const { remove, writeFile, ensureFile } = require('fs-extra');
 const c = require('chalk');
 const CONFIG_FILE = '.application.yml';
 
@@ -256,6 +256,8 @@ describe('Experience Commands', () => {
     await remove('./experience/components/gaTracking.hbs');
     await writeFile('./experience/pages/dash.hbs', 'hello world...');
     await writeFile('experience/pages/Dashboard Stream Only.hbs', 'Oh hi mark...');
+    await ensureFile('./experience/pages/newPage.hbs');
+    await writeFile('./experience/pages/newPage.hbs', 'a whole new page!');
     statusDeferred = defer();
     statusMessage = '';
     spy = sinon.stub(ssLog, 'stdout').callsFake((message) => {
@@ -280,7 +282,8 @@ describe('Experience Commands', () => {
         ['Home Page', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['Log In', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['dash', 'page', c.yellow('modified'), c.gray('unmodified'), c.gray('no')],
-        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')]
+        ['default auto set', 'page', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
+        ['newPage', 'page', c.green('added'), c.blue('missing'), c.gray('no')]
       ]));
     spy.restore();
     const uploadDeferred = defer();
