@@ -243,10 +243,10 @@ describe('Files Commands', () => {
         'max-age=31536000' ]);
 
     nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .post('/applications/5b9297591fefb200072e554d/files', { name: 'newFile.txt', parentDirectory: '/deep/nested', type: 'file', fileSize: 11, contentType: 'text/plain' })
+      .post('/applications/5b9297591fefb200072e554d/files', { name: 'newFile.txt.other', parentDirectory: '/deep/nested', type: 'file', fileSize: 11, contentType: 'application/octet-stream' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(201, {
-        name: 'newFile.txt',
+        name: 'newFile.txt.other',
         parentDirectory: '/deep/nested',
         type: 'file',
         fileSize: 11,
@@ -258,7 +258,7 @@ describe('Files Commands', () => {
         creationDate: '2018-10-19T20:24:19.039Z',
         status: 'pending',
         url: 'https://files.onlosant.com/5b9297591fefb200072e554d/newFile.txt',
-        id: '5bca3d7330307f0007c0e4e3',
+        id: '5bca3d7330307f0007c0e4e4',
         upload: {
           url: 'https://s3.us-west-2.amazonaws.com/files.onlosant.com',
           fields: {
@@ -358,8 +358,8 @@ describe('Files Commands', () => {
       ]
     ));
     await writeFile('./files/newFile.txt', 'hello world');
-    await ensureFile('./files/deep/nested/newFile.txt');
-    await writeFile('./files/deep/nested/newFile.txt', 'hello world');
+    await ensureFile('./files/deep/nested/newFile.txt.other');
+    await writeFile('./files/deep/nested/newFile.txt.other', 'hello world');
     statusDefer = defer();
     statusMessage = '';
     spy.restore();
@@ -379,7 +379,7 @@ describe('Files Commands', () => {
       [
         ['30442479_1804907812955173_2594707246956191799_n.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
         ['7c_iLKJn.jpg', '/', c.gray('unmodified'), c.gray('unmodified'), c.gray('no')],
-        ['newFile.txt', 'deep/nested', c.green('added'), c.blue('missing'), c.gray('no')],
+        ['newFile.txt.other', 'deep/nested', c.green('added'), c.blue('missing'), c.gray('no')],
         ['newFile.txt', '/', c.green('added'), c.blue('missing'), c.gray('no')]
       ]
     ));
@@ -401,11 +401,11 @@ describe('Files Commands', () => {
     await uploadDefer.promise;
     uploadMessages.length.should.equal(8);
     uploadMessages.sort().should.deepEqual([
-      uploadedLog('files/deep/nested/newFile.txt'),
+      uploadedLog('files/deep/nested/newFile.txt.other'),
       uploadedLog('files/newFile.txt'),
       processingLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
       processingLog('files/7c_iLKJn.jpg'),
-      processingLog('files/deep/nested/newFile.txt'),
+      processingLog('files/deep/nested/newFile.txt.other'),
       processingLog('files/newFile.txt'),
       unmodifiedLog('files/30442479_1804907812955173_2594707246956191799_n.jpg'),
       unmodifiedLog('files/7c_iLKJn.jpg')
