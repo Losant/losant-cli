@@ -60,8 +60,7 @@ describe('#ExperienceVersion', function() {
            self:
             { href: '/applications/568beedeb436ab01007be53d/experience/versions' }
          }
-      }
-      );
+      });
 
     await buildConfig();
 
