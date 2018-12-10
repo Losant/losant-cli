@@ -1,6 +1,6 @@
 const printHelp = require('../../lib/print-help');
 const helpLines = [
-  'To generate our standard experience starter views:',
+  'To generate our standard experience starter views',
   '$ losant experience bootstrap'
 ];
 module.exports = (program) => {
