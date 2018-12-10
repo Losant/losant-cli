@@ -173,6 +173,10 @@ ansi-regex@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-3.0.0.tgz#ed0317c322064f79466c02966bddb605ab37d998"
 
+ansi-regex@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-4.0.0.tgz#70de791edf021404c3fd615aa89118ae0432e5a9"
+
 ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
@@ -1248,8 +1252,8 @@ flat-cache@^1.2.1:
     write "^0.2.1"
 
 follow-redirects@^1.3.0:
-  version "1.5.9"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.9.tgz#c9ed9d748b814a39535716e531b9196a845d89c6"
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
   dependencies:
     debug "=3.1.0"
 
@@ -1601,7 +1605,7 @@ ini@^1.3.4, ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
-inquirer@^6.1.0, inquirer@^6.2.0:
+inquirer@^6.1.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-6.2.0.tgz#51adcd776f661369dc1e894859c2560a224abdd8"
   dependencies:
@@ -1617,6 +1621,24 @@ inquirer@^6.1.0, inquirer@^6.2.0:
     rxjs "^6.1.0"
     string-width "^2.1.0"
     strip-ansi "^4.0.0"
+    through "^2.3.6"
+
+inquirer@^6.2.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-6.2.1.tgz#9943fc4882161bdb0b0c9276769c75b32dbfcd52"
+  dependencies:
+    ansi-escapes "^3.0.0"
+    chalk "^2.0.0"
+    cli-cursor "^2.1.0"
+    cli-width "^2.0.0"
+    external-editor "^3.0.0"
+    figures "^2.0.0"
+    lodash "^4.17.10"
+    mute-stream "0.0.7"
+    run-async "^2.2.0"
+    rxjs "^6.1.0"
+    string-width "^2.1.0"
+    strip-ansi "^5.0.0"
     through "^2.3.6"
 
 is-accessor-descriptor@^0.1.6:
@@ -2122,8 +2144,8 @@ loose-envify@^1.3.1:
     js-tokens "^3.0.0 || ^4.0.0"
 
 losant-rest@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.3.0.tgz#e50f2a00276e7040649355c7d3b1660c81e888fb"
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.3.1.tgz#99ce921b7a7773dd059ce968d2ede5b5b1f2cfd5"
   dependencies:
     axios "^0.18.0"
     es6-promise "^4.0.5"
@@ -2144,7 +2166,7 @@ lru-cache@^4.0.1:
 
 lru-cache@~2.2.1:
   version "2.2.4"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.2.4.tgz#6c658619becf14031d0d0b594b16042ce4dc063d"
+  resolved "http://registry.npmjs.org/lru-cache/-/lru-cache-2.2.4.tgz#6c658619becf14031d0d0b594b16042ce4dc063d"
 
 make-dir@^1.0.0:
   version "1.3.0"
@@ -2712,11 +2734,12 @@ propagate@^1.0.0:
   resolved "https://registry.yarnpkg.com/propagate/-/propagate-1.0.0.tgz#00c2daeedda20e87e3782b344adba1cddd6ad709"
 
 proper-lockfile@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-3.0.2.tgz#d30b3b83ecb157e08fe0d411f2393bc384b77ad1"
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-3.2.0.tgz#89ca420eea1d55d38ca552578851460067bcda66"
   dependencies:
     graceful-fs "^4.1.11"
-    retry "^0.10.1"
+    retry "^0.12.0"
+    signal-exit "^3.0.2"
 
 pseudomap@^1.0.2:
   version "1.0.2"
@@ -2741,9 +2764,13 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
 
-qs@^6.5.1, qs@^6.5.2, qs@~6.5.2:
+qs@^6.5.1, qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
+
+qs@^6.5.2:
+  version "6.6.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
 
 querystringify@^2.0.0:
   version "2.1.0"
@@ -2945,9 +2972,9 @@ ret@~0.1.10:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
 
-retry@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/retry/-/retry-0.10.1.tgz#e76388d217992c252750241d3d3956fed98d8ff4"
+retry@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/retry/-/retry-0.12.0.tgz#1b42a6266a21f07421d1b0b54b7dc167b01c013b"
 
 rimraf@^2.2.8, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
   version "2.6.2"
@@ -2956,8 +2983,8 @@ rimraf@^2.2.8, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
     glob "^7.0.5"
 
 rollbar@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/rollbar/-/rollbar-2.5.0.tgz#dbb513eea34f1e3bae57611810c3e6df0ef50a12"
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/rollbar/-/rollbar-2.5.1.tgz#0416c793e08fd2fd37ea6e2c623aeadb81ce4804"
   dependencies:
     async "~1.2.1"
     console-polyfill "0.3.0"
@@ -3305,6 +3332,12 @@ strip-ansi@^4.0.0:
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-4.0.0.tgz#a8479022eb1ac368a871389b635262c505ee368f"
   dependencies:
     ansi-regex "^3.0.0"
+
+strip-ansi@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-5.0.0.tgz#f78f68b5d0866c20b2c9b8c61b5298508dc8756f"
+  dependencies:
+    ansi-regex "^4.0.0"
 
 strip-bom@^3.0.0:
   version "3.0.0"

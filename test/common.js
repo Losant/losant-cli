@@ -34,6 +34,7 @@ const deleteFakeData = () => {
 };
 
 const printTable = (headers, columns) => {
+  headers = headers.map((name) => { return c.magentaBright(name); });
   const table = new Table({ head: headers });
 
   table.push(...columns);
@@ -119,6 +120,6 @@ module.exports = {
   buildConfig,
   printTable,
   buildUserConfig,
-  statusExpHeaders: [  c.magentaBright('Name'),  c.magentaBright('View Type'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ],
-  statusFilesHeaders: [  c.magentaBright('Name'),  c.magentaBright('Directory'),  c.magentaBright('Local Status'),  c.magentaBright('Remote Status'),  c.magentaBright('Conflict') ]
+  statusExpHeaders: [  'Name',  'View Type',  'Local Status',  'Remote Status',  'Conflict' ],
+  statusFilesHeaders: [  'Name',  'Directory',  'Local Status',  'Remote Status',  'Conflict' ]
 };

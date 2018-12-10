@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 const program = require('commander');
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');
