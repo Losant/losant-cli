@@ -79,6 +79,12 @@ beforeEach(async () => {
   nock.cleanAll();
 });
 
+afterEach(() => {
+  if (!nock.isDone()) {
+    throw new Error(`Pending Nocks: ${nock.pendingMocks()}`);
+  }
+});
+
 const resetCommander = () => {
   // in order to get a clean commander start every time.
   // #theMKway

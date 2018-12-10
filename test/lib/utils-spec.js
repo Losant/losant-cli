@@ -1,4 +1,4 @@
-require('../common');
+const { buildUserConfig } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
 const { writeFile, remove } = require('fs-extra');
@@ -22,13 +22,13 @@ describe('utils', () => {
   describe('Config', () => {
     it('.saveConfig and .loadConfig', async () => {
       const config = {
-        applicationId: '5b9297591fefb200072e554d',
-        apiToken: 'token'
+        applicationId: '5b9297591fefb200072e554d'
       };
       const file = 'save-config.yaml';
       await utils.saveConfig(file, config);
+      await buildUserConfig();
       const result = await utils.loadConfig(file);
-      result.should.deepEqual(merge(config, { file }));
+      result.should.deepEqual(merge(config, { file, apiToken: 'token' }));
     });
   });
   describe('Meta Data', () => {
