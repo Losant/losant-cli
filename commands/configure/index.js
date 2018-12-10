@@ -8,6 +8,7 @@ const retryP = require('../../lib/retryP');
 const { ensureDir } = require('fs-extra');
 const params = require('../../lib/get-download-params');
 const getDownloader = require('../../lib/get-downloader');
+const experienceBootStrap = require('../../lib/experience-bootstrap');
 const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
@@ -108,6 +109,15 @@ program
       const downloaded = await experienceDownload(null, {}, loadedConfig);
       if (downloaded) {
         logResult('success', 'Downloaded all experience resources!', 'green');
+      } else {
+        const { shouldBootstrap } = await inquirer.prompt([{
+          type: 'confirm',
+          name: 'shouldBootstrap',
+          message: `Do you want to bootstrap your experience for application ${applicationName}?`
+        }]);
+        if (shouldBootstrap) {
+          await experienceBootStrap({}, loadedConfig);
+        }
       }
     } catch (e) {
       console.error(e);
