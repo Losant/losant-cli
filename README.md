@@ -86,7 +86,7 @@ The `losant experience` command is how you manage the Experience Views and Versi
   `$ losant experience layout`
 * View all of your experience pages that match this pattern with their layout  
   `$ losant experience layout -l v1.*`
-* Set a layout for page example  
+* Set a layout for page example 
   `$ losant experience layout example`
 
 ### Files
