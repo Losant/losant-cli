@@ -1,10 +1,12 @@
-# Losant CLI v1.0.1
+# Losant CLI Changelog
 
-**Added**
+## Losant CLI v1.1.0
 
-  * Experience layout command (`losant experience layout [page]`)
-  * Experience bootstrap command (`losant experience bootstrap`)
+### Added
 
-**Fixed**
+* Experience layout command (`losant experience layout [page]`)
+* Experience bootstrap command (`losant experience bootstrap`)
 
-  * ensuring lock file unlocks when closing the watcher
+### Fixed
+
+* Ensuring lock file unlocks when closing the watcher
