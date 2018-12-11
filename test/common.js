@@ -59,7 +59,8 @@ const buildUserConfig = () => {
 const buildConfig = async () => {
   await buildUserConfig();
   const config = {
-    applicationId: '5b9297591fefb200072e554d'
+    applicationId: '5b9297591fefb200072e554d',
+    applicationName: 'Test Application'
   };
   return utils.saveConfig(undefined, config); // let it default
 };

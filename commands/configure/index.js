@@ -29,21 +29,20 @@ const getApplicationFunc = (api) => {
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
     ]);
-    let applicationId, applicationName;
+    let applicationInfo;
     const applications = await api.applications.get({ filterField: 'name', filter });
     if (applications.count > 25) {
       throw error({ type: 'TooMany', message: 'Too many applications found to list through.' });
     } else if (applications.count === 0) {
       throw error({ type: 'NotFound', message: `No applications found with the filter ${filter}` });
     } else if (applications.count === 1) {
-      applicationId = applications.items[0].id;
-      applicationName = applications.items[0].name;
+      applicationInfo = applications.items[0];
     } else {
       const nameToId = {};
-      const choices = applications.items.map(({ id, name }) => {
-        const key = `${name} https://app.losant.com/applications/${id}`;
-        nameToId[key] = id;
-        return key;
+      const choices = applications.items.map((appInfo) => {
+        const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
+        nameToId[key] = appInfo;
+        return ` ${key}`;
       });
       choices.push('none of these, search again');
       const { name } = await inquirer.prompt([{
@@ -55,10 +54,9 @@ const getApplicationFunc = (api) => {
       if (name === 'none of these, search again') {
         throw error({ type: 'ForceRetry', message: 'user typed in wrong filter' });
       }
-      applicationId = nameToId[name];
-      applicationName = name.replace(`https://app.losant.com/applications/${applicationId}`, '').trim();
+      applicationInfo = nameToId[name];
     }
-    return { applicationId, applicationName };
+    return applicationInfo;
   };
 };
 
@@ -96,11 +94,10 @@ program
       }
       throw e;
     }
-    const { applicationId, applicationName } = appInfo;
-    const config = { applicationId, applicationName };
+    const config = { applicationId: appInfo.id, applicationName: appInfo.name };
     try {
       const file = await saveConfig(command.config, config);
-      logResult('success', `Configuration written to ${c.bold(file)} for the application ${applicationName}`, 'green');
+      logResult('success', `Configuration written to ${c.bold(file)} for the application ${appInfo.name}`, 'green');
     } catch (e) {
       logError(`Failed to write configuration: ${c.bold(e.message)}`);
     }
@@ -113,10 +110,10 @@ program
         const { shouldBootstrap } = await inquirer.prompt([{
           type: 'confirm',
           name: 'shouldBootstrap',
-          message: `Do you want to bootstrap your experience for application ${applicationName}?`
+          message: `Do you want to bootstrap your experience for application ${appInfo.name}?`
         }]);
         if (shouldBootstrap) {
-          await experienceBootStrap({}, loadedConfig);
+          await experienceBootStrap({}, loadedConfig, appInfo);
         }
       }
     } catch (e) {

@@ -11,7 +11,78 @@ const c = require('chalk');
 const pad = require('pad');
 
 describe('#ExperienceBootstrap', () => {
+  it('should not bootstrap if it has already been skipped or completed', async () => {
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        id: '5b9297591fefb200072e554d',
+        applicationId: '5b9297591fefb200072e554d',
+        name: 'Test Application',
+        ftueTracking: [{
+          name: 'experience',
+          status: 'skipped'
+        }]
+      }, [ 'Date',
+        'Mon, 10 Dec 2018 23:17:23 GMT',
+        'Content-Type',
+        'application/json',
+        'Content-Length',
+        '13475',
+        'Connection',
+        'close',
+        'Pragma',
+        'no-cache',
+        'Cache-Control',
+        'no-cache, no-store, must-revalidate',
+        'X-Content-Type-Options',
+        'nosniff',
+        'X-XSS-Protection',
+        '1; mode=block',
+        'Content-Security-Policy',
+        'default-src \'none\'; style-src \'unsafe-inline\'',
+        'Access-Control-Allow-Origin',
+        '*',
+        'Strict-Transport-Security',
+        'max-age=31536000' ]);
+    let message;
+    sinon.stub(ssLog, 'stdout').callsFake((msg) => {
+      message = msg;
+    });
+    await buildConfig();
+    await bootstrap();
+    message.should.equal(`${pad(c.yellow('Cannot Complete'), 13)}\tBootstrapping has already been skipped for Test Application`);
+  });
   it('should log out that not pages were found', async () => {
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        id: '5b9297591fefb200072e554d',
+        applicationId: '5b9297591fefb200072e554d',
+        name: 'Test Application'
+      }, [ 'Date',
+        'Mon, 10 Dec 2018 23:17:23 GMT',
+        'Content-Type',
+        'application/json',
+        'Content-Length',
+        '13475',
+        'Connection',
+        'close',
+        'Pragma',
+        'no-cache',
+        'Cache-Control',
+        'no-cache, no-store, must-revalidate',
+        'X-Content-Type-Options',
+        'nosniff',
+        'X-XSS-Protection',
+        '1; mode=block',
+        'Content-Security-Policy',
+        'default-src \'none\'; style-src \'unsafe-inline\'',
+        'Access-Control-Allow-Origin',
+        '*',
+        'Strict-Transport-Security',
+        'max-age=31536000' ]);
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000' })
