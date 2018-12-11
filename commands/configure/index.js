@@ -42,7 +42,7 @@ const getApplicationFunc = (api) => {
       const choices = applications.items.map((appInfo) => {
         const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
-        return ` ${key}`;
+        return key;
       });
       choices.push('none of these, search again');
       const { name } = await inquirer.prompt([{
@@ -74,6 +74,18 @@ const printRetry = (err) => {
     log('Please try again');
   }
   return false;
+};
+
+const setSkippedExperience = (api, application) => {
+  if (!application.ftueTracking) {
+    application.ftueTracking = [];
+  }
+  application.ftueTracking.push({
+    name: 'experience',
+    version: 3,
+    status: 'skipped'
+  });
+  return api.application.patch({ applicationId: application.applicationId, application: { ftueTracking: application.ftueTracking } });
 };
 
 program
@@ -116,15 +128,7 @@ program
           if (shouldBootstrap) {
             await experienceBootstrap({}, loadedConfig, appInfo);
           } else {
-            if (!appInfo.ftueTracking) { // eslint-disable-line max-depth
-              appInfo.ftueTracking = [];
-            }
-            appInfo.ftueTracking.push({
-              name: 'experience',
-              version: 3,
-              status: 'skipped'
-            });
-            await api.application.update({ appilcationId: appInfo.id }, { appInfo });
+            await setSkippedExperience(api, appInfo);
           }
         }
       }
