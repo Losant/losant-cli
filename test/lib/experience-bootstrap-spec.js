@@ -24,7 +24,7 @@ describe('#ExperienceBootstrap', () => {
           status: 'skipped',
           version: 2
         }],
-        endpointSlug: 'aSlug.com'
+        endpointSlug: 'aSlug'
       }, [ 'Date',
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
@@ -63,7 +63,7 @@ describe('#ExperienceBootstrap', () => {
         id: '5b9297591fefb200072e554d',
         applicationId: '5b9297591fefb200072e554d',
         name: 'Test Application',
-        endpointSlug: 'aSlug.com'
+        endpointSlug: 'aSlug'
       }, [ 'Date',
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
@@ -181,7 +181,7 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\taSlug.com`,
+      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.onlosant.com`,
       `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
       `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
       `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`
