@@ -8,12 +8,12 @@ const retryP = require('../../lib/retryP');
 const { ensureDir } = require('fs-extra');
 const params = require('../../lib/get-download-params');
 const getDownloader = require('../../lib/get-downloader');
-const experienceBootStrap = require('../../lib/experience-bootstrap');
+const experienceBootstrap = require('../../lib/experience-bootstrap');
 const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
 const {
-  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta
+  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
@@ -107,13 +107,25 @@ program
       if (downloaded) {
         logResult('success', 'Downloaded all experience resources!', 'green');
       } else {
-        const { shouldBootstrap } = await inquirer.prompt([{
-          type: 'confirm',
-          name: 'shouldBootstrap',
-          message: `Do you want to bootstrap your experience for application ${appInfo.name}?`
-        }]);
-        if (shouldBootstrap) {
-          await experienceBootStrap({}, loadedConfig, appInfo);
+        if (!hasBootstrapped(appInfo)) {
+          const { shouldBootstrap } = await inquirer.prompt([{
+            type: 'confirm',
+            name: 'shouldBootstrap',
+            message: `Do you want to bootstrap your experience for application ${appInfo.name}?`
+          }]);
+          if (shouldBootstrap) {
+            await experienceBootstrap({}, loadedConfig, appInfo);
+          } else {
+            if (!appInfo.ftueTracking) { // eslint-disable-line max-depth
+              appInfo.ftueTracking = [];
+            }
+            appInfo.ftueTracking.push({
+              name: 'experience',
+              version: 3,
+              status: 'skipped'
+            });
+            await api.application.update({ appilcationId: appInfo.id }, { appInfo });
+          }
         }
       }
     } catch (e) {
