@@ -88,6 +88,8 @@ The `losant experience` command is how you manage the Experience Views and Versi
   `$ losant experience layout -l v1.*`
 * View all your experience pages with their layouts  
   `$ losant experience layout`
+* To generate our standard experience starter views  
+  `$ losant experience bootstrap`
 
 ### Files
 
