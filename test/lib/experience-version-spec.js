@@ -41,7 +41,7 @@ describe('#ExperienceVersion', function() {
              id: '5ba172ccb4abff001661037b',
              attachedDomains: [
                { id: '59fa2e946130fd00072c786c',  domainName: 'domain.com' },
-               { id: '59fa2e946130fd00072c786bd',  domainName: 'domaain1.com' },
+               { id: '59fa2e946130fd00072c786bd',  domainName: 'domain1.com' },
                { id: '59fa2e946130fd00072c786be',  domainName: '*wildcard.com' }
              ],
              attachedSlugs: [],
@@ -67,7 +67,7 @@ describe('#ExperienceVersion', function() {
     await versionCommand(null, {});
     let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.onlosant.commycustomguy.com\nanotherCustomMan.com\n`;
     versionPrint += '---------------------------\n\n';
-    versionPrint += `Version Name: ${c.cyan.bold('v1.0.0')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\ndomain.com\ndomaain1.com\n*wildcard.com\n`;
+    versionPrint += `Version Name: ${c.cyan.bold('v1.0.0')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\ndomain.com\ndomain1.com\n*wildcard.com\n`;
     message.should.equal(versionPrint);
   });
 
