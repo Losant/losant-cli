@@ -3,6 +3,7 @@
 **Added**
 
   * Experience layout command (`losant experience layout [page]`)
+  * Experience bootstrap command (`losant experience bootstrap`)
 
 **Fixed**
 
