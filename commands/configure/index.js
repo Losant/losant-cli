@@ -1,6 +1,6 @@
 const error = require('error/typed');
 const p = require('commander');
-const { merge } = require('omnibelt');
+const { merge, findIndex, propEq } = require('omnibelt');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
@@ -80,11 +80,13 @@ const setSkippedExperience = (api, application) => {
   if (!application.ftueTracking) {
     application.ftueTracking = [];
   }
-  application.ftueTracking.push({
-    name: 'experience',
-    version: 3,
-    status: 'skipped'
-  });
+  const index = findIndex(propEq('name', 'experience'), application.ftueTracking);
+  const track = { name: 'experience', version: 3, status: 'skipped' };
+  if (index === -1) {
+    application.ftueTracking.push(track);
+  } else {
+    application.ftueTracking[index] = track;
+  }
   return api.application.patch({ applicationId: application.applicationId, application: { ftueTracking: application.ftueTracking } });
 };
 

@@ -139,7 +139,7 @@ describe('#ExperienceBootstrap', () => {
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/bootstrap', {})
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
-      .reply(200, { resourceSuffix: '', password: 'yp926mfr6a', email: 'test.user.yp926mfr6a@example.com' }, [ 'Date',
+      .reply(200, { resourceSuffix: 'aSuffix', password: 'yp926mfr6a', email: 'test.user.yp926mfr6a@example.com' }, [ 'Date',
         'Mon, 10 Dec 2018 23:17:22 GMT',
         'Content-Type',
         'application/json',
@@ -181,7 +181,7 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.onlosant.com`,
+      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.onlosant.com/aSuffix`,
       `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
       `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
       `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`
