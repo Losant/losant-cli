@@ -53,6 +53,7 @@ The `losant experience` command is how you manage the Experience Views and Versi
 * status
 * upload
 * layout
+* bootstrap
 * version
 * watch
 
