@@ -17,11 +17,13 @@ const {
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
-  'files'
+  'files',
+  'experience'
 ];
 
 const LOCAL_META_FILES = [
-  'files'
+  'files',
+  'experience'
 ];
 
 const getApplicationFunc = (api) => {
@@ -97,6 +99,8 @@ program
     if (!userConfig.apiToken) {
       return logError('Must run losant login before running losant configure.');
     }
+    await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
+    await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api);
     let appInfo;
@@ -145,9 +149,6 @@ program
         if (downloadedFiles) {
           logResult('success', 'Downloaded all of files!', 'green');
         }
-      } else {
-        await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
-        await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
       }
     } catch (e) {
       console.error(e);

@@ -10,3 +10,4 @@
 ### Fixed
 
 * Ensuring lock file unlocks when closing the watcher
+* Actually generating folder structure on configure
