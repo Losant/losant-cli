@@ -889,9 +889,10 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
 
-es6-promise@^4.0.5:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.5.tgz#da6d0d5692efb461e082c14817fe2427d8f5d054"
+es6-promise@^4.2.6:
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.6.tgz#b685edd8258886365ea62b57d30de28fadcd974f"
+  integrity sha512-aRVgGdnmW2OiySVPUC9e6m+plolMAJKjZnQlCwNSuK5yQ0JN61DZSO1X1Ufd1foqWRAlig0rhduTCHe7sVtK5Q==
 
 escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.4, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -2143,14 +2144,16 @@ loose-envify@^1.3.1:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
-losant-rest@^2.3.0:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.3.1.tgz#99ce921b7a7773dd059ce968d2ede5b5b1f2cfd5"
+losant-rest@2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.3.5.tgz#d967536e32b9381eda15748787a904c5e7c18e01"
+  integrity sha512-qV2nAYczgnXLsqG90VJBCAba2BnJdkTj2EG+vJ1Qi5qHMGIT+YqTP7POSLVBsbLg9xTHC8RxV3NnRGM4cKTx3Q==
   dependencies:
     axios "^0.18.0"
-    es6-promise "^4.0.5"
+    es6-promise "^4.2.6"
     eventsource "^1.0.7"
-    qs "^6.5.2"
+    form-data "^2.3.3"
+    qs "^6.6.0"
     uri-template "^1.0.1"
 
 lowercase-keys@^1.0.0:
@@ -2768,9 +2771,10 @@ qs@^6.5.1, qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
 
-qs@^6.5.2:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
+qs@^6.6.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
+  integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
 querystringify@^2.0.0:
   version "2.1.0"
