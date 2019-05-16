@@ -37,8 +37,10 @@ program
     } catch (e) {
       return logError(e);
     }
+    const conf = {};
+    conf[process.env.LOSANT_API_URL]= { url: process.env.LOSANT_API_URL, apiToken: api.getOption('accessToken') };
     try {
-      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
+      const userFile = await saveUserConfig(conf);
       logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);

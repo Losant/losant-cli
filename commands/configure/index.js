@@ -26,7 +26,7 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api) => {
+const getApplicationFunc = (api, url) => {
   return async () => {
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
@@ -42,7 +42,7 @@ const getApplicationFunc = (api) => {
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
+        const key = `${appInfo.name} ${url}/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
@@ -60,6 +60,20 @@ const getApplicationFunc = (api) => {
     }
     return applicationInfo;
   };
+};
+
+const getApiURL = async (userConfig) => {
+  const keys = Object.keys(userConfig);
+  if (keys.length === 1) {
+    return 'https://api.losant.com';
+  }
+  const { url } = await inquirer.prompt([{
+    type: 'list',
+    name: 'url',
+    message: 'Choose an API url:',
+    choices: keys
+  }]);
+  return url;
 };
 
 const printRetry = (err) => {
@@ -95,14 +109,16 @@ const setSkippedExperience = (api, application) => {
 program
   .description('Configures and associates a directory on disk to represent one of your Losant applications and its resources.')
   .action(async (command) => {
-    const userConfig = await loadUserConfig() || {};
-    if (!userConfig.apiToken) {
+    let userConfig = await loadUserConfig() || {};
+    if (!userConfig) {
       return logError('Must run losant login before running losant configure.');
     }
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
+    const url = await getApiURL(userConfig);
+    userConfig = userConfig[`${url}`];
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api);
+    const getApplication = getApplicationFunc(api, url);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
