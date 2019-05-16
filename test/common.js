@@ -53,7 +53,7 @@ const unlockConfigFiles = (files) => {
 const sandbox = sinon.createSandbox();
 
 const buildUserConfig = () => {
-  return utils.saveUserConfig({ apiToken: 'token' });
+  return utils.saveUserConfig( { url: { apiToken: 'token', url: 'url' } });
 };
 
 const buildConfig = async () => {
