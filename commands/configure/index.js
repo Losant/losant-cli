@@ -26,7 +26,7 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api, url) => {
+const getApplicationFunc = (api) => {
   return async () => {
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
@@ -42,7 +42,7 @@ const getApplicationFunc = (api, url) => {
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} ${url}/applications/${appInfo.id}`;
+        const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
@@ -118,7 +118,7 @@ program
     const url = await getApiURL(userConfig);
     userConfig = userConfig[url];
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api, url);
+    const getApplication = getApplicationFunc(api);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
@@ -128,7 +128,7 @@ program
       }
       throw e;
     }
-    const config = { applicationId: appInfo.id, applicationName: appInfo.name };
+    const config = { applicationId: appInfo.id, applicationName: appInfo.name, apiUrl: url };
     try {
       const file = await saveConfig(command.config, config);
       logResult('success', `Configuration written to ${c.bold(file)} for the application ${appInfo.name}`, 'green');

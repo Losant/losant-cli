@@ -22,7 +22,8 @@ describe('utils', () => {
   describe('Config', () => {
     it('.saveConfig and .loadConfig', async () => {
       const config = {
-        applicationId: '5b9297591fefb200072e554d'
+        applicationId: '5b9297591fefb200072e554d',
+        apiUrl: 'https://api.losant.space'
       };
       const file = 'save-config.yaml';
       await utils.saveConfig(file, config);

@@ -53,14 +53,17 @@ const unlockConfigFiles = (files) => {
 const sandbox = sinon.createSandbox();
 
 const buildUserConfig = () => {
-  return utils.saveUserConfig( { url: { apiToken: 'token', url: 'url' } });
+  const conf = {};
+  conf['https://api.losant.space'] = { apiToken: 'token' };
+  return utils.saveUserConfig(conf);
 };
 
 const buildConfig = async () => {
   await buildUserConfig();
   const config = {
     applicationId: '5b9297591fefb200072e554d',
-    applicationName: 'Test Application'
+    applicationName: 'Test Application',
+    apiUrl: 'https://api.losant.space'
   };
   return utils.saveConfig(undefined, config); // let it default
 };
