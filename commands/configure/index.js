@@ -12,16 +12,19 @@ const experienceBootstrap = require('../../lib/experience-bootstrap');
 const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
+const dataTablesDownload = getDownloader(params.dataTables);
 const {
   saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
+  'data-tables',
   'files',
   'experience'
 ];
 
 const LOCAL_META_FILES = [
+  'dataTables',
   'files',
   'experience'
 ];
@@ -153,6 +156,18 @@ program
     } catch (e) {
       console.error(e);
       logError('Failed to download files.');
+    }
+    try {
+      const { canDownloadDataTables } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadDataTables', message: 'Download data tables now?' }]);
+      if (canDownloadDataTables) {
+        const downloadedTables = await dataTablesDownload(null, {}, loadedConfig);
+        if (downloadedTables) {
+          logResult('success, Downloaded all data tables!', 'green');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      logError('Failed to download data tables.');
     }
     log('Configuration completed! :D');
   });
