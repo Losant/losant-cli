@@ -26,7 +26,7 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api) => {
+const getApplicationFunc = (api, url) => {
   return async () => {
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
@@ -37,12 +37,12 @@ const getApplicationFunc = (api) => {
       throw error({ type: 'TooMany', message: 'Too many applications found to list through.' });
     } else if (applications.count === 0) {
       throw error({ type: 'NotFound', message: `No applications found with the filter ${filter}` });
-    } else if (applications.count === 1) {
+    } else if (applications.count === 0) {
       applicationInfo = applications.items[0];
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
+        const key = `${appInfo.name} ${url.replace('api', 'app')}/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
@@ -116,9 +116,9 @@ program
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     const url = await getApiURL(userConfig);
-    userConfig = userConfig[url];
+    userConfig = userConfig[url] || userConfig;
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api);
+    const getApplication = getApplicationFunc(api, url);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
