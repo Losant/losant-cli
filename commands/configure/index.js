@@ -13,7 +13,7 @@ const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
 const {
-  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped
+  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped, getWhitelabel
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
@@ -26,8 +26,9 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api, url) => {
+const getApplicationFunc = (api) => {
   return async () => {
+    const { appUrl } = await getWhitelabel(api);
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
     ]);
@@ -37,12 +38,12 @@ const getApplicationFunc = (api, url) => {
       throw error({ type: 'TooMany', message: 'Too many applications found to list through.' });
     } else if (applications.count === 0) {
       throw error({ type: 'NotFound', message: `No applications found with the filter ${filter}` });
-    } else if (applications.count === 0) {
+    } else if (applications.count === 1) {
       applicationInfo = applications.items[0];
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} ${url.replace('api', 'app')}/applications/${appInfo.id}`;
+        const key = `${appInfo.name} ${appUrl}/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
