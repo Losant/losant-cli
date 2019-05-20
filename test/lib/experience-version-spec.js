@@ -5,6 +5,20 @@ const c = require('chalk');
 
 describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
+    nock('https://api.losant.space', {
+      headers: {
+        'accept': 'application/json',
+        'accept-version': '^1.14.1',
+        'authorization': 'Bearer token',
+        'user-agent': 'axios/0.18.0'
+      }
+    })
+      .get('/whitelabels/domain')
+      .reply(200,
+        {
+          appUrl: 'https://app.losant.com',
+          endpointDomain: 'onlosant.com'
+        });
     let message;
     sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;

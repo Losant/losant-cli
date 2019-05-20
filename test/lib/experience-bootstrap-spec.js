@@ -13,6 +13,20 @@ const inquirer = require('inquirer');
 
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {
+    nock('https://api.losant.space', {
+      headers: {
+        'accept': 'application/json',
+        'accept-version': '^1.14.1',
+        'authorization': 'Bearer token',
+        'user-agent': 'axios/0.18.0'
+      }
+    })
+      .get('/whitelabels/domain')
+      .reply(200,
+        {
+          appUrl: 'https://app.losant.com',
+          endpointDomain: 'onlosant.com'
+        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -60,6 +74,20 @@ describe('#ExperienceBootstrap', () => {
     message.should.equal(`${pad(c.yellow('Skip'), 13)}\tBootstrapping for this application Test Application.`);
   });
   it('should not bootstrap if it has already been completed', async () => {
+    nock('https://api.losant.space', {
+      headers: {
+        'accept': 'application/json',
+        'accept-version': '^1.14.1',
+        'authorization': 'Bearer token',
+        'user-agent': 'axios/0.18.0'
+      }
+    })
+      .get('/whitelabels/domain')
+      .reply(200,
+        {
+          appUrl: 'https://app.losant.com',
+          endpointDomain: 'onlosant.com'
+        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -104,6 +132,20 @@ describe('#ExperienceBootstrap', () => {
     message.should.equal(`${pad(c.yellow('Cannot Complete'), 13)}\tBootstrapping has already been completed for Test Application`);
   });
   it('should log out that pages were downloaded and bootstrapping completed', async () => {
+    nock('https://api.losant.space', {
+      headers: {
+        'accept': 'application/json',
+        'accept-version': '^1.14.1',
+        'authorization': 'Bearer token',
+        'user-agent': 'axios/0.18.0'
+      }
+    })
+      .get('/whitelabels/domain')
+      .reply(200,
+        {
+          appUrl: 'https://app.losant.com',
+          endpointDomain: 'onlosant.com'
+        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -237,6 +279,20 @@ describe('#ExperienceBootstrap', () => {
   });
 
   it('should bootstrap even if skipped', async () => {
+    nock('https://api.losant.space', {
+      headers: {
+        'accept': 'application/json',
+        'accept-version': '^1.14.1',
+        'authorization': 'Bearer token',
+        'user-agent': 'axios/0.18.0'
+      }
+    })
+      .get('/whitelabels/domain')
+      .reply(200,
+        {
+          appUrl: 'https://app.losant.com',
+          endpointDomain: 'onlosant.com'
+        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
