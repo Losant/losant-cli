@@ -1,7 +1,9 @@
-const { buildUserConfig } = require('../common');
+const { buildUserConfig, nock } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
 const { writeFile, remove } = require('fs-extra');
+const should = require('should');
+
 
 describe('utils', () => {
   describe('logging', () => {
@@ -30,6 +32,16 @@ describe('utils', () => {
       await buildUserConfig();
       const result = await utils.loadConfig(file);
       result.should.deepEqual(merge(config, { file, apiToken: 'token' }));
+    });
+    it('saveConfig and loadApplicationConfig should default on empty apiUrl', async () => {
+      const config = {
+        applicationId: '5b9297591fefb200072e554d'
+      };
+      const file = 'save-config.yaml';
+      await utils.saveConfig(file, config);
+      const loadResult = await utils.loadApplicationConfig(file);
+      should.exist(loadResult.apiUrl);
+      loadResult.apiUrl.should.deepEqual('https://api.losant.com');
     });
   });
   describe('Meta Data', () => {
@@ -147,6 +159,22 @@ describe('utils', () => {
       localStatus.should.equal('modified');
       remoteStatus.should.equal('modified');
       conflict.should.equal(false);
+    });
+  });
+  describe('Whitelabel', () => {
+    it('should get whitelabel from an API token', async () => {
+      nock('https://api.losant.space')
+        .get('/whitelabels/domain')
+        .reply(200,
+          {
+            appUrl: 'https://app.losant.com',
+            endpointDomain: 'onlosant.com'
+          });
+      const result = await utils.getWhitelabel('token');
+      result.should.deepEqual({
+        appUrl: 'https://app.losant.com',
+        endpointDomain: 'onlosant.com'
+      });
     });
   });
 });

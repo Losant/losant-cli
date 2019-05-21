@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
+process.env.TESTING_URL = 'https://api.losant.space';
 process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
@@ -52,7 +53,7 @@ const unlockConfigFiles = (files) => {
 
 const sandbox = sinon.createSandbox();
 
-const buildUserConfig = () => {
+const buildUserConfig = async () => {
   const conf = {};
   conf['https://api.losant.space'] = { apiToken: 'token' };
   return utils.saveUserConfig(conf);
