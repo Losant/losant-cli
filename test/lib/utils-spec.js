@@ -2,8 +2,6 @@ const { buildUserConfig, nock } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
 const { writeFile, remove } = require('fs-extra');
-const should = require('should');
-
 
 describe('utils', () => {
   describe('logging', () => {
@@ -24,24 +22,13 @@ describe('utils', () => {
   describe('Config', () => {
     it('.saveConfig and .loadConfig', async () => {
       const config = {
-        applicationId: '5b9297591fefb200072e554d',
-        apiUrl: 'https://api.losant.space'
+        applicationId: '5b9297591fefb200072e554d'
       };
       const file = 'save-config.yaml';
       await utils.saveConfig(file, config);
       await buildUserConfig();
       const result = await utils.loadConfig(file);
       result.should.deepEqual(merge(config, { file, apiToken: 'token' }));
-    });
-    it('saveConfig and loadApplicationConfig should default on empty apiUrl', async () => {
-      const config = {
-        applicationId: '5b9297591fefb200072e554d'
-      };
-      const file = 'save-config.yaml';
-      await utils.saveConfig(file, config);
-      const loadResult = await utils.loadApplicationConfig(file);
-      should.exist(loadResult.apiUrl);
-      loadResult.apiUrl.should.deepEqual('https://api.losant.com');
     });
   });
   describe('Meta Data', () => {
