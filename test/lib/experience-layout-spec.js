@@ -6,14 +6,7 @@ const c = require('chalk');
 
 describe('#ExperienceLayout', () => {
   it('should log out that not pages were found', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {
@@ -56,14 +49,7 @@ describe('#ExperienceLayout', () => {
     message.should.equal('No pages were found for this application.');
   });
   it('it should print the table of all pages to layouts', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {
@@ -125,14 +111,7 @@ describe('#ExperienceLayout', () => {
   });
 
   it('it should update a one page\'s layout', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {
@@ -262,14 +241,7 @@ describe('#ExperienceLayout', () => {
     message.should.equal(`${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`);
   });
   it('should update multiple pages layouts', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {
@@ -472,14 +444,7 @@ describe('#ExperienceLayout', () => {
   });
 
   it('should update multiple pages layouts to null', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {

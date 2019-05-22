@@ -5,14 +5,7 @@ const c = require('chalk');
 
 describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
-    nock('https://api.losant.space', {
-      headers: {
-        'accept': 'application/json',
-        'accept-version': '^1.14.1',
-        'authorization': 'Bearer token',
-        'user-agent': 'axios/0.18.0'
-      }
-    })
+    nock('https://api.losant.space', { encodedQueryParams: true })
       .get('/whitelabels/domain')
       .reply(200,
         {

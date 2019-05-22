@@ -163,7 +163,7 @@ describe('utils', () => {
   });
   describe('Whitelabel', () => {
     it('should get whitelabel from an API token', async () => {
-      nock('https://api.losant.space')
+      nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/whitelabels/domain')
         .reply(200,
           {
