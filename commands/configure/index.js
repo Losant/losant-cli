@@ -119,7 +119,7 @@ program
     const url = await getApiURL(userConfig);
     userConfig = userConfig[url] || userConfig;
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api, url);
+    const getApplication = getApplicationFunc(api);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
