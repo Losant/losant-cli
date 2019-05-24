@@ -37,6 +37,7 @@
     "chokidar": "^2.0.4",
     "cli-table3": "^0.5.1",
     "commander": "^2.19.0",
+    "csv": "^5.1.1",
     "death": "^1.1.0",
     "error": "^7.0.2",
     "find-file-up": "^2.0.1",
