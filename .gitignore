@@ -8,7 +8,7 @@ package-lock.json
 ### Folders used by the application
 /experience/*
 /files/*
-/data-tables/*
+/dataTables/*
 example*
 /.losant/*
 
