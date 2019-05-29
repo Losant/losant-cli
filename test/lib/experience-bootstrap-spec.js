@@ -14,13 +14,6 @@ const inquirer = require('inquirer');
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {
     nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .get('/whitelabels/domain')
-      .reply(200,
-        {
-          appUrl: 'https://app.losant.com',
-          endpointDomain: 'onlosant.com'
-        });
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -68,13 +61,6 @@ describe('#ExperienceBootstrap', () => {
   });
   it('should not bootstrap if it has already been completed', async () => {
     nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .get('/whitelabels/domain')
-      .reply(200,
-        {
-          appUrl: 'https://app.losant.com',
-          endpointDomain: 'onlosant.com'
-        });
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -118,13 +104,6 @@ describe('#ExperienceBootstrap', () => {
     message.should.equal(`${pad(c.yellow('Cannot Complete'), 13)}\tBootstrapping has already been completed for Test Application`);
   });
   it('should log out that pages were downloaded and bootstrapping completed', async () => {
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .get('/whitelabels/domain')
-      .reply(200,
-        {
-          appUrl: 'https://app.losant.com',
-          endpointDomain: 'onlosant.com'
-        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -250,7 +229,7 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.onlosant.com/aSuffix`,
+      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.on.losant.space/aSuffix`,
       `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
       `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
       `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`
@@ -258,13 +237,6 @@ describe('#ExperienceBootstrap', () => {
   });
 
   it('should bootstrap even if skipped', async () => {
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
-      .get('/whitelabels/domain')
-      .reply(200,
-        {
-          appUrl: 'https://app.losant.com',
-          endpointDomain: 'onlosant.com'
-        });
     nock('https://api.losant.space:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
@@ -398,7 +370,7 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.onlosant.com/aSuffix`,
+      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.on.losant.space/aSuffix`,
       `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
       `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
       `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`

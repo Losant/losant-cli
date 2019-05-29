@@ -26,9 +26,8 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api) => {
+const getApplicationFunc = (appUrl, api) => {
   return async () => {
-    const { appUrl } = await getWhitelabel(api);
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
     ]);
@@ -65,8 +64,11 @@ const getApplicationFunc = (api) => {
 
 const getApiURL = async (userConfig) => {
   const keys = Object.keys(userConfig);
+  if (keys.length < 1) {
+    return logError('Must run losant login before running losant configure.');
+  }
   if (keys.length === 1) {
-    return 'https://api.losant.com';
+    return keys[0];
   }
   const { url } = await inquirer.prompt([{
     type: 'list',
@@ -111,15 +113,13 @@ program
   .description('Configures and associates a directory on disk to represent one of your Losant applications and its resources.')
   .action(async (command) => {
     let userConfig = await loadUserConfig() || {};
-    if (!userConfig) {
-      return logError('Must run losant login before running losant configure.');
-    }
+    const { appUrl, endpointDomain } = await getWhitelabel(userConfig.apiToken);
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     const url = await getApiURL(userConfig);
     userConfig = userConfig[url] || userConfig;
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api);
+    const getApplication = getApplicationFunc(appUrl, api);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
@@ -129,7 +129,7 @@ program
       }
       throw e;
     }
-    const config = { applicationId: appInfo.id, applicationName: appInfo.name, apiUrl: url };
+    const config = { applicationId: appInfo.id, applicationName: appInfo.name, apiUrl: url, appUrl, endpointDomain };
     try {
       const file = await saveConfig(command.config, config);
       logResult('success', `Configuration written to ${c.bold(file)} for the application ${appInfo.name}`, 'green');

@@ -7,11 +7,7 @@ describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
     nock('https://api.losant.space', { encodedQueryParams: true })
       .get('/whitelabels/domain')
-      .reply(200,
-        {
-          appUrl: 'https://app.losant.com',
-          endpointDomain: 'onlosant.com'
-        });
+      .reply(200, { appUrl: 'https://app.losant.space', endpointDomain: 'on.losant.space' });
     let message;
     sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;
@@ -72,7 +68,7 @@ describe('#ExperienceVersion', function() {
     await buildConfig();
 
     await versionCommand(null, {});
-    let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.onlosant.commycustomguy.com\nanotherCustomMan.com\n`;
+    let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.on.losant.spacemycustomguy.com\nanotherCustomMan.com\n`;
     versionPrint += '---------------------------\n\n';
     versionPrint += `Version Name: ${c.cyan.bold('v1.0.0')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\ndomain.com\ndomain1.com\n*wildcard.com\n`;
     message.should.equal(versionPrint);

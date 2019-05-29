@@ -22,13 +22,42 @@ describe('utils', () => {
   describe('Config', () => {
     it('.saveConfig and .loadConfig', async () => {
       const config = {
+        applicationId: '5b9297591fefb200072e554d',
+        appUrl: 'https://app.losant.space',
+        apiUrl: 'https://api.losant.space',
+        endpointDomain: 'on.losant.space'
+      };
+      const file = 'save-config.yaml';
+      await utils.saveConfig(file, config);
+      await buildUserConfig();
+      const result = await utils.loadConfig(file);
+      result.should.deepEqual(merge(config, {
+        file,
+        apiToken: 'token',
+        appUrl: 'https://app.losant.space',
+        apiUrl: 'https://api.losant.space',
+        endpointDomain: 'on.losant.space'
+      }));
+    });
+
+    it('.saveConfig and .loadConfig should update config to new format', async () => {
+      nock('https://api.losant.space:443', { encodedQueryParams: true })
+        .get('/whitelabels/domain')
+        .reply(200, { appUrl: 'https://app.losant.space', endpointDomain: 'on.losant.space' });
+      const config = {
         applicationId: '5b9297591fefb200072e554d'
       };
       const file = 'save-config.yaml';
       await utils.saveConfig(file, config);
       await buildUserConfig();
       const result = await utils.loadConfig(file);
-      result.should.deepEqual(merge(config, { file, apiToken: 'token' }));
+      result.should.deepEqual(merge(config, {
+        file,
+        apiToken: 'token',
+        appUrl: 'https://app.losant.space',
+        apiUrl: 'https://api.losant.space',
+        endpointDomain: 'on.losant.space'
+      }));
     });
   });
   describe('Meta Data', () => {
@@ -149,18 +178,14 @@ describe('utils', () => {
     });
   });
   describe('Whitelabel', () => {
-    it('should get whitelabel from an API token', async () => {
+    it('should get whitelabel from an api endpoint', async () => {
       nock('https://api.losant.space:443', { encodedQueryParams: true })
         .get('/whitelabels/domain')
-        .reply(200,
-          {
-            appUrl: 'https://app.losant.com',
-            endpointDomain: 'onlosant.com'
-          });
+        .reply(200, { appUrl: 'https://app.losant.space', endpointDomain: 'on.losant.space' });
       const result = await utils.getWhitelabel('token');
       result.should.deepEqual({
-        appUrl: 'https://app.losant.com',
-        endpointDomain: 'onlosant.com'
+        appUrl: 'https://app.losant.space',
+        endpointDomain: 'on.losant.space'
       });
     });
   });

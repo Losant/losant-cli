@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
-process.env.TESTING_URL = 'https://api.losant.space';
+process.env.DEFAULT_API_URL = process.env.DEFAULT_API_URL || 'https://api.losant.space';
 process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
@@ -61,7 +61,10 @@ const buildConfig = async () => {
   await buildUserConfig();
   const config = {
     applicationId: '5b9297591fefb200072e554d',
-    applicationName: 'Test Application'
+    applicationName: 'Test Application',
+    appUrl: 'https://app.losant.space',
+    endpointDomain: 'on.losant.space',
+    apiUrl: 'https://api.losant.space'
   };
   return utils.saveConfig(undefined, config); // let it default
 };

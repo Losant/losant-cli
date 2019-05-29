@@ -106,6 +106,14 @@
     lodash.camelcase "^4.3.0"
     ramda "^0.25.0"
 
+"@rjhilgefort/export-dir@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@rjhilgefort/export-dir/-/export-dir-1.1.2.tgz#4ba370895c5a0f5270305d2e23ab1973de438938"
+  integrity sha512-jDq1JmFDZYLX70cHqew4BH+A+tcxN+PlXzFEeC8y7lAr2e3XYm8RVcu0e46njEIuEtLG+5mB9CzABklOLm+7Og==
+  dependencies:
+    lodash.camelcase "^4.3.0"
+    ramda "^0.26.1"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -2106,7 +2114,7 @@ lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
 
-lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.4, lodash@^4.17.5:
+lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -2470,15 +2478,16 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-omnibelt@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/omnibelt/-/omnibelt-1.2.0.tgz#041470fdc99fd03f84f4a237d57f2b3c41ddb665"
+omnibelt@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/omnibelt/-/omnibelt-1.3.0.tgz#c05ce4223148694f064341c51ea0624b58700e65"
+  integrity sha512-xYnHMk41B4HiYfYoGKXxkNgIjs5nRxjRY8sHPzb9JbkELPAsCvCHgyqGoCuJz2gYbiKSSBlZYi42/48WuIx8gA==
   dependencies:
-    "@rjhilgefort/export-dir" "^1.1.0"
-    lodash "^4.17.10"
-    ramda "^0.25.0"
+    "@rjhilgefort/export-dir" "^1.1.2"
+    lodash "^4.17.11"
+    ramda "^0.26.1"
     string-format "^1.0.0"
-    stringify-object "^3.2.1"
+    stringify-object "^3.3.0"
 
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
@@ -2783,6 +2792,11 @@ querystringify@^2.0.0:
 ramda@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
+
+ramda@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
+  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
   version "1.2.8"
@@ -3317,7 +3331,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-stringify-object@^3.2.1, stringify-object@^3.2.2:
+stringify-object@^3.2.2, stringify-object@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/stringify-object/-/stringify-object-3.3.0.tgz#703065aefca19300d3ce88af4f5b3956d7556629"
   dependencies:
