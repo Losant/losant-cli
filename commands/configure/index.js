@@ -65,7 +65,8 @@ const getApplicationFunc = (appUrl, api) => {
 const getApiURL = async (userConfig) => {
   const keys = Object.keys(userConfig);
   if (keys.length < 1) {
-    return logError('Must run losant login before running losant configure.');
+    logError('User Configuration file missing, run losant login to generate this file.');
+    process.exit(1);
   }
   if (keys.length === 1) {
     return keys[0];
@@ -116,7 +117,8 @@ program
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     const url = await getApiURL(userConfig);
-    userConfig = userConfig[url] || userConfig;
+    if (!url) { return; }
+    userConfig = userConfig[url];
     const { appUrl, endpointDomain } = await getWhitelabel(userConfig.apiToken);
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(appUrl, api);
