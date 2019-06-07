@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+process.env.DEFAULT_API_URL = process.env.DEFAULT_API_URL || 'https://api.losant.com';
 const program = require('commander');
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');

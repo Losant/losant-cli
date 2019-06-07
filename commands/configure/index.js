@@ -113,11 +113,11 @@ program
   .description('Configures and associates a directory on disk to represent one of your Losant applications and its resources.')
   .action(async (command) => {
     let userConfig = await loadUserConfig() || {};
-    const { appUrl, endpointDomain } = await getWhitelabel(userConfig.apiToken);
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     const url = await getApiURL(userConfig);
     userConfig = userConfig[url] || userConfig;
+    const { appUrl, endpointDomain } = await getWhitelabel(userConfig.apiToken);
     const api = await getApi({ apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(appUrl, api);
     let appInfo;
