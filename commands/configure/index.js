@@ -18,7 +18,7 @@ const {
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
-  'data-tables',
+  'dataTables',
   'files',
   'experience'
 ];
