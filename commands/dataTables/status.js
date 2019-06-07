@@ -1,5 +1,5 @@
-const { experience } = require('../../lib/constants');
+const { dataTables } = require('../../lib/constants');
 
 module.exports = (program) => {
-  return require('../utils/status')(program, 'dataTables', experience);
+  return require('../utils/status')(program, 'dataTables', dataTables);
 };
