@@ -1,11 +1,10 @@
 const { fromFiles } = require('@rjhilgefort/export-dir');
 const commands = Object.values(fromFiles(null, __dirname));
-//const commonCommands = Object.values(require('../common'));
 const p = require('commander');
 const program = new p.Command('losant datatables');
 const printHelp = require('../../lib/print-help');
 
-program.description('do data things');
+program.description('Manage Data Tables on Losant for your Application');
 
 const help =  [];
 commands.forEach((command) => {
@@ -14,13 +13,6 @@ commands.forEach((command) => {
     help.push(...helpLines);
   }
 });
-
-// commonCommands.forEach((command) => {
-//   const { helpLines } = command('datatables', program) || {};
-//   if (helpLines) {
-//     help.push(...helpLines);
-//   }
-// });
 
 
 printHelp(program, help);

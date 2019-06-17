@@ -10,7 +10,7 @@ const pgm = program
   .command('configure', 'Configure the command line tool for a specific directory.')
   .command('experience', 'Manages your Losant Application\'s Experience Views, and Versions from the command line.')
   .command('files', 'Manage Files on Losant for your Application.')
-  .command('datatables', 'do data things');
+  .command('datatables', 'Manage Data Tables on Losant for your Application');
 
 const results = pgm.parse(process.argv);
 
