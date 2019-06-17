@@ -9,7 +9,7 @@ const {
 } = require('../common');
 const { defer } = require('omnibelt');
 
-describe.only('Data Tables Commands', () => {
+describe('Data Tables Commands', () => {
   it('should log an error if configure was not run first', async function() {
     await buildUserConfig();
     const deferred = defer();
