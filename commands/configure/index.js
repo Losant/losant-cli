@@ -119,8 +119,8 @@ program
     const url = await getApiURL(userConfig);
     if (!url) { return; }
     userConfig = userConfig[url];
-    const { appUrl, endpointDomain } = await getWhitelabel(userConfig.apiToken);
-    const api = await getApi({ apiToken: userConfig.apiToken });
+    const api = await getApi({ apiToken: userConfig.apiToken, url });
+    const { endpointDomain, appUrl } = await getWhitelabel({ api });
     const getApplication = getApplicationFunc(appUrl, api);
     let appInfo;
     try {
