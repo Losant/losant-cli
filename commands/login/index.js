@@ -37,8 +37,21 @@ program
     } catch (e) {
       return logError(e);
     }
+    const urlKey = process.ENV.LOSANT_API_URL || 'https://api.losant.com';
+    let wlInfo;
     try {
-      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
+      wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
+    } catch (e) {
+      return logError(`failed to write configuration: ${c.bold(e.message)}`);
+    }
+    try {
+      const userFile = await saveUserConfig({
+        [urlKey]: {
+          apiToken: api.getOption('accessToken'),
+          appUrl: wlInfo.appUrl,
+          endpointDomain: wlInfo.endpointDomain
+        }
+      });
       logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);

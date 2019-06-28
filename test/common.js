@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
-process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.space';
+process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.com';
 process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
+process.env.HOME = __dirname;
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
 const sinon = require('sinon');
@@ -26,7 +27,7 @@ const conflictLog = (msg) => { return `${pad(c.redBright('conflict'), 13)}\t${ms
 const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
 const addedLog = (msg) => { return `${pad(c.green('added'), 13)}\t${msg}`; };
 const deleteFakeData = () => {
-  return Promise.all(['experience', 'files', 'views', '.losant', 'losant.yml'].map(async (folder) => {
+  return Promise.all(['experience', 'files', 'views', '.losant', 'losant.yml', 'save-config.yaml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
       return remove(`./${folder}`);
     }
@@ -53,20 +54,21 @@ const unlockConfigFiles = (files) => {
 const sandbox = sinon.createSandbox();
 
 const buildUserConfig = () => {
-  return utils.saveUserConfig({ apiToken: 'token' });
+  return utils.saveUserConfig({ 'https://api.losant.com': { apiToken: 'token', endpointDomain: 'on.losant.com', appUrl: 'https://app.losant.com' } });
 };
 
 const buildConfig = async () => {
   await buildUserConfig();
   const config = {
     applicationId: '5b9297591fefb200072e554d',
-    applicationName: 'Test Application'
+    applicationName: 'Test Application',
+    apiUrl: 'https://api.losant.com'
   };
   return utils.saveConfig(undefined, config); // let it default
 };
 
 before(() => {
-  process.chdir('./test');
+  process.chdir(path.resolve(__dirname));
 });
 
 beforeEach(async () => {

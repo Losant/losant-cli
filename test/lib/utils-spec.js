@@ -1,7 +1,9 @@
-const { buildUserConfig } = require('../common');
+const { buildUserConfig, nock } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
 const { writeFile, remove } = require('fs-extra');
+const should = require('should');
+const path = require('path');
 
 describe('utils', () => {
   describe('logging', () => {
@@ -22,13 +24,38 @@ describe('utils', () => {
   describe('Config', () => {
     it('.saveConfig and .loadConfig', async () => {
       const config = {
+        apiUrl: 'https://api.losant.com',
         applicationId: '5b9297591fefb200072e554d'
       };
-      const file = 'save-config.yaml';
+      const file = path.resolve('save-config.yaml');
       await utils.saveConfig(file, config);
       await buildUserConfig();
       const result = await utils.loadConfig(file);
-      result.should.deepEqual(merge(config, { file, apiToken: 'token' }));
+      should.exist(result.api);
+      delete result.api;
+      result.should.deepEqual(merge(config, { file, apiToken: 'token', appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' }));
+    });
+    it('.loadConfig should update old config files', async () => {
+      await utils.saveUserConfig({ apiToken: 'token' });
+      const file = path.resolve('save-config.yaml');
+      const config = {
+        applicationId: '5b9297591fefb200072e554d'
+      };
+      nock('https://api.losant.com', { encodedQueryParams: true })
+        .get('/whitelabels/domain')
+        .reply(200, { appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' });
+      await utils.saveConfig(file, config);
+      const result = await utils.loadConfig(file);
+      should.exist(result.api);
+      delete result.api;
+      result.should.deepEqual({
+        file,
+        applicationId: '5b9297591fefb200072e554d',
+        appUrl: 'https://app.losant.com',
+        endpointDomain: 'on.losant.com',
+        apiUrl: 'https://api.losant.com',
+        apiToken: 'token'
+      });
     });
   });
   describe('Meta Data', () => {

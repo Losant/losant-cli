@@ -18,7 +18,7 @@ describe('#getDownloader', () => {
   it('should try to download', async () => {
 
     for (let i = 0; i < 4; i++) {
-      nock('https://api.losant.space:443', { encodedQueryParams: true })
+      nock('https://api.losant.com:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/experience/views')
         .query({ _actions: 'false', _links: 'true', _embedded: 'true', page: 0, perPage: 1000 })
         .reply(200, {

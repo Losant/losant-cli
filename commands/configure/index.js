@@ -26,7 +26,7 @@ const LOCAL_META_FILES = [
   'experience'
 ];
 
-const getApplicationFunc = (api) => {
+const getApplicationFunc = (api, appUrl) => {
   return async () => {
     const { filter } = await  inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
@@ -42,7 +42,7 @@ const getApplicationFunc = (api) => {
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} https://app.losant.com/applications/${appInfo.id}`;
+        const key = `${appInfo.name} ${appUrl}/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
@@ -92,17 +92,34 @@ const setSkippedExperience = (api, application) => {
   return api.application.patch({ applicationId: application.applicationId, application: { ftueTracking: application.ftueTracking } });
 };
 
+const getApiURL = async (userConfig) => {
+  const keys = Object.keys(userConfig);
+  if (keys.length < 1) {
+    logError('User Configuration file missing, run losant login to generate this file.');
+    process.exit(1);
+  }
+  if (keys.length === 1) {
+    return keys[0];
+  }
+  const { url } = await inquirer.prompt([{
+    type: 'list',
+    name: 'url',
+    message: 'Choose an API url:',
+    choices: keys
+  }]);
+  return url;
+};
+
 program
   .description('Configures and associates a directory on disk to represent one of your Losant applications and its resources.')
   .action(async (command) => {
-    const userConfig = await loadUserConfig() || {};
-    if (!userConfig.apiToken) {
-      return logError('Must run losant login before running losant configure.');
-    }
+    let userConfig = await loadUserConfig() || {};
+    const apiUrl = await getApiURL(userConfig);
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
+    userConfig = userConfig[apiUrl];
     const api = await getApi({ apiToken: userConfig.apiToken });
-    const getApplication = getApplicationFunc(api);
+    const getApplication = getApplicationFunc(api, userConfig.appUrl);
     let appInfo;
     try {
       appInfo = await retryP(getApplication, printRetry);
@@ -112,7 +129,7 @@ program
       }
       throw e;
     }
-    const config = { applicationId: appInfo.id, applicationName: appInfo.name };
+    const config = { applicationId: appInfo.id, applicationName: appInfo.name, apiUrl };
     try {
       const file = await saveConfig(command.config, config);
       logResult('success', `Configuration written to ${c.bold(file)} for the application ${appInfo.name}`, 'green');
@@ -120,6 +137,7 @@ program
       logError(`Failed to write configuration: ${c.bold(e.message)}`);
     }
     const loadedConfig = merge(userConfig, config);
+    loadedConfig.api = api;
     try {
       const downloaded = await experienceDownload(null, {}, loadedConfig);
       if (downloaded) {

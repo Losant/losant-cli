@@ -44,7 +44,7 @@ describe('Files Commands', () => {
   it('should run get status', async function() {
     await buildConfig();
     const deferred = defer();
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/files')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', type: 'file', page: 0, perPage: 1000
@@ -151,7 +151,7 @@ describe('Files Commands', () => {
         'jPQs76DzBnKTPR73RdGwDskTR52j1W1p1ag6GZKgtLiGNvdk0A8iGg=='
       ]);
     for (let i = 0; i < 4; i++) {
-      nock('https://api.losant.space:443', { encodedQueryParams: true })
+      nock('https://api.losant.com:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/files')
         .query({
           _actions: 'false', _links: 'true', _embedded: 'true', type: 'file', page: 0, perPage: 1000
@@ -194,7 +194,7 @@ describe('Files Commands', () => {
           'max-age=31536000' ]);
     }
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/files', { name: 'newFile.txt', parentDirectory: '/', type: 'file', fileSize: 11, contentType: 'text/plain' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(201, {
@@ -242,7 +242,7 @@ describe('Files Commands', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/files', { name: 'newFile.txt.other', parentDirectory: '/deep/nested', type: 'file', fileSize: 11, contentType: 'application/octet-stream' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(201, {
