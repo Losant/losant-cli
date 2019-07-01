@@ -45,6 +45,7 @@
     "glob": "^7.1.3",
     "inquirer": "^6.2.0",
     "js-yaml": "^3.12.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash-template": "^1.0.0",
     "losant-rest": "^2.3.7",
     "mime-types": "^2.1.21",

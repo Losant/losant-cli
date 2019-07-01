@@ -37,7 +37,6 @@ program
     } catch (e) {
       return logError(e);
     }
-    const urlKey = process.ENV.LOSANT_API_URL || 'https://api.losant.com';
     let wlInfo;
     try {
       wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
@@ -46,7 +45,7 @@ program
     }
     try {
       const userFile = await saveUserConfig({
-        [urlKey]: {
+        [api.getOption('url')]: {
           apiToken: api.getOption('accessToken'),
           appUrl: wlInfo.appUrl,
           endpointDomain: wlInfo.endpointDomain

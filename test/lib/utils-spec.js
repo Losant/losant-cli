@@ -1,9 +1,10 @@
 const { buildUserConfig, nock } = require('../common');
 const utils     = require('../../lib/utils');
 const { merge } = require('omnibelt');
-const { writeFile, remove } = require('fs-extra');
+const { writeFile, remove, pathExists } = require('fs-extra');
 const should = require('should');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 describe('utils', () => {
   describe('logging', () => {
@@ -21,13 +22,26 @@ describe('utils', () => {
       utils.logError({ message: 'YOU DID SOMETHING BAD!' });
     });
   });
-  describe('Config', () => {
+  describe('Configuration', () => {
+    let ogUrl;
+    const file = path.resolve(__dirname, 'save-config.yaml');
+    before(() => {
+      ogUrl = process.env.LOSANT_API_URL;
+    });
+    afterEach(async () => {
+      utils.unlockConfigSync(file);
+      if (await pathExists(file)) {
+        return remove(file);
+      }
+    });
+    after(() => {
+      process.env.LOSANT_API_URL = ogUrl;
+    });
     it('.saveConfig and .loadConfig', async () => {
       const config = {
         apiUrl: 'https://api.losant.com',
         applicationId: '5b9297591fefb200072e554d'
       };
-      const file = path.resolve('save-config.yaml');
       await utils.saveConfig(file, config);
       await buildUserConfig();
       const result = await utils.loadConfig(file);
@@ -36,25 +50,37 @@ describe('utils', () => {
       result.should.deepEqual(merge(config, { file, apiToken: 'token', appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' }));
     });
     it('.loadConfig should update old config files', async () => {
-      await utils.saveUserConfig({ apiToken: 'token' });
-      const file = path.resolve('save-config.yaml');
-      const config = {
-        applicationId: '5b9297591fefb200072e554d'
-      };
-      nock('https://api.losant.com', { encodedQueryParams: true })
+      process.env.LOSANT_API_URL = 'https://host.com';
+      const token = jwt.sign({
+        data: 'foobar'
+      }, 'sssshhhitsasecret', { issuer: 'https://host.com' });
+      nock('https://host.com', { encodedQueryParams: true })
         .get('/whitelabels/domain')
-        .reply(200, { appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' });
+        .reply(200, { appUrl: 'https://app.host.com', endpointDomain: 'on.host.com' });
+      await utils.saveUserConfig({ apiToken: token });
+      const config = {
+        applicationId: '5b9297591fefb200072e554d',
+        apiUrl: 'https://host.com'
+      };
       await utils.saveConfig(file, config);
+      const userConfig = await utils.loadUserConfig();
+      userConfig.should.deepEqual({
+        'https://host.com': {
+          apiToken: token,
+          endpointDomain: 'on.host.com',
+          appUrl: 'https://app.host.com'
+        }
+      });
       const result = await utils.loadConfig(file);
       should.exist(result.api);
       delete result.api;
       result.should.deepEqual({
         file,
         applicationId: '5b9297591fefb200072e554d',
-        appUrl: 'https://app.losant.com',
-        endpointDomain: 'on.losant.com',
-        apiUrl: 'https://api.losant.com',
-        apiToken: 'token'
+        apiUrl: 'https://host.com',
+        endpointDomain: 'on.host.com',
+        appUrl: 'https://app.host.com',
+        apiToken: token
       });
     });
   });

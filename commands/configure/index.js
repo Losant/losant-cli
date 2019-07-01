@@ -94,10 +94,6 @@ const setSkippedExperience = (api, application) => {
 
 const getApiURL = async (userConfig) => {
   const keys = Object.keys(userConfig);
-  if (keys.length < 1) {
-    logError('User Configuration file missing, run losant login to generate this file.');
-    process.exit(1);
-  }
   if (keys.length === 1) {
     return keys[0];
   }
