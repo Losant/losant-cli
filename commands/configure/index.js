@@ -13,7 +13,7 @@ const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
 const {
-  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped
+  saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped, getApiURL
 } = require('../../lib/utils');
 
 const DIRECTORIES_TO_GENERATE = [
@@ -90,20 +90,6 @@ const setSkippedExperience = (api, application) => {
     application.ftueTracking[index] = track;
   }
   return api.application.patch({ applicationId: application.applicationId, application: { ftueTracking: application.ftueTracking } });
-};
-
-const getApiURL = async (userConfig) => {
-  const keys = Object.keys(userConfig);
-  if (keys.length === 1) {
-    return keys[0];
-  }
-  const { url } = await inquirer.prompt([{
-    type: 'list',
-    name: 'url',
-    message: 'Choose an API url:',
-    choices: keys
-  }]);
-  return url;
 };
 
 program

@@ -37,13 +37,8 @@ program
     } catch (e) {
       return logError(e);
     }
-    let wlInfo;
     try {
-      wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
-    } catch (e) {
-      return logError(`failed to write configuration: ${c.bold(e.message)}`);
-    }
-    try {
+      const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
       const userFile = await saveUserConfig({
         [api.getOption('url')]: {
           apiToken: api.getOption('accessToken'),

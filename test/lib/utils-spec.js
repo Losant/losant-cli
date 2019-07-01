@@ -53,16 +53,11 @@ describe('utils', () => {
       process.env.LOSANT_API_URL = 'https://host.com';
       const token = jwt.sign({
         data: 'foobar'
-      }, 'sssshhhitsasecret', { issuer: 'https://host.com' });
+      }, 'sssshhhitsasecret', { issuer: 'host.com' });
       nock('https://host.com', { encodedQueryParams: true })
         .get('/whitelabels/domain')
         .reply(200, { appUrl: 'https://app.host.com', endpointDomain: 'on.host.com' });
       await utils.saveUserConfig({ apiToken: token });
-      const config = {
-        applicationId: '5b9297591fefb200072e554d',
-        apiUrl: 'https://host.com'
-      };
-      await utils.saveConfig(file, config);
       const userConfig = await utils.loadUserConfig();
       userConfig.should.deepEqual({
         'https://host.com': {
@@ -71,6 +66,11 @@ describe('utils', () => {
           appUrl: 'https://app.host.com'
         }
       });
+      const config = {
+        applicationId: '5b9297591fefb200072e554d',
+        apiUrl: 'https://host.com'
+      };
+      await utils.saveConfig(file, config);
       const result = await utils.loadConfig(file);
       should.exist(result.api);
       delete result.api;
