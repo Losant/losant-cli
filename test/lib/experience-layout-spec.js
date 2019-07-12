@@ -6,8 +6,7 @@ const c = require('chalk');
 
 describe('#ExperienceLayout', () => {
   it('should log out that not pages were found', async () => {
-
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'page'
@@ -44,7 +43,7 @@ describe('#ExperienceLayout', () => {
   });
   it('it should print the table of all pages to layouts', async () => {
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'page'
@@ -99,7 +98,7 @@ describe('#ExperienceLayout', () => {
   });
 
   it('it should update a one page\'s layout', async () => {
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'layout'
@@ -145,7 +144,7 @@ describe('#ExperienceLayout', () => {
         'max-age=31536000' ]);
 
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'page', filterField: 'name', filter: 'Home Page'
@@ -182,7 +181,7 @@ describe('#ExperienceLayout', () => {
       ]
       );
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/views/5b92975d376bb800087d1f50', { layoutId: '5c0a9a163fb78400095ec089' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -222,7 +221,7 @@ describe('#ExperienceLayout', () => {
     message.should.equal(`${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`);
   });
   it('should update multiple pages layouts', async () => {
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'layout'
@@ -268,7 +267,7 @@ describe('#ExperienceLayout', () => {
         'max-age=31536000' ]);
 
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'page', filterField: 'name', filter: '*'
@@ -337,7 +336,7 @@ describe('#ExperienceLayout', () => {
       ]
       );
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/views/5b92975d376bb800087d1f50', { layoutId: '5c0a9a163fb78400095ec089' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -365,7 +364,7 @@ describe('#ExperienceLayout', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca94', { layoutId: '5c0a9a163fb78400095ec089' })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -418,7 +417,7 @@ describe('#ExperienceLayout', () => {
   });
 
   it('should update multiple pages layouts to null', async () => {
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'layout'
@@ -464,7 +463,7 @@ describe('#ExperienceLayout', () => {
         'max-age=31536000' ]);
 
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/views')
       .query({
         _actions: 'false', _links: 'true', _embedded: 'true', page: '0', perPage: '1000', viewType: 'page', filterField: 'name', filter: '*'
@@ -533,7 +532,7 @@ describe('#ExperienceLayout', () => {
       ]
       );
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/views/5b92975d376bb800087d1f50', { layoutId: null })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -561,7 +560,7 @@ describe('#ExperienceLayout', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .patch('/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca94', { layoutId: null })
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {

@@ -9,7 +9,7 @@ describe('#ExperienceVersion', function() {
     sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;
     });
-    nock('https://api.losant.space:443', { encodedQueryParams: true })
+    nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/versions')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -65,7 +65,7 @@ describe('#ExperienceVersion', function() {
     await buildConfig();
 
     await versionCommand(null, {});
-    let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.onlosant.commycustomguy.com\nanotherCustomMan.com\n`;
+    let versionPrint = `Version Name: ${c.cyan.bold('develop')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\nembree.on.losant.commycustomguy.com\nanotherCustomMan.com\n`;
     versionPrint += '---------------------------\n\n';
     versionPrint += `Version Name: ${c.cyan.bold('v1.0.0')}\nCreation Date: Sep 18 2018 17:49\n\nDomains:\ndomain.com\ndomain1.com\n*wildcard.com\n`;
     message.should.equal(versionPrint);
@@ -76,7 +76,7 @@ describe('#ExperienceVersion', function() {
     sinon.stub(ssLog, 'stdout').callsFake((_message) => {
       message = _message;
     });
-    const createCall = nock('https://api.losant.space:443', { encodedQueryParams: true })
+    const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/experience/versions')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
@@ -84,14 +84,14 @@ describe('#ExperienceVersion', function() {
         description: 'The first version'
       });
 
-    const createDomainCall = nock('https://api.losant.space:443', { encodedQueryParams: true })
+    const createDomainCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/domains')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
         items: []
       });
 
-    const createSlugCall = nock('https://api.losant.space:443', { encodedQueryParams: true })
+    const createSlugCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/experience/slugs')
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, {
