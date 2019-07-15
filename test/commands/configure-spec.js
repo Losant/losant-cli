@@ -57,7 +57,7 @@ describe('Configure Commands', () => {
       return Promise.resolve({ filter: 'CSV' });
     });
     stub.onCall(2).callsFake(() => {
-      return Promise.resolve({ canDownloadDataFiles: false });
+      return Promise.resolve({ canDownloadFiles: false });
     });
     stub.onCall(3).callsFake(() => {
       deferred.resolve();
