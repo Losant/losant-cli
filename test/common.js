@@ -27,7 +27,7 @@ const conflictLog = (msg) => { return `${pad(c.redBright('conflict'), 13)}\t${ms
 const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
 const addedLog = (msg) => { return `${pad(c.green('added'), 13)}\t${msg}`; };
 const deleteFakeData = () => {
-  return Promise.all(['experience', 'files', 'views', '.losant', 'losant.yml'].map(async (folder) => {
+  return Promise.all(['experience', 'files', 'dataTables', 'views', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
       return remove(`./${folder}`);
     }
