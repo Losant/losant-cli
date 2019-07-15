@@ -38,7 +38,14 @@ program
       return logError(e);
     }
     try {
-      const userFile = await saveUserConfig({ apiToken: api.getOption('accessToken') });
+      const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
+      const userFile = await saveUserConfig({
+        [api.getOption('url')]: {
+          apiToken: api.getOption('accessToken'),
+          appUrl: wlInfo.appUrl,
+          endpointDomain: wlInfo.endpointDomain
+        }
+      });
       logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
     } catch (e) {
       logError(`failed to write configuration: ${c.bold(e.message)}`);

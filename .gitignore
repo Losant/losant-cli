@@ -10,7 +10,8 @@ package-lock.json
 /files/*
 /dataTables/*
 example*
-/.losant/*
+*/.losant/*
+*.yaml
 
 ### Node ###
 
