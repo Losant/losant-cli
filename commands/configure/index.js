@@ -7,12 +7,14 @@ const c = require('chalk');
 const retryP = require('../../lib/retryP');
 const { ensureDir } = require('fs-extra');
 const params = require('../../lib/get-download-params');
+const dtParams = require('../../lib/get-export-params').dataTables;
 const getDownloader = require('../../lib/get-downloader');
+const getExporter = require('../../lib/get-exporter');
 const experienceBootstrap = require('../../lib/experience-bootstrap');
 const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
-const dataTablesDownload = getDownloader(params.dataTables);
+const dataTablesDownload = getExporter(dtParams);
 const {
   saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped, getApiURL
 } = require('../../lib/utils');
@@ -24,7 +26,6 @@ const DIRECTORIES_TO_GENERATE = [
 ];
 
 const LOCAL_META_FILES = [
-  'dataTables',
   'files',
   'experience'
 ];
@@ -162,12 +163,12 @@ program
       if (canDownloadDataTables) {
         const downloadedTables = await dataTablesDownload(null, {}, loadedConfig);
         if (downloadedTables) {
-          logResult('success, Downloaded all data tables!', 'green');
+          logResult('success, Exported all data tables!', 'green');
         }
       }
     } catch (e) {
       console.error(e);
-      logError('Failed to download data tables.');
+      logError('Failed to export data tables.');
     }
     log('Configuration completed! :D');
   });

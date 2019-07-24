@@ -26,7 +26,7 @@ describe('Data Tables Commands', () => {
     msg.should.equal(errorLog('Configuration file missing for this directory, run losant configure to generate this file.'));
   });
 
-  it('should try to download data tables', async function() {
+  it('should try to export data tables', async function() {
     await buildConfig();
     const deferred = defer();
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -40,10 +40,10 @@ describe('Data Tables Commands', () => {
     require('../../commands/dataTables').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-dataTables.js'),
-      'download'
+      'export'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal('\u001b[33mMissing\u001b[39m\tNo dataTables found to download.');
+    msg.should.equal('\u001b[33mMissing\u001b[39m\tNo dataTables found to export.');
   });
 
   it('should get rows from a data table', async function() {
@@ -87,7 +87,7 @@ describe('Data Tables Commands', () => {
     require('../../commands/dataTables').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-dataTables.js'),
-      'download'
+      'export'
     ]);
     let msg = '';
     const stub = sinon.stub(ssLog, 'stdout');
@@ -99,6 +99,6 @@ describe('Data Tables Commands', () => {
       deferred.resolve();
     });
     await deferred.promise;
-    msg.should.equal('\u001b[90mprocessing\u001b[39m\tdataTables/Red.csv\n\u001b[32mdownloaded\u001b[39m\tdataTables/Red.csv\n');
+    msg.should.equal('\u001b[90mprocessing\u001b[39m\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n\u001b[32mexported\u001b[39m\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n');
   });
 });
