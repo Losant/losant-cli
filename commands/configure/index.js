@@ -14,7 +14,7 @@ const experienceBootstrap = require('../../lib/experience-bootstrap');
 const inquirer = require('inquirer');
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
-const dataTablesDownload = getExporter(dtParams);
+const dataTablesExport = getExporter(dtParams);
 const {
   saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped, getApiURL
 } = require('../../lib/utils');
@@ -159,10 +159,10 @@ program
       logError('Failed to download files.');
     }
     try {
-      const { canDownloadDataTables } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadDataTables', message: 'Download data tables now?' }]);
-      if (canDownloadDataTables) {
-        const downloadedTables = await dataTablesDownload(null, {}, loadedConfig);
-        if (downloadedTables) {
+      const { canExportDataTables } = await inquirer.prompt([{ type: 'confirm', name: 'canExportDataTables', message: 'Export data tables now?' }]);
+      if (canExportDataTables) {
+        const exportedTables = await dataTablesExport(null, {}, loadedConfig);
+        if (exportedTables) {
           logResult('success, Exported all data tables!', 'green');
         }
       }
