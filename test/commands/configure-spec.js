@@ -61,7 +61,7 @@ describe('Configure Commands', () => {
     });
     stub.onCall(3).callsFake(() => {
       deferred.resolve();
-      return Promise.resolve({ canDownloadDataTables: false });
+      return Promise.resolve({ canExportDataTables: false });
     });
 
     require('../../commands/configure').parse([
