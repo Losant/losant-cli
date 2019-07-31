@@ -5,7 +5,7 @@
 ## Description
 
 [Losant CLI](https://docs.losant.com/cli/overview) is a command line tool to help manage your [Losant Application](https://docs.losant.com/applications/overview/) and its resources.
-It easily lets you manage [Experience Views](https://docs.losant.com/experiences/views/), [Experience Versions](https://docs.losant.com/experiences/versions/), and [Files](https://docs.losant.com/applications/files/) in your Applications.
+It easily lets you manage [Experience Views](https://docs.losant.com/experiences/views/), [Experience Versions](https://docs.losant.com/experiences/versions/), [Files](https://docs.losant.com/applications/files/), and [Data Tables](https://docs.losant.com/data-tables/overview/) in your Applications.
 
 ## Installation
 
@@ -27,6 +27,7 @@ losant [options] [command]
 * [configure](#configure)
 * [experience](#experience)
 * [files](#files)
+* [datatables](#data-tables)
 
 ### Login
 
@@ -119,6 +120,21 @@ The `losant files` command is how you manage the files for a configured Applicat
   `$ losant files upload -f`
 * Watch your Files while you make changes and have them automatically uploaded  
   `$ losant files watch`
+
+### Data Tables
+
+The `losant datatables` command is how you manage the data tables for a configured Application. It has the following subcommands:
+
+* export
+
+#### Data Tables Examples
+
+* Export all data tables  
+  `$ losant datatables export`
+* Export all data tables whose names start with `Chicago`
+  `$ losant datatables export Chicago`
+* Force a export of all data tables overwriting local modifications  
+  `$ losant datatables export -f`
 
 *****
 
