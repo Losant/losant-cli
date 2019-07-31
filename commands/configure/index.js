@@ -42,7 +42,7 @@ const getApplicationFunc = (api, appUrl) => {
     } else {
       const nameToId = {};
       const choices = applications.items.map((appInfo) => {
-        const key = `${appInfo.name} ${appUrl}/applications/${appInfo.id}`;
+        const key = `${appInfo.name} | ${appInfo.organizationName || 'My Sandbox'} | ${appUrl}/applications/${appInfo.id}`;
         nameToId[key] = appInfo;
         return key;
       });
