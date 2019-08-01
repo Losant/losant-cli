@@ -100,7 +100,7 @@ program
     await Promise.all(DIRECTORIES_TO_GENERATE.map((dir) => { return ensureDir(dir); }));
     await Promise.all(LOCAL_META_FILES.map((type) => { return saveLocalMeta(type, {}); }));
     userConfig = userConfig[apiUrl];
-    const api = await getApi({ apiToken: userConfig.apiToken });
+    const api = await getApi({ url: apiUrl, apiToken: userConfig.apiToken });
     const getApplication = getApplicationFunc(api, userConfig.appUrl);
     let appInfo;
     try {
