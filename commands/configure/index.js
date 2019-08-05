@@ -163,7 +163,7 @@ program
       if (canExportDataTables) {
         const exportedTables = await dataTablesExport(null, {}, loadedConfig);
         if (exportedTables) {
-          logResult('success, Exported all data tables!', 'green');
+          logResult('success', 'Exported all data tables!', 'green');
         }
       }
     } catch (e) {

@@ -20,7 +20,7 @@ describe('Data Tables Commands', () => {
     require('../../commands/dataTables').parse([
       '/bin/node',
       path.resolve(__dirname, '/bin/losant-dataTables.js'),
-      'status'
+      'export'
     ]);
     const msg = await deferred.promise;
     msg.should.equal(errorLog('Configuration file missing for this directory, run losant configure to generate this file.'));
@@ -69,7 +69,7 @@ describe('Data Tables Commands', () => {
 
     nock('https://api.losant.com:443', { encodedQueryParams: true })
       .get('/applications/5b9297591fefb200072e554d/data-tables/5d2c9dab16770d0008c013fb/rows')
-      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true', limit: 1000, offset: 0 })
       .reply(200, {
         applicationId: '5b9297591fefb200072e554d',
         dataTableId: '5d2c9dab16770d0008c013fb',
