@@ -131,7 +131,7 @@ The `losant datatables` command is how you manage the data tables for a configur
 
 * Export all data tables  
   `$ losant datatables export`
-* Export all data tables whose names start with `Chicago`
+* Export all data tables whose names start with `Chicago`  
   `$ losant datatables export Chicago`
 * Force a export of all data tables overwriting local modifications  
   `$ losant datatables export -f`
