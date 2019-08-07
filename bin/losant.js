@@ -9,7 +9,8 @@ const pgm = program
   .command('login', 'Log in and create your user configuration to use the other commands.')
   .command('configure', 'Configure the command line tool for a specific directory.')
   .command('experience', 'Manages your Losant Application\'s Experience Views, and Versions from the command line.')
-  .command('files', 'Manage Files on Losant for your Application.');
+  .command('files', 'Manage Files on Losant for your Application.')
+  .command('datatables', 'Manage Data Tables on Losant for your Application.');
 
 const results = pgm.parse(process.argv);
 

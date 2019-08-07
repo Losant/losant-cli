@@ -57,8 +57,11 @@ describe('Configure Commands', () => {
       return Promise.resolve({ filter: 'CSV' });
     });
     stub.onCall(2).callsFake(() => {
+      return Promise.resolve({ canDownloadFiles: false });
+    });
+    stub.onCall(3).callsFake(() => {
       deferred.resolve();
-      return Promise.resolve({ shouldBootstrap: true });
+      return Promise.resolve({ canExportDataTables: false });
     });
 
     require('../../commands/configure').parse([

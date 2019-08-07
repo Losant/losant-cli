@@ -37,6 +37,7 @@
     "chokidar": "^2.0.4",
     "cli-table3": "^0.5.1",
     "commander": "^2.19.0",
+    "csv-stringify": "^5.3.0",
     "death": "^1.1.0",
     "error": "^7.0.2",
     "find-file-up": "^2.0.1",
@@ -57,6 +58,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "rollbar": "^2.5.0",
+    "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
     "update-notifier": "^2.3.0"
   },
