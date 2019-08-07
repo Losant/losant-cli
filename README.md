@@ -45,7 +45,7 @@ The `losant configure` command configures and links the current directory to one
 * files/
 * dataTables/
 
-This is how the CLI will be able to detect new files or experience views that you want to add, update or remove from your Losant Application. The files directory will contain and reflect the directory and files on your Losant Application's Files. The experience directory is broken down by view type (components, layouts and pages), e.g. if you want to create a new component add this to your components directory, or if you want to remove a page, you will find that page located under experience/pages.
+This is how the CLI will be able to detect new files, experience views, or data tables that you want to add, update or remove from your Losant Application. The files directory will contain and reflect the directory and files on your Losant Application's Files. Similarly, the dataTables directory will contain your Losant Application's data tables as csv files. and The experience directory is broken down by view type (components, layouts and pages), e.g. if you want to create a new component add this to your components directory, or if you want to remove a page, you will find that page located under experience/pages.
 
 ### Experience
 
