@@ -122,10 +122,8 @@ describe('#Watch Files', () => {
           'https://s3.us-west-2.amazonaws.com/files.onlosant.com/5b9297591fefb200072e554d%2FnewFile.txt']);
     }
 
-
     const deferred = defer();
     const messages = [];
-
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
       if (messages.length >= 11) {
