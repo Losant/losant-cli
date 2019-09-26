@@ -8,7 +8,7 @@ const {
 const { defer } = require('omnibelt');
 const watch = require('../../lib/watch-files')('files', 10);
 const ssLog = require('single-line-log');
-const { ensureDir, writeFile } = require('fs-extra');
+const { ensureDir, writeFile, appendFile } = require('fs-extra');
 
 describe('#Watch Files', () => {
   let watcherClose;
@@ -140,9 +140,9 @@ describe('#Watch Files', () => {
         deferred.resolve();
       }
     });
-    await writeFile('files/help.txt', 'hello mom');
-    await writeFile('files/yo.txt', 'hello dad');
-    await writeFile('files/mine/myFile.txt', 'hello son');
+    await appendFile('files/help.txt', ' mom');
+    await appendFile('files/yo.txt', ' dad');
+    await appendFile('files/mine/myFile.txt', ' son');
     console.log('rewrote files...');
     await deferred.promise;
     console.log('awaiting deferred...');
