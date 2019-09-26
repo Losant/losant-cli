@@ -11,16 +11,15 @@ const ssLog = require('single-line-log');
 const { ensureDir, writeFile } = require('fs-extra');
 
 describe('#Watch Files', () => {
-  let watcher;
+  let watcherClose;
   beforeEach(async () => {
     await buildConfig();
     await ensureDir('files/mine');
-    watcher = await watch();
+    watcherClose = await watch();
   });
 
   afterEach(() => {
-    watcher.close();
-    watcher.removeAllListeners();
+    watcherClose();
   });
   it('should process files in the order they were queued', async function() {
     this.timeout(3000);
