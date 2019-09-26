@@ -6,7 +6,7 @@ const {
   uploadedLog
 } = require('../common');
 const { defer } = require('omnibelt');
-const watch = require('../../lib/watch-files')('files', 1000);
+const watch = require('../../lib/watch-files')('files', 10);
 const ssLog = require('single-line-log');
 const { ensureDir, writeFile } = require('fs-extra');
 
@@ -22,7 +22,7 @@ describe('#Watch Files', () => {
     watcherClose();
   });
   it('should process files in the order they were queued', async function() {
-    this.timeout(8000);
+    this.timeout(30000);
     for (let i = 0; i < 3; i++) {
       nock('https://api.losant.com:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/files')
