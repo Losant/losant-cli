@@ -15,13 +15,22 @@ describe('#Watch Files', () => {
   beforeEach(async () => {
     await buildConfig();
     await ensureDir('files/mine');
-    watcherClose = await watch();
   });
 
   afterEach(() => {
-    watcherClose();
+    if (watcherClose) {
+      watcherClose();
+      watcherClose = null;
+    }
+
   });
   it('should process files in the order they were queued', async function() {
+    await Promise.all([
+      writeFile('files/help.txt', 'hello mom'),
+      writeFile('files/yo.txt', 'hello dad'),
+      writeFile('files/mine/myFile.txt', 'hello son')
+    ]);
+    watcherClose = await watch();
     this.timeout(30000);
     for (let i = 0; i < 3; i++) {
       nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -125,18 +134,16 @@ describe('#Watch Files', () => {
     const messages = [];
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
+      console.log(message);
       console.log(messages.length);
       if (messages.length >= 11) {
         deferred.resolve();
       }
     });
-    console.log('created files.');
-    await Promise.all([
-      writeFile('files/help.txt', 'hello mom'),
-      writeFile('files/yo.txt', 'hello dad'),
-      writeFile('files/mine/myFile.txt', 'hello son')
-    ]);
-
+    await writeFile('files/help.txt', 'hello');
+    await writeFile('files/yo.txt', 'hello');
+    await writeFile('files/mine/myFile.txt', 'hello');
+    console.log('rewrote files...');
     await deferred.promise;
     console.log('awaiting deferred...');
     messages.length.should.equal(11);
