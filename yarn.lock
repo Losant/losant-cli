@@ -96,7 +96,7 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@losant/eslint-config-losant@^1.3.4":
+"@losant/eslint-config-losant@^1.3.8":
   version "1.3.9"
   resolved "https://registry.yarnpkg.com/@losant/eslint-config-losant/-/eslint-config-losant-1.3.9.tgz#98ea6187813a9a008833c0962d9478ae86bbf43a"
   integrity sha512-3NB125qsmBhqUWnwGtAyJcHK1/rRdpPOK3CxhGZo9yBUL1kPARSQHRjzq7AriDj9xRt20+JwSaYLLPVWgIBEWA==
