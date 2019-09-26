@@ -125,11 +125,12 @@ describe('#Watch Files', () => {
     const messages = [];
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
+      console.log(messages.length);
       if (messages.length >= 11) {
         deferred.resolve();
       }
     });
-
+    console.log('created files.');
     await Promise.all([
       writeFile('files/help.txt', 'hello mom'),
       writeFile('files/yo.txt', 'hello dad'),
@@ -137,6 +138,7 @@ describe('#Watch Files', () => {
     ]);
 
     await deferred.promise;
+    console.log('awaiting deferred...');
     messages.length.should.equal(11);
     const queueing = messages.slice(1, 4);
     const processing = messages.slice(5, 12);
