@@ -18,3 +18,19 @@
 
 * Ensuring lock file unlocks when closing the watcher
 * Actually generating folder structure on configure
+
+## Losant CLI v1.2.0
+
+### Added
+
+* Data Tables export command (`losant datatable export`)
+
+### Fixed
+
+* sanitizing file names
+
+## Losant CLI v1.2.1
+
+### Fixed
+
+* watch command now has a queueing process incase you have slow internet or a lot of changes at once.
