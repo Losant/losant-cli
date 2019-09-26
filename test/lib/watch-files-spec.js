@@ -5,11 +5,11 @@ const {
   processingLog,
   uploadedLog
 } = require('../common');
+const path = require('path');
 const { defer } = require('omnibelt');
 const watch = require('../../lib/watch-files')('files', 10);
 const ssLog = require('single-line-log');
 const { ensureDir, writeFile, appendFile } = require('fs-extra');
-
 describe('#Watch Files', () => {
   let watcherClose;
   beforeEach(async () => {
@@ -22,8 +22,8 @@ describe('#Watch Files', () => {
       watcherClose();
       watcherClose = null;
     }
-
   });
+
   it('should process files in the order they were queued', async function() {
     await Promise.all([
       writeFile('files/help.txt', 'hello'),
@@ -136,7 +136,7 @@ describe('#Watch Files', () => {
       messages.push(message);
       console.log(message);
       console.log(messages.length);
-      if (messages.length >= 11) {
+      if (messages.length >= 10) {
         deferred.resolve();
       }
     });
@@ -146,9 +146,9 @@ describe('#Watch Files', () => {
     console.log('rewrote files...');
     await deferred.promise;
     console.log('awaiting deferred...');
-    messages.length.should.equal(11);
-    const queueing = messages.slice(1, 4);
-    const processing = messages.slice(5, 12);
+    messages.length.should.equal(10);
+    const queueing = messages.slice(0, 3);
+    const processing = messages.slice(4, 11);
     const fileOrder = [];
 
     queueing.forEach((msg, index) => {
