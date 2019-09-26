@@ -5,7 +5,6 @@ const {
   processingLog,
   uploadedLog
 } = require('../common');
-const path = require('path');
 const { defer, sleep } = require('omnibelt');
 const watch = require('../../lib/watch-files')('files', 1000);
 const ssLog = require('single-line-log');
@@ -134,8 +133,6 @@ describe('#Watch Files', () => {
     const messages = [];
     sinon.stub(ssLog, 'stdout').callsFake((message) => {
       messages.push(message);
-      console.log(message);
-      console.log(messages.length);
       if (messages.length >= 10) {
         deferred.resolve();
       }
@@ -146,9 +143,7 @@ describe('#Watch Files', () => {
     await sleep(150);
     await appendFile('files/mine/myFile.txt', ' son');
     await sleep(150);
-    console.log('rewrote files...');
     await deferred.promise;
-    console.log('awaiting deferred...');
     messages.length.should.equal(10);
     const queueing = messages.slice(0, 3);
     const processing = messages.slice(4, 11);
