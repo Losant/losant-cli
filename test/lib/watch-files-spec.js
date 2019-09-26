@@ -22,7 +22,7 @@ describe('#Watch Files', () => {
     watcherClose();
   });
   it('should process files in the order they were queued', async function() {
-    this.timeout(3000);
+    this.timeout(8000);
     for (let i = 0; i < 3; i++) {
       nock('https://api.losant.com:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/files')
