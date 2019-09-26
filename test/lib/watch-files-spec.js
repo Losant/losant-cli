@@ -26,9 +26,9 @@ describe('#Watch Files', () => {
   });
   it('should process files in the order they were queued', async function() {
     await Promise.all([
-      writeFile('files/help.txt', 'hello mom'),
-      writeFile('files/yo.txt', 'hello dad'),
-      writeFile('files/mine/myFile.txt', 'hello son')
+      writeFile('files/help.txt', 'hello'),
+      writeFile('files/yo.txt', 'hello'),
+      writeFile('files/mine/myFile.txt', 'hello')
     ]);
     watcherClose = await watch();
     this.timeout(30000);
@@ -140,9 +140,9 @@ describe('#Watch Files', () => {
         deferred.resolve();
       }
     });
-    await writeFile('files/help.txt', 'hello');
-    await writeFile('files/yo.txt', 'hello');
-    await writeFile('files/mine/myFile.txt', 'hello');
+    await writeFile('files/help.txt', 'hello mom');
+    await writeFile('files/yo.txt', 'hello dad');
+    await writeFile('files/mine/myFile.txt', 'hello son');
     console.log('rewrote files...');
     await deferred.promise;
     console.log('awaiting deferred...');
