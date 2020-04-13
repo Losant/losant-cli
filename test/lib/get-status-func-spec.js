@@ -9,8 +9,9 @@ const {
 
 const API_TYPE = 'experienceViews';
 const COMMAND_TYPE = 'views';
+const template = require('lodash-template');
 const LOCAL_STATUS_PARAMS = [ '/**/*.hbs' ];
-const REMOTE_STATUS_PARAMS = [ 'views/${viewType}s/${name}.hbs', 'body' ]; // eslint-disable-line no-template-curly-in-string
+const REMOTE_STATUS_PARAMS = [ template('views/${viewType}s/${name}.hbs'), 'body' ]; // eslint-disable-line no-template-curly-in-string
 
 describe('#getStatusFunc', () => {
   it('should log out that there are no local files found', async () => {
