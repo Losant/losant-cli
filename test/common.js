@@ -1,7 +1,9 @@
 process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.com';
 process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
+// this is for the utils file and saving the config.
 process.env.HOME = __dirname;
+process.env.DIR = __dirname;
 const utils = require('../lib/utils');
 const Table = require('cli-table3');
 const sinon = require('sinon');
@@ -67,6 +69,10 @@ const buildConfig = async () => {
   return utils.saveConfig(undefined, config); // let it default
 };
 
+const buildResourceConfig = async (file, config = {}) => {
+  return utils.saveConfig(file, config);
+};
+
 before(() => {
   process.chdir(path.resolve(__dirname));
 });
@@ -129,6 +135,7 @@ module.exports = {
   buildConfig,
   printTable,
   buildUserConfig,
+  buildResourceConfig,
   statusExpHeaders: [  'Name',  'View Type',  'Local Status',  'Remote Status',  'Conflict' ],
   statusFilesHeaders: [  'Name',  'Directory',  'Local Status',  'Remote Status',  'Conflict' ]
 };
