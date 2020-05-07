@@ -127,7 +127,35 @@ describe('#getDownloader', () => {
   it('should handle downloading files with names that would be sanitized', async () => {
     const exps = [
       {
+        name: '5b92975dc2f8de0006e2ca93',
+        description: 'description',
+        viewType: 'layout',
+        body: 'a body',
+        applicationId: '5b9297591fefb200072e554d',
+        creationDate: '2018-09-07T15:21:01.223Z',
+        lastUpdated: '2018-09-07T15:21:01.234Z',
+        viewTags: {},
+        experienceViewId: '5b92975dc2f8de0006e2ca91',
+        id: '5b92975dc2f8de0006e2ca91',
+        _type: 'experienceView',
+        _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca93' } }
+      },
+      {
         name: 'my:View',
+        description: 'description',
+        viewType: 'layout',
+        body: 'a body',
+        applicationId: '5b9297591fefb200072e554d',
+        creationDate: '2018-09-07T15:21:01.223Z',
+        lastUpdated: '2018-09-07T15:21:01.234Z',
+        viewTags: {},
+        experienceViewId: '5b92975dc2f8de0006e2ca92',
+        id: '5b92975dc2f8de0006e2ca92',
+        _type: 'experienceView',
+        _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca93' } }
+      },
+      {
+        name: 'my::View',
         description: 'description',
         viewType: 'layout',
         body: 'a body',
@@ -149,8 +177,8 @@ describe('#getDownloader', () => {
         creationDate: '2018-09-07T15:21:01.223Z',
         lastUpdated: '2018-09-07T15:21:01.234Z',
         viewTags: {},
-        experienceViewId: '5b92975dc2f8de0006e2ca93',
-        id: '5b92975dc2f8de0006e2ca93',
+        experienceViewId: '5b92975dc2f8de0006e2ca94',
+        id: '5b92975dc2f8de0006e2ca94',
         _type: 'experienceView',
         _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca93' } }
       },
@@ -163,8 +191,8 @@ describe('#getDownloader', () => {
         creationDate: '2018-09-07T15:21:01.223Z',
         lastUpdated: '2018-09-07T15:21:01.234Z',
         viewTags: {},
-        experienceViewId: '5b92975dc2f8de0006e2ca93',
-        id: '5b92975dc2f8de0006e2ca93',
+        experienceViewId: '5b92975dc2f8de0006e2ca95',
+        id: '5b92975dc2f8de0006e2ca95',
         _type: 'experienceView',
         _links: { self: { href: '/applications/5b9297591fefb200072e554d/experience/views/5b92975dc2f8de0006e2ca93' } }
       }
@@ -178,13 +206,17 @@ describe('#getDownloader', () => {
     await downloader(null, command);
     await unlockConfigFiles('.application.yml');
     const messages = await nextLog.promise;
-    messages.length.should.equal(6);
-    messages[0].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView.hbs`);
-    messages[1].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView.hbs`);
-    messages[2].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-0.hbs`);
-    messages[3].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-0.hbs`);
-    messages[4].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/${exps[2].id}.hbs`);
-    messages[5].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/${exps[2].id}.hbs`);
+    messages.length.should.equal(10);
+    messages[0].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
+    messages[1].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
+    messages[2].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView.hbs`);
+    messages[3].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView.hbs`);
+    messages[4].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-0.hbs`);
+    messages[5].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-0.hbs`);
+    messages[6].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-1.hbs`);
+    messages[7].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-1.hbs`);
+    messages[8].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/${exps[4].id}.hbs`);
+    messages[9].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/${exps[4].id}.hbs`);
   });
   it('should leave files that have previously been created locally', async () => {
     const exps = [
