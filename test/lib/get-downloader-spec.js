@@ -294,6 +294,8 @@ describe('#getDownloader', () => {
       'experience/layouts/myOtherView.hbs'
     ]);
     localMeta['experience/layouts/my:View.hbs'].name.should.equal('my:View');
+    localMeta['experience/layouts/my:View.hbs'].remoteTime.should.equal((new Date('2018-09-07T15:21:01.234Z')).getTime());
     localMeta['experience/layouts/myOtherView.hbs'].name.should.equal('myOtherView');
+    localMeta['experience/layouts/myOtherView.hbs'].remoteTime.should.equal((new Date('2018-09-07T15:21:01.234Z')).getTime());
   });
 });
