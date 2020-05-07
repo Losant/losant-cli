@@ -211,10 +211,10 @@ describe('#getDownloader', () => {
     messages[1].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
     messages[2].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView.hbs`);
     messages[3].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView.hbs`);
-    messages[4].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-0.hbs`);
-    messages[5].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-0.hbs`);
-    messages[6].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-1.hbs`);
-    messages[7].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-1.hbs`);
+    messages[4].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-1.hbs`);
+    messages[5].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-1.hbs`);
+    messages[6].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/myView-2.hbs`);
+    messages[7].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/myView-2.hbs`);
     messages[8].should.equal(`${pad(c.gray('processing'), 13)}\texperience/layouts/${exps[4].id}.hbs`);
     messages[9].should.equal(`${pad(c.green('downloaded'), 13)}\texperience/layouts/${exps[4].id}.hbs`);
   });
