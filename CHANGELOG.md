@@ -34,3 +34,9 @@
 ### Fixed
 
 * watch command now has a queueing process incase you have slow internet or a lot of changes at once.
+
+## Losant CLI v1.2.2
+
+### Fixed
+
+* sanitizing experience file names
