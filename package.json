@@ -25,7 +25,8 @@
     "lint:watch": "yarn lint --watch",
     "precommit": "lint-staged",
     "test": "mocha test",
-    "reinstall": "rm -rf nodes_modules && yarn install"
+    "reinstall": "rm -rf nodes_modules && yarn install",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
