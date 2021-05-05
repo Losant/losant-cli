@@ -32,7 +32,7 @@ const LOCAL_META_FILES = [
 
 const getApplicationFunc = (api, appUrl) => {
   return async () => {
-    const { filter } = await  inquirer.prompt([
+    const { filter } = await inquirer.prompt([
       { type: 'input', name: 'filter', message: 'Enter an Application Name:' }
     ]);
     let applicationInfo;
