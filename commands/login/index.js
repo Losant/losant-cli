@@ -1,6 +1,6 @@
 const error = require('error/typed');
 const p = require('commander');
-const program = new p.Command('losant configure');
+const program = new p.Command('losant login'); // TODO why was that like that?
 const getApi = require('../../lib/get-api');
 const retryP = require('../../lib/retryP');
 const c = require('chalk');
