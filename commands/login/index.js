@@ -8,13 +8,13 @@ const {
   saveUserConfig, logError, logResult
 } = require('../../lib/utils');
 const inquirer = require('inquirer');
+const { curry } = require('omnibelt');
 
-const signIn = async (isRetry) => {
+const signIn = curry(async (email, isRetry) => {
   if (isRetry) {
     logError('Authentication failed please try again...');
   }
-  const { email, password, twoFactorCode } = await inquirer.prompt([
-    { type: 'input', name: 'email', message: 'Enter Losant email:' },
+  const { password, twoFactorCode } = await inquirer.prompt([
     { type: 'password', name: 'password', message: 'Enter Losant password:' },
     { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
   ]);
@@ -22,7 +22,7 @@ const signIn = async (isRetry) => {
     throw error({ type: 'Required' });
   }
   return getApi({ email, password, twoFactorCode });
-};
+});
 
 const isLockedError = (err) => {
   return err.type === 'AccountLocked';
@@ -32,11 +32,30 @@ program
   .description('Log in and create your user configuration to use the other commands.')
   .action(async () => {
     let api;
-    try {
-      api = await retryP(signIn, isLockedError);
-    } catch (e) {
-      return logError(e);
+    const { email } = await inquirer.prompt([
+      { type: 'input', name: 'email', message: 'Enter Losant email:' }
+    ]);
+    api = await getApi();
+    const isSSoAccount = await api.auth.ssoDomain({ email });
+
+    if (isSSoAccount) {
+      const { token: apiToken } = await inquirer.prompt([
+        {
+          type: 'input',
+          name: 'token',
+          message: 'This email is attached to an SSO Account, please enter an API user token:'
+        }
+      ]);
+      api = await getApi({ apiToken });
+    } else {
+      const loginFunc = signIn(email);
+      try {
+        api = await retryP(loginFunc, isLockedError);
+      } catch (e) {
+        return logError(e);
+      }
     }
+
     try {
       const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
       const userFile = await saveUserConfig({
