@@ -1,10 +1,10 @@
 language: node_js
 node_js:
+  - '16'
+  - '15'
+  - '14'
   - '12'
-  - '11'
   - '10'
-  - '9'
-  - '8'
 notifications:
   slack:
     secure: tTKyxLmaYY8AnWivS4PtXjdRdwGDiDvpuyW8lv9E0oYlk4ysxDvp5VPRhGvbd6YB4DIyuNZK7BlM5mewOgLJGl8FcHQ4rriMfhJE2ubIwdHfrbUzFdXbbB5ZPhWjceuNs2GP2uFYiSwY9P+7CE93idU1FQiSG4tkbMp92CfRnJKC+vTfLigM4gAtTVr3SW4cTqMSO6f3BKt5BzXjCt2kmqSMthGUoLwK0zOOqJwAjCYiPu4hu9OlwsFpk2sc1vJjq0Wo9XFtK5IQ9xm9/XBLhPjf0iM5n+XkQRZdqcNFETJCP60pvwVj26IEuK6u+4eCfJ2sRHG2aQO9jZT+897K2oP/D2ylBgH0//227OiDr9ni3CfiDyHWGlHEalLIU7CPiWnrf43agnn07UwPp1pa1UqF/7h2tgXMCLTMwcoAFlgtdshG+/f2COHfozg7J3vX5W8zFgW1rS9wC6lHeoxHdpBsUTsNuHyTm9Eracl9ounrJCEDV+6T8x2voySAFyHMKBrcByrG1pn1Ku948UoYhOFQ1H+4FTyQNRP8HO2Aj9LwCo1XIlPpMgSGfOc9uon/68hHVpH7chSVlKpWJLH6JZ1jLv2sYw/rDWfF21FVp+XyIkABnM1KBx2NQPVXWKLtp5FWU1yxj6fsrjEh6sNyAoW02USbCvF1FdOZyNX+CA4=

@@ -136,6 +136,6 @@ module.exports = {
   printTable,
   buildUserConfig,
   buildResourceConfig,
-  statusExpHeaders: [  'Name',  'View Type',  'Local Status',  'Remote Status',  'Conflict' ],
-  statusFilesHeaders: [  'Name',  'Directory',  'Local Status',  'Remote Status',  'Conflict' ]
+  statusExpHeaders: [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
+  statusFilesHeaders: [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ]
 };

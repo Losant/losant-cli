@@ -25,8 +25,8 @@ describe('#ExperienceVersion', function() {
              experienceVersionId: '5ba172ccb4abff001661037b',
              id: '5ba172ccb4abff001661037b',
              attachedDomains: [
-               { id: '59fa2e946130fd00072c786a',  domainName: 'mycustomguy.com' },
-               { id: '59fa2e946130fd00072c786b',  domainName: 'anotherCustomMan.com' }
+               { id: '59fa2e946130fd00072c786a', domainName: 'mycustomguy.com' },
+               { id: '59fa2e946130fd00072c786b', domainName: 'anotherCustomMan.com' }
              ],
              attachedSlugs: [{ id: '5ba172cbb4abff0016610375', slug: 'embree' }],
              _type: 'experienceVersion'
@@ -40,9 +40,9 @@ describe('#ExperienceVersion', function() {
              experienceVersionId: '5ba172ccb4abff001661037a',
              id: '5ba172ccb4abff001661037b',
              attachedDomains: [
-               { id: '59fa2e946130fd00072c786c',  domainName: 'domain.com' },
-               { id: '59fa2e946130fd00072c786bd',  domainName: 'domain1.com' },
-               { id: '59fa2e946130fd00072c786be',  domainName: '*wildcard.com' }
+               { id: '59fa2e946130fd00072c786c', domainName: 'domain.com' },
+               { id: '59fa2e946130fd00072c786bd', domainName: 'domain1.com' },
+               { id: '59fa2e946130fd00072c786be', domainName: '*wildcard.com' }
              ],
              attachedSlugs: [],
              _type: 'experienceVersion'
@@ -98,7 +98,7 @@ describe('#ExperienceVersion', function() {
         items: []
       });
     await buildConfig();
-    const command = { description: 'The first version'  };
+    const command = { description: 'The first version' };
 
     await versionCommand('v1.0.0', command);
 

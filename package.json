@@ -17,60 +17,61 @@
     "losant": "./bin/losant.js"
   },
   "engines": {
-    "node": ">=8.3"
+    "node": ">=10"
   },
   "scripts": {
     "lint": "esw . --ext .js",
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
     "precommit": "lint-staged",
-    "test": "mocha test 2>&1",
-    "reinstall": "rm -rf nodes_modules && yarn install"
+    "test": "mocha test",
+    "reinstall": "rm -rf nodes_modules && yarn install",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Losant/losant-cli.git"
   },
   "dependencies": {
-    "@rjhilgefort/export-dir": "^1.1.3",
-    "chalk": "^2.4.1",
-    "chokidar": "^2.0.4",
-    "cli-table3": "^0.5.1",
+    "@rjhilgefort/export-dir": "^2.0.0",
+    "chalk": "^4.1.1",
+    "chokidar": "^2.1.8",
+    "cli-table3": "^0.6.0",
     "commander": "^2.20.3",
-    "csv-stringify": "^5.5.0",
+    "csv-stringify": "^5.6.2",
     "death": "^1.1.0",
     "error": "^7.2.0",
     "find-file-up": "^2.0.1",
-    "form-data": "^3.0.0",
+    "form-data": "^4.0.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.6",
     "inquirer": "^7.1.0",
     "js-yaml": "^3.12.0",
     "jsonwebtoken": "^8.5.1",
     "lodash-template": "^1.0.0",
-    "losant-rest": "2.5.1",
-    "mime-types": "^2.1.27",
+    "losant-rest": "2.8.0",
+    "mime-types": "^2.1.30",
     "minimatch": "^3.0.4",
-    "moment": "^2.25.3",
-    "omnibelt": "^1.3.3",
+    "moment": "^2.29.1",
+    "omnibelt": "^2.0.1",
     "pad": "^3.2.0",
-    "proper-lockfile": "^4.1.1",
+    "proper-lockfile": "^4.1.2",
     "request": "^2.88.2",
-    "request-promise": "^4.2.5",
-    "rollbar": "^2.15.2",
+    "request-promise": "^4.2.6",
+    "rollbar": "^2.21.1",
     "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
     "update-notifier": "^4.1.0"
   },
   "devDependencies": {
-    "@losant/eslint-config-losant": "1.3.6",
-    "husky": "^1.1.4",
-    "lint-staged": "^8.2.1",
-    "mocha": "^5.2.0",
-    "nock": "^10.0.2",
+    "@losant/eslint-config-losant": "1.4.3",
+    "husky": "^6.0.0",
+    "lint-staged": "^10.5.1",
+    "mocha": "^8.3.2",
+    "nock": "^13.0.11",
     "rimraf": "^3.0.2",
     "should": "^13.2.3",
-    "sinon": "^9.0.2"
+    "sinon": "^10.0.0"
   },
   "lint-staged": {
     "*.js": "esw"
@@ -84,9 +85,10 @@
     "commands/*",
     "README.md"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "mocha": {
+    "reporter": "spec",
+    "recursive": true,
+    "require": "should",
+    "check-leaks": true
   }
 }
