@@ -8,7 +8,7 @@ const {
 } = require('../../lib/utils');
 
 program
-  .description('Set a token and create your user configuration to use the other commands.')
+  .description('Create a User API Token in your Losant account, then set it here to configure the command line tool.')
   .action(async () => {
     // prompt the user to input a token
     const { token: apiToken } = await inquirer.prompt([

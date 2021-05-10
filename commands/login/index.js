@@ -1,6 +1,6 @@
 const error = require('error/typed');
 const p = require('commander');
-const program = new p.Command('losant login'); // TODO why was that like that?
+const program = new p.Command('losant login');
 const getApi = require('../../lib/get-api');
 const retryP = require('../../lib/retryP');
 const c = require('chalk');
@@ -10,9 +10,20 @@ const {
 const inquirer = require('inquirer');
 const { curry } = require('omnibelt');
 
-const signIn = curry(async (email, isRetry) => {
+const getEmail = async () => {
+  const { email } = await inquirer.prompt([
+    { type: 'input', name: 'email', message: 'Enter Losant email:' }
+  ]);
+  return email;
+};
+
+const signIn = curry(async ({ originalEmail } = {}, isRetry) => {
+  let email;
   if (isRetry) {
     logError('Authentication failed please try again...');
+    email = await getEmail();
+  } else {
+    email = originalEmail;
   }
   const { password, twoFactorCode } = await inquirer.prompt([
     { type: 'password', name: 'password', message: 'Enter Losant password:' },
@@ -32,9 +43,7 @@ program
   .description('Log in and create your user configuration to use the other commands.')
   .action(async () => {
     let api;
-    const { email } = await inquirer.prompt([
-      { type: 'input', name: 'email', message: 'Enter Losant email:' }
-    ]);
+    const email = await getEmail();
     api = await getApi();
     const isSSoAccount = await api.auth.ssoDomain({ email });
 
@@ -43,12 +52,12 @@ program
         {
           type: 'input',
           name: 'token',
-          message: 'This email is attached to an SSO Account, please enter an API user token:'
+          message: `This account, ${email}, is linked to a Single Sign-On (SSO) provider. Please create a CLI-Scoped User API Token in your Losant account, and then enter it here:`
         }
       ]);
       api = await getApi({ apiToken });
     } else {
-      const loginFunc = signIn(email);
+      const loginFunc = signIn({ originalEmail: email });
       try {
         api = await retryP(loginFunc, isLockedError);
       } catch (e) {
