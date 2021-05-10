@@ -24,6 +24,7 @@ losant [options] [command]
 ## Commands
 
 * [login](#login)
+* [set-token](#set-token)
 * [configure](#configure)
 * [experience](#experience)
 * [files](#files)
@@ -31,9 +32,12 @@ losant [options] [command]
 
 ### Login
 
-Before you run any other commands, you will want to run `losant login` to authenticate with your Losant account.
-This will ask for the email address and password (and optionally your 2 factor code) for your Losant account, and store
-an authentication token on your computer.
+Before you run any other commands, you will want to run `losant login` to authenticate with your Losant account. This command will check to see if your account is linked to a Single Sign-on (SSO) provider. If so the command will prompt for a User Token otherwise it will prompt for the password (and optionally your 2 factor code) for your Losant account. After either is given successfully the command will store
+the authentication token on your computer.
+
+### Set-token
+
+The set-token command, `losant set-token`, is an alternative way to login for those users who's account is linked to a Single Sign-on (SSO) provider. This will take the given token, verify that token against the API and then set it on your user configuration file to be used for configuring a new directory or any pre configured applications.
 
 ### Configure
 
