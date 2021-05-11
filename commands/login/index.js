@@ -8,9 +8,8 @@ const {
   saveUserConfig, logError, logResult
 } = require('../../lib/utils');
 const inquirer = require('inquirer');
-const { curry } = require('omnibelt');
 
-const signIn = curry(async (isRetry) => {
+const signIn = async (isRetry) => {
   if (isRetry) {
     logError('Authentication failed please try again...');
   }
@@ -42,7 +41,7 @@ const signIn = curry(async (isRetry) => {
     apiCreds.twoFactorCode = twoFactorCode;
   }
   return getApi(apiCreds);
-});
+};
 
 const isLockedError = (err) => {
   return err.type === 'AccountLocked';
