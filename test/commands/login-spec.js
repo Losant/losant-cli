@@ -90,7 +90,6 @@ describe('Login Command', () => {
       '/bin/node',
       path.resolve(__dirname, '/bin/login.js')
     ]);
-
     await deferred.promise;
 
     await sleep(500); // give it a second to right the file...
