@@ -16,7 +16,7 @@ const signIn = async (isRetry) => {
   const { email } = await inquirer.prompt([
     { type: 'input', name: 'email', message: 'Enter Losant email:' }
   ]);
-  const api = await getApi();
+  let api = await getApi();
   const apiCreds = {};
   const isSSoAccount = await api.auth.ssoDomain({ email });
   if (isSSoAccount) {
@@ -40,7 +40,9 @@ const signIn = async (isRetry) => {
     apiCreds.password = password;
     apiCreds.twoFactorCode = twoFactorCode;
   }
-  return getApi(apiCreds);
+  api = await getApi(apiCreds);
+  const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
+  return { api, appUrl: wlInfo.appUrl, endpointDomain: wlInfo.endpointDomain };
 };
 
 const isLockedError = (err) => {
@@ -50,20 +52,19 @@ const isLockedError = (err) => {
 program
   .description('Log in and create your user configuration to use the other commands.')
   .action(async () => {
-    let api;
+    let result;
     try {
-      api = await retryP(signIn, isLockedError);
+      result = await retryP(signIn, isLockedError);
     } catch (e) {
       return logError(e);
     }
 
     try {
-      const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
       const userFile = await saveUserConfig({
-        [api.getOption('url')]: {
-          apiToken: api.getOption('accessToken'),
-          appUrl: wlInfo.appUrl,
-          endpointDomain: wlInfo.endpointDomain
+        [result.api.getOption('url')]: {
+          apiToken: result.api.getOption('accessToken'),
+          appUrl: result.appUrl,
+          endpointDomain: result.endpointDomain
         }
       });
       logResult('success', `configuration written to ${c.bold(userFile)} with your user token!`, 'green');
