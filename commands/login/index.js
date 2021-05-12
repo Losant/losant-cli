@@ -31,7 +31,7 @@ const signIn = async (isRetry) => {
   } else {
     const { password, twoFactorCode } = await inquirer.prompt([
       { type: 'password', name: 'password', message: 'Enter Losant password:' },
-      { type: 'input', name: 'twoFactorCode', message: 'Enter two factor auth code (if applicable):' }
+      { type: 'input', name: 'twoFactorCode', message: 'Enter two-factor auth code (if applicable):' }
     ]);
     if (!email || !password) {
       throw error({ type: 'Required' });
