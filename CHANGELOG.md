@@ -40,3 +40,14 @@
 ### Fixed
 
 * sanitizing experience file names
+
+## Losant CLI v1.2.3
+
+### Added
+
+* Set token command (`losant set-token`)
+
+### Changed
+
+* Updated `losant login` command to prompt for a User Token when an email is linked to a Single Sign-On provider.
+* Updated the losant-rest client version

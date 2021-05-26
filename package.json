@@ -1,6 +1,6 @@
 {
   "name": "losant-cli",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Losant Command Line Interface",
   "license": "MIT",
   "homepage": "https://github.com/Losant/losant-cli#readme",
