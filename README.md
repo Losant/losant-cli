@@ -33,11 +33,11 @@ losant [options] [command]
 ### Login
 
 Before you run any other commands, you must run `losant login` to authenticate with your Losant account. This command checks to see if your account is linked to a Single Sign-On (SSO) provider. If so, the command will prompt for a User Token; otherwise it will prompt for the password (and optionally your two-factor code) for your Losant account. After either is given successfully, the command will store
-the authentication token on your computer.
+the authentication token on your computer. On this command you can optionally set the LOSANT_API_URL as an enviroment variable e.g. `LOSANT_API_URL=<api.private.install> losant login`, by default the CLI will use `https://api.losant.com` as the API URL. This will allow you to login to multiple users across Losant installs. If you are logged into multiple Losant installs when you configure a directory, you will be asked which API token to use to access the application. And from then on any request for that application will use the same API URL.
 
 ### Set-token
 
-The set-token command, `losant set-token`, is an alternative way to log in for those users whose account is linked to a Single Sign-On (SSO) provider. This will take the given token, verify that token against the API, and then set it on your user configuration file.
+The set-token command, `losant set-token`, is an alternative way to log in for those users whose account is linked to a Single Sign-On (SSO) provider. This will take the given token, verify that token against the API, and then set it on your user configuration file.  On this command you can optionally set the LOSANT_API_URL as an enviroment variable e.g. `LOSANT_API_URL=<api.private.install> losant set-token`, by default the CLI will use `https://api.losant.com` as the API URL. This will allow you to set a token for any Losant private installation, and allow you to set up multiple tokens (or use the login command) for different Losant installs. If you do login to multiple Losant API instances, when configuring a directory for an application, the configure command will ask which API to use to find the application. And from then on any request for that application will use the same API URL.
 
 ### Configure
 
@@ -143,6 +143,6 @@ The `losant datatables` command is how you manage the data tables for a configur
 
 *****
 
-Copyright (c) 2019 Losant IoT, Inc
+Copyright (c) 2023 Losant IoT, Inc
 
 <https://www.losant.com>
