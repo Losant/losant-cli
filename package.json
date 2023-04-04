@@ -35,9 +35,9 @@
   "dependencies": {
     "@rjhilgefort/export-dir": "^2.0.0",
     "chalk": "^4.1.1",
-    "chokidar": "^3.5.3",
+    "chokidar": "^2.1.8",
     "cli-table3": "^0.6.0",
-    "commander": "^2.20.3",
+    "commander": "^6.2.1",
     "csv-stringify": "^6.3.0",
     "death": "^1.1.0",
     "error": "^7.2.0",

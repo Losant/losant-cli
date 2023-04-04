@@ -4,6 +4,7 @@ const printHelp = require('../../lib/print-help');
 module.exports = (nameOfCommand, program) => {
   const subProgram = program
     .command('watch')
+    .storeOptionsAsProperties()
     .action(require('../../lib/watch-files')(nameOfCommand));
   const helpLines = [
     `Watch your ${capitalize(nameOfCommand)} while you make changes and have them automatically uploaded`,

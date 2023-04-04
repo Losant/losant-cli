@@ -10,6 +10,7 @@ const helpLines = [
 module.exports = (program) => {
   const subProgram = program
     .command('layout [page]')
+    .storeOptionsAsProperties()
     .option('-l, --list <pattern>', 'pages that match this pattern will be listed with their layout')
     .action(require('../../lib/experience-layout'));
 
