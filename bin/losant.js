@@ -3,6 +3,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 const program = require('commander');
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');
+
 const pgm = program
   .version(pkg.version)
   .description('Losant CLI is a command line tool to help manage your Losant Application and its resources.')
@@ -12,12 +13,10 @@ const pgm = program
   .command('experience', 'Manages your Losant Application\'s Experience Views, and Versions from the command line.')
   .command('files', 'Manage Files on Losant for your Application.')
   .command('datatables', 'Manage Data Tables on Losant for your Application.');
+  // .showHelpAfterError();
+  
+// program.showHelpAfterError();
+pgm.parse(process.argv);
 
-const results = pgm.parse(process.argv);
-
-if (results) {
-  console.error('Unknown command: %s\n', results.args.join(' '));
-  pgm.help();
-}
 
 updateNotifier({ pkg }).notify();

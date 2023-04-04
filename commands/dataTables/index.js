@@ -5,6 +5,7 @@ const program = new p.Command('losant datatables');
 const printHelp = require('../../lib/print-help');
 
 program.description('Manage Data Tables on Losant for your Application');
+// program.showHelpAfterError();
 
 const help =  [];
 commands.forEach((command) => {
@@ -13,7 +14,7 @@ commands.forEach((command) => {
     help.push(...helpLines);
   }
 });
+// program.addHelpText('after', help);
 
-
-printHelp(program, help);
+// printHelp(program, help);
 module.exports = program;

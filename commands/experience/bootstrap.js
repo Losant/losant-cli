@@ -6,6 +6,7 @@ const helpLines = [
 module.exports = (program) => {
   const subProgram = program
     .command('bootstrap')
+    // .storeOptionsAsProperties()
     .action(require('../../lib/experience-bootstrap'));
 
   printHelp(subProgram, helpLines);
