@@ -9,6 +9,7 @@ const {
 
 program
   .description('Create a User API Token in your Losant account, then set it here to configure the command line tool.')
+  .showHelpAfterError()
   .action(async () => {
     // prompt the user to input a token
     const { token: apiToken } = await inquirer.prompt([

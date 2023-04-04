@@ -125,7 +125,7 @@ program
     const loadedConfig = merge(userConfig, config);
     loadedConfig.api = api;
     try {
-      const downloaded = await experienceDownload(null, {}, loadedConfig);
+      const downloaded = await experienceDownload(null, {}, {}, loadedConfig);
       if (downloaded) {
         logResult('success', 'Downloaded all experience resources!', 'green');
       } else {
@@ -136,7 +136,7 @@ program
             message: `Do you want to bootstrap your experience for application ${appInfo.name}?`
           }]);
           if (shouldBootstrap) {
-            await experienceBootstrap({}, loadedConfig, appInfo);
+            await experienceBootstrap({}, {}, loadedConfig, appInfo);
           } else {
             await setSkippedExperience(api, appInfo);
           }
@@ -149,7 +149,7 @@ program
     try {
       const { canDownloadFiles } = await inquirer.prompt([{ type: 'confirm', name: 'canDownloadFiles', message: 'Download files now?' }]);
       if (canDownloadFiles) {
-        const downloadedFiles = await filesDownload(null, {}, loadedConfig);
+        const downloadedFiles = await filesDownload(null, {}, {}, loadedConfig);
         if (downloadedFiles) {
           logResult('success', 'Downloaded all of files!', 'green');
         }
@@ -161,7 +161,7 @@ program
     try {
       const { canExportDataTables } = await inquirer.prompt([{ type: 'confirm', name: 'canExportDataTables', message: 'Export data tables now?' }]);
       if (canExportDataTables) {
-        const exportedTables = await dataTablesExport(null, {}, loadedConfig);
+        const exportedTables = await dataTablesExport(null, {}, {}, loadedConfig);
         if (exportedTables) {
           logResult('success', 'Exported all data tables!', 'green');
         }

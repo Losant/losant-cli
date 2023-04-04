@@ -51,6 +51,7 @@ const isLockedError = (err) => {
 
 program
   .description('Log in and create your user configuration to use the other commands.')
+  .showHelpAfterError()
   .action(async () => {
     let result;
     try {
