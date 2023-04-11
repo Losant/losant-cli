@@ -12,6 +12,7 @@ package-lock.json
 example*
 */.losant/*
 *.yaml
+app-test
 
 ### Node ###
 

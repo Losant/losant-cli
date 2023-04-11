@@ -8,6 +8,5 @@ $ losant ${type} status
   program.addHelpText('after', helpLines);
   program
     .command('status')
-    .storeOptionsAsProperties()
     .action(getStatusFunc(params));
 };

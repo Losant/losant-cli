@@ -13,7 +13,6 @@ module.exports = (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('version [version]')
-    .storeOptionsAsProperties()
     .option('-l, --list <pattern>', 'list all versions like this pattern')
     .option('-d, --description <description>', 'a description to attach to this version')
     .action(require('../../lib/experience-version'));
