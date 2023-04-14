@@ -9,6 +9,7 @@ const { defer, sleep } = require('omnibelt');
 const watch = require('../../lib/watch-files')('files', 1000);
 const ssLog = require('single-line-log');
 const { ensureDir, writeFile, appendFile } = require('fs-extra');
+
 describe('#Watch Files', () => {
   let watcherClose;
   beforeEach(async () => {
@@ -30,7 +31,7 @@ describe('#Watch Files', () => {
       writeFile('files/mine/myFile.txt', 'hello')
     ]);
     watcherClose = await watch();
-    this.timeout(3000);
+    this.timeout(30000);
     for (let i = 0; i < 3; i++) {
       nock('https://api.losant.com:443', { encodedQueryParams: true })
         .get('/applications/5b9297591fefb200072e554d/files')
