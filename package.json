@@ -61,7 +61,7 @@
     "rollbar": "^2.21.1",
     "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
-    "update-notifier": "^6.0.2"
+    "update-notifier": "^5.1.0"
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "1.6.1",
