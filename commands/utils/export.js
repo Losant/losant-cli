@@ -1,4 +1,4 @@
-const { getExporter } = require('../../lib/');
+const { getExporter } = require('../../lib');
 const { options } = require('../../lib/constants');
 
 module.exports = (program, params = {}, opts) => {
