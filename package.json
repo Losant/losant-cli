@@ -17,7 +17,7 @@
     "losant": "./bin/losant.js"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "scripts": {
     "lint": "esw . --ext .js",
