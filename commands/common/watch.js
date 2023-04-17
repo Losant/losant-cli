@@ -7,6 +7,5 @@ $ losant ${nameOfCommand} watch
 `);
   program
     .command('watch')
-    .storeOptionsAsProperties()
     .action(require('../../lib/watch-files')(nameOfCommand));
 };

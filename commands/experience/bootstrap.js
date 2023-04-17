@@ -6,6 +6,5 @@ module.exports = (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('bootstrap')
-    .storeOptionsAsProperties()
     .action(require('../../lib/experience-bootstrap'));
 };

@@ -1,10 +1,9 @@
-const { getExporter } = require('../../lib/');
+const { getExporter } = require('../../lib');
 const { options } = require('../../lib/constants');
 
 module.exports = (program, params = {}, opts) => {
   const subProgram = program
     .command('export [pattern]')
-    .storeOptionsAsProperties()
     .option(...options.force)
     .option(...options.dryRun);
 

@@ -10,10 +10,7 @@ const sinon = require('sinon');
 const nock = require('nock');
 const c = require('chalk');
 const pad = require('pad');
-const { promisify } = require('util');
-const rimraf = require('rimraf');
 const program = require('commander');
-const rmDir = promisify(rimraf);
 const locker = require('proper-lockfile');
 const { pathExists, remove } = require('fs-extra');
 const path = require('path');
@@ -117,7 +114,6 @@ after(async () => {
 });
 
 module.exports = {
-  rmDir,
   nock,
   sinon: sandbox,
   downloadLog,
