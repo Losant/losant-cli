@@ -29,6 +29,7 @@ describe('#Watch Files', () => {
     await writeFile('files/help.txt', 'hello');
     await writeFile('files/yo.txt', 'hello');
     await writeFile('files/mine/myFile.txt', 'hello');
+    await sleep(1000);
     watcherClose = await watch();
     this.timeout(30000);
     nock('https://api.losant.com:443', { encodedQueryParams: true })
