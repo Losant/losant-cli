@@ -1,6 +1,6 @@
 const { buildUserConfig, nock } = require('../common');
 const utils     = require('../../lib/utils');
-const { merge } = require('omnibelt');
+const { mergeRight } = require('omnibelt');
 const { writeFile, remove, pathExists } = require('fs-extra');
 const should = require('should');
 const path = require('path');
@@ -47,7 +47,7 @@ describe('utils', () => {
       const result = await utils.loadConfig(file);
       should.exist(result.api);
       delete result.api;
-      result.should.deepEqual(merge(config, { file, apiToken: 'token', appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' }));
+      result.should.deepEqual(mergeRight(config, { file, apiToken: 'token', appUrl: 'https://app.losant.com', endpointDomain: 'on.losant.com' }));
     });
     it('.loadConfig should update old config files', async () => {
       process.env.LOSANT_API_URL = 'https://host.com';
