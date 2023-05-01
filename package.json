@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "@rjhilgefort/export-dir": "^2.0.0",
+    "axios": "^1.4.0",
     "chalk": "^4.1.1",
     "chokidar": "^3.5.3",
     "cli-table3": "^0.6.0",
@@ -56,8 +57,6 @@
     "omnibelt": "^2.0.1",
     "pad": "^3.2.0",
     "proper-lockfile": "^4.1.2",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6",
     "rollbar": "^2.21.1",
     "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
