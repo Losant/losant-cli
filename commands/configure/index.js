@@ -1,6 +1,6 @@
 const error = require('error/typed');
 const p = require('commander');
-const { merge, findIndex, propEq } = require('omnibelt');
+const { mergeRight, findIndex, propEq } = require('omnibelt');
 const program = new p.Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
@@ -86,7 +86,7 @@ const setSkippedExperience = (api, application) => {
   if (!application.ftueTracking) {
     application.ftueTracking = [];
   }
-  const index = findIndex(propEq('name', 'experience'), application.ftueTracking);
+  const index = findIndex(propEq('experience', 'name'), application.ftueTracking);
   const track = { name: 'experience', version: 3, status: 'skipped' };
   if (index === -1) {
     application.ftueTracking.push(track);
@@ -122,7 +122,7 @@ program
     } catch (e) {
       logError(`Failed to write configuration: ${c.bold(e.message)}`);
     }
-    const loadedConfig = merge(userConfig, config);
+    const loadedConfig = mergeRight(userConfig, config);
     loadedConfig.api = api;
     try {
       const downloaded = await experienceDownload(null, {}, {}, loadedConfig);
