@@ -9,7 +9,7 @@ It easily lets you manage [Experience Views](https://docs.losant.com/experiences
 
 ## Installation
 
-The CLI requires [Node.js](https://nodejs.org/en/) version 8.3 or higher. The latest stable version is available in NPM and can be installed using:
+The CLI requires [Node.js](https://nodejs.org/en/) version 14 or higher. The latest stable version is available in NPM and can be installed using:
 
 ```bash
 npm install -g losant-cli
