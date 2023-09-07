@@ -3472,10 +3472,10 @@ loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
-losant-rest@2.12.3:
-  version "2.12.3"
-  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.12.3.tgz#0be359cf63d5e219b4a373bea0e2b54c0dfdc7fb"
-  integrity sha512-WH7RyYqmivSrIVjY6AjXvsrWMJ5vf+QlVIFQb8KTcON+FeKZqnOwDcXjgkdNfRRW9cc0DCVU59pGmhHEucQ+Vg==
+losant-rest@2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/losant-rest/-/losant-rest-2.14.0.tgz#d98f0bdd1740a9f47b1dc654ae44a37efa2aee73"
+  integrity sha512-ktLaIKnJxJJkiBRNRt1Hsyc+6Wy+9k/1VMr7RfUKArxejQ+JZjyUaH4S0fNhJgoCDnvIZIMYmsiOUeCmfWYu7g==
   dependencies:
     axios "^0.21.2"
     es6-promise "^4.2.8"
