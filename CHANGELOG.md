@@ -6,6 +6,10 @@
 
 * new `--reset` option on `experience download` which will remove all files from your experience directory and then download all experience files from the application.
 
+### Changed
+
+* Upgraded various dependencies.
+
 ### Fixed
 
 * Ensure the path delimiter is what the losant API expects when uploading new files in nested directories.

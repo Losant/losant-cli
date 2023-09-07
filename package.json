@@ -50,7 +50,7 @@
     "js-yaml": "^3.14.1",
     "jsonwebtoken": "^9.0.0",
     "lodash-template": "^1.0.0",
-    "losant-rest": "2.12.3",
+    "losant-rest": "2.14.0",
     "mime-types": "^2.1.30",
     "minimatch": "^9.0.0",
     "moment": "^2.29.1",
