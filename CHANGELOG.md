@@ -1,5 +1,23 @@
 # Losant CLI Changelog
 
+## Losant CLI v1.3.0
+
+### Added
+
+* new `--reset` option on `experience download` which will remove all files from your experience directory and then download all experience files from the application.
+
+### Changed
+
+* Upgraded various dependencies.
+* Adding version 20 to travis.
+
+### Fixed
+
+* Ensure the path delimiter is what the losant API expects when uploading new files in nested directories.
+* Fixing the path pattern properly match on any either Mac/Linux or Windows.
+
+--
+
 ## Losant CLI v1.2.3
 
 ### Added
