@@ -9,6 +9,7 @@
 ### Changed
 
 * Upgraded various dependencies.
+* Adding version 20 to travis.
 
 ### Fixed
 
