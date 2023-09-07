@@ -14,6 +14,7 @@
 ### Fixed
 
 * Ensure the path delimiter is what the losant API expects when uploading new files in nested directories.
+* Fixing the path pattern properly match on any either Mac/Linux or Windows.
 
 --
 
