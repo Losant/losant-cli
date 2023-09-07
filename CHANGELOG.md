@@ -1,5 +1,17 @@
 # Losant CLI Changelog
 
+## Losant CLI v1.3.0
+
+### Added
+
+* new `--reset` option on `experience download` which will remove all files from your experience directory and then download all experience files from the application.
+
+### Fixed
+
+* Ensure the path delimiter is what the losant API expects when uploading new files in nested directories.
+
+--
+
 ## Losant CLI v1.2.3
 
 ### Added
