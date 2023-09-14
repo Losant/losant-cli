@@ -1,5 +1,13 @@
 # Losant CLI Changelog
 
+## Losant CLI v1.3.1
+
+### Changed
+
+* Rotating rollbar key
+
+--
+
 ## Losant CLI v1.3.0
 
 ### Added
