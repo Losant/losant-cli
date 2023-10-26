@@ -13,6 +13,7 @@ example*
 */.losant/*
 *.yaml
 app-test
+test-app
 
 ### Node ###
 
