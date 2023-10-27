@@ -107,4 +107,88 @@ describe('#ExperienceVersion', function() {
     createCall.isDone().should.be.true();
     message.should.equal(`${c.green('created')}\tv1.0.0`);
   });
+
+  it('should create a new version with slugs', async () => {
+    let message;
+    sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+    });
+    const versionData = {
+      version: 'v1.0.0',
+      description: 'The first version',
+      domainIds: [],
+      slugIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ]
+    };
+    const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .post('/applications/5b9297591fefb200072e554d/experience/versions', (body) => {
+        body.should.deepEqual(versionData);
+        return true;
+      })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, versionData);
+
+    await buildConfig();
+    const command = { description: 'The first version', slugIds: 'oneId, twoId,   threeId, fourId ' };
+
+    await versionCommand('v1.0.0', command);
+
+    createCall.isDone().should.be.true();
+    message.should.equal(`${c.green('created')}\tv1.0.0`);
+  });
+
+  it('should create a new version with domains', async () => {
+    let message;
+    sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+    });
+    const versionData = {
+      version: 'v1.0.0',
+      description: 'The first version',
+      domainIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ],
+      slugIds: []
+    };
+    const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .post('/applications/5b9297591fefb200072e554d/experience/versions', (body) => {
+        body.should.deepEqual(versionData);
+        return true;
+      })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, versionData);
+
+    await buildConfig();
+    const command = { description: 'The first version', domainIds: 'oneId, twoId,   threeId, fourId ' };
+
+    await versionCommand('v1.0.0', command);
+
+    createCall.isDone().should.be.true();
+    message.should.equal(`${c.green('created')}\tv1.0.0`);
+  });
+
+  it('should create a new version with domains and slugs', async () => {
+    let message;
+    sinon.stub(ssLog, 'stdout').callsFake((_message) => {
+      message = _message;
+    });
+    const versionData = {
+      version: 'v1.0.0',
+      description: 'The first version',
+      domainIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ],
+      slugIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ]
+    };
+    const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .post('/applications/5b9297591fefb200072e554d/experience/versions', (body) => {
+        body.should.deepEqual(versionData);
+        return true;
+      })
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, versionData);
+
+    await buildConfig();
+    const command = { description: 'The first version', domainIds: 'oneId, twoId, threeId, fourId', slugIds: 'oneId, twoId, threeId, fourId' };
+
+    await versionCommand('v1.0.0', command);
+
+    createCall.isDone().should.be.true();
+    message.should.equal(`${c.green('created')}\tv1.0.0`);
+  });
 });
