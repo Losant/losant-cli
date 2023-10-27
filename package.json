@@ -45,7 +45,7 @@
     "find-file-up": "^2.0.1",
     "form-data": "^4.0.0",
     "fs-extra": "^11.1.1",
-    "glob": "^10.3.10",
+    "glob": "10.2.2",
     "inquirer": "^8.2.3",
     "js-yaml": "^3.14.1",
     "jsonwebtoken": "^9.0.2",
@@ -65,7 +65,7 @@
   "devDependencies": {
     "@losant/eslint-config-losant": "1.6.1",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "13.2.2",
     "mocha": "^10.2.0",
     "nock": "^13.3.6",
     "should": "^13.2.3",
