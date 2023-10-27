@@ -8,7 +8,7 @@ const pgm = program
   .version(pkg.version)
   .description('Losant CLI is a command line tool to help manage your Losant Application and its resources.')
   .command('login', 'Log in and create your user configuration to use the other commands.')
-  .command('set-token [token]', 'Create a User API Token in your Losant account, then set it here to configure the command line tool.')
+  .command('set-token', 'Create a User API Token in your Losant account, then set it here to configure the command line tool.')
   .command('configure', 'Configure the command line tool for a specific directory.')
   .command('experience', 'Manages your Losant Application\'s Experience Views, and Versions from the command line.')
   .command('files', 'Manage Files on Losant for your Application.')
