@@ -8,6 +8,7 @@
 * Upload command uploads in a specific order to remove any resources needed first and then add or update any resources needed.
 * Upgrade default version of Node to 18.18.2
 * Upgrade various dependencies
+* Dropping support for Node 14.
 
 --
 
