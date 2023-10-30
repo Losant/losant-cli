@@ -274,7 +274,7 @@ describe('#ExperienceVersion', function() {
           {
             id: 'twoId',
             slug: 'two'
-          },
+          }
         ]
       });
 
