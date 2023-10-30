@@ -16,7 +16,7 @@ const {
   uploadedLog,
   statusExpHeaders
 } = require('../common');
-const { defer } = require('omnibelt');
+const { defer, uniq, reject, isNil } = require('omnibelt');
 let spy;
 const { remove, writeFile, ensureFile } = require('fs-extra');
 const c = require('chalk');
@@ -686,6 +686,15 @@ describe('Experience Commands', () => {
     ]);
     await unlockConfigFiles(CONFIG_FILE);
     await uploadDeferred.promise;
+    const status = uniq(reject(isNil, uploadMessages.map((msg) => {
+      const stat = msg.split('\x1B')[1].replace('[90m', '').replace('[33m', '').replace('[32m', '');
+      if (stat !== 'processing') {
+        return stat;
+      }
+    })));
+    // the order that files are processed is not stable but...
+    // the order of what type of action is taken is stable
+    status.should.deepEqual([ 'unmodified', 'deleted', 'uploaded' ]);
     uploadMessages.sort().should.deepEqual([
       uploadedLog('experience/pages/Dashboard Stream Only.hbs'),
       uploadedLog('experience/pages/dash.hbs'),
