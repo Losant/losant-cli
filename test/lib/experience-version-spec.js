@@ -179,6 +179,36 @@ describe('#ExperienceVersion', function() {
       domainIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ],
       slugIds: []
     };
+    const createDomainCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d/experience/domains')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        items: [
+          {
+            id: 'oneId',
+            domainName: 'one'
+          },
+          {
+            id: 'twoId',
+            domainName: 'two'
+          },
+          {
+            id: 'threeId',
+            domainName: 'three'
+          },
+          {
+            id: 'fourId',
+            domainName: 'four'
+          }
+        ]
+      });
+
+    const createSlugCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d/experience/slugs')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        items: []
+      });
     const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/experience/versions', (body) => {
         body.should.deepEqual(versionData);
@@ -191,7 +221,8 @@ describe('#ExperienceVersion', function() {
     const command = { description: 'The first version', domainIds: 'oneId, twoId,   threeId, fourId ' };
 
     await versionCommand('v1.0.0', command);
-
+    createDomainCall.isDone().should.be.true();
+    createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
     message.should.equal(`${c.green('created')}\tv1.0.0`);
   });
@@ -204,8 +235,8 @@ describe('#ExperienceVersion', function() {
     const versionData = {
       version: 'v1.0.0',
       description: 'The first version',
-      domainIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ],
-      slugIds: [ 'oneId', 'twoId', 'threeId', 'fourId' ]
+      domainIds: [ 'threeId', 'fourId' ],
+      slugIds: [ 'oneId', 'twoId' ]
     };
     const createCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
       .post('/applications/5b9297591fefb200072e554d/experience/versions', (body) => {
@@ -215,11 +246,44 @@ describe('#ExperienceVersion', function() {
       .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
       .reply(200, versionData);
 
+    const createDomainCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d/experience/domains')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        items: [
+          {
+            id: 'threeId',
+            domainName: 'three'
+          },
+          {
+            id: 'fourId',
+            domainName: 'four'
+          }
+        ]
+      });
+
+    const createSlugCall = nock('https://api.losant.com:443', { encodedQueryParams: true })
+      .get('/applications/5b9297591fefb200072e554d/experience/slugs')
+      .query({ _actions: 'false', _links: 'true', _embedded: 'true' })
+      .reply(200, {
+        items: [
+          {
+            id: 'oneId',
+            slug: 'one'
+          },
+          {
+            id: 'twoId',
+            slug: 'two'
+          },
+        ]
+      });
+
     await buildConfig();
-    const command = { description: 'The first version', domainIds: 'oneId, twoId, threeId, fourId', slugIds: 'oneId, twoId, threeId, fourId' };
+    const command = { description: 'The first version', domainIds: 'threeId, fourId', slugIds: 'oneId, twoId' };
 
     await versionCommand('v1.0.0', command);
-
+    createDomainCall.isDone().should.be.true();
+    createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
     message.should.equal(`${c.green('created')}\tv1.0.0`);
   });
