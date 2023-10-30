@@ -1,6 +1,6 @@
 {
   "name": "losant-cli",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Losant Command Line Interface",
   "license": "MIT",
   "homepage": "https://github.com/Losant/losant-cli#readme",
@@ -17,7 +17,7 @@
     "losant": "./bin/losant.js"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "scripts": {
     "lint": "esw . --ext .js",
@@ -34,30 +34,30 @@
   },
   "dependencies": {
     "@rjhilgefort/export-dir": "^2.0.0",
-    "axios": "^1.4.0",
+    "axios": "^1.5.1",
     "chalk": "^4.1.1",
     "chokidar": "^3.5.3",
     "cli-table3": "^0.6.0",
     "commander": "^10.0.1",
-    "csv-stringify": "^6.3.3",
+    "csv-stringify": "^6.4.4",
     "death": "^1.1.0",
     "error": "^7.2.0",
     "find-file-up": "^2.0.1",
     "form-data": "^4.0.0",
     "fs-extra": "^11.1.1",
-    "glob": "^10.2.2",
+    "glob": "10.2.2",
     "inquirer": "^8.2.3",
     "js-yaml": "^3.14.1",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
     "lodash-template": "^1.0.0",
-    "losant-rest": "2.14.0",
+    "losant-rest": "2.14.1",
     "mime-types": "^2.1.30",
-    "minimatch": "^9.0.0",
+    "minimatch": "^9.0.3",
     "moment": "^2.29.1",
-    "omnibelt": "^3.1.1",
+    "omnibelt": "^3.1.2",
     "pad": "^3.2.0",
     "proper-lockfile": "^4.1.2",
-    "rollbar": "^2.21.1",
+    "rollbar": "^2.26.2",
     "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
     "update-notifier": "^5.1.0"
@@ -65,9 +65,9 @@
   "devDependencies": {
     "@losant/eslint-config-losant": "1.6.1",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "13.2.2",
     "mocha": "^10.2.0",
-    "nock": "^13.3.1",
+    "nock": "^13.3.6",
     "should": "^13.2.3",
     "sinon": "^15.0.4"
   },

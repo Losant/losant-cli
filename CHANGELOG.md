@@ -1,5 +1,17 @@
 # Losant CLI Changelog
 
+## Losant CLI v1.3.2
+
+### Changed
+
+* Updating commands to quit early if no meta configuration file is found.
+* Upload command uploads in a specific order to remove any resources needed first and then add or update any resources needed.
+* Upgrade default version of Node to 18.18.2
+* Upgrade various dependencies
+* Dropping support for Node 14.
+
+--
+
 ## Losant CLI v1.3.1
 
 ### Changed
