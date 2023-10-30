@@ -9,12 +9,17 @@ const {
 
 program
   .description('Create a User API Token in your Losant account, then set it here to configure the command line tool.')
+  .argument('[token]', 'The API token to set (if not passed, user will be prompted)')
   .showHelpAfterError()
-  .action(async () => {
-    // prompt the user to input a token
-    const { token: apiToken } = await inquirer.prompt([
-      { type: 'input', name: 'token', message: 'Enter a Losant User API token:' }
-    ]);
+  .action(async (token) => {
+    let apiToken = token;
+    if (!apiToken) {
+      // prompt the user to input a token
+      const res = await inquirer.prompt([
+        { type: 'input', name: 'token', message: 'Enter a Losant User API token:' }
+      ]);
+      apiToken = res.token;
+    }
     try {
       const api = await getApi({ apiToken });
       const wlInfo = await api.request({ method: 'get', url: '/whitelabels/domain' });
