@@ -26,7 +26,7 @@
     "precommit": "lint-staged",
     "test": "mocha test",
     "reinstall": "rm -rf nodes_modules && yarn install",
-    "prepare": "husky install"
+    "prepare": "husky install || true"
   },
   "repository": {
     "type": "git",
