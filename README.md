@@ -32,8 +32,7 @@ losant [options] [command]
 
 ### Login
 
-Before you run any other commands, you must run `losant login` to authenticate with your Losant account. This command checks to see if your account is linked to a Single Sign-On (SSO) provider. If so, the command will prompt for a User Token; otherwise it will prompt for the password (and optionally your two-factor code) for your Losant account. After either is given successfully, the command will store
-the authentication token on your computer. With this command, you can optionally set `LOSANT_API_URL` as an environment variable; e.g. `LOSANT_API_URL=<api.private.install> losant login`. By default the CLI will use `https://api.losant.com` as the API URL. This will allow you to log in across Losant installations. If you are logged in to multiple Losant installations when you configure a directory, you will be asked which API token to use to access the application. From then on, any request for that application will use the same API URL.
+Before you run any other commands, you must run `losant login` to authenticate with your Losant account. This command checks to see if your account is linked to a Single Sign-On (SSO) provider. If so, the command will prompt for a User Token; otherwise it will prompt for the password (and optionally your multi-factor code) for your Losant account. After either is given successfully, the command will store the authentication token on your computer. With this command, you can optionally set `LOSANT_API_URL` as an environment variable; e.g. `LOSANT_API_URL=<api.private.install> losant login`. By default the CLI will use `https://api.losant.com` as the API URL. This will allow you to log in across Losant installations. If you are logged in to multiple Losant installations when you configure a directory, you will be asked which API token to use to access the application. From then on, any request for that application will use the same API URL.
 
 ### Set-token
 
