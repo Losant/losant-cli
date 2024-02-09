@@ -1,5 +1,13 @@
 # Losant CLI Changelog
 
+## Losant CLI v1.3.3
+
+### Fixed
+
+* Fixing race condition on watch when saving the same file multiple times before the watch queue is processed.
+
+--
+
 ## Losant CLI v1.3.2
 
 ### Changed
