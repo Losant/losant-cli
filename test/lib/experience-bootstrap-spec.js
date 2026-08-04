@@ -8,7 +8,6 @@ const {
 const bootstrap = require('../../lib/experience-bootstrap');
 const ssLog = require('single-line-log');
 const c = require('chalk');
-const pad = require('pad');
 const inquirer = require('inquirer');
 
 describe('#ExperienceBootstrap', () => {
@@ -57,7 +56,7 @@ describe('#ExperienceBootstrap', () => {
     });
     await buildConfig();
     await bootstrap();
-    message.should.equal(`${pad(c.yellow('Skip'), 13)}\tBootstrapping for this application Test Application.`);
+    message.should.equal(`${c.yellow('Skip').padEnd(13)}\tBootstrapping for this application Test Application.`);
   });
   it('should not bootstrap if it has already been completed', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -101,7 +100,7 @@ describe('#ExperienceBootstrap', () => {
     });
     await buildConfig();
     await bootstrap();
-    message.should.equal(`${pad(c.yellow('Cannot Complete'), 13)}\tBootstrapping has already been completed for Test Application`);
+    message.should.equal(`${c.yellow('Cannot Complete').padEnd(13)}\tBootstrapping has already been completed for Test Application`);
   });
   it('should log out that pages were downloaded and bootstrapping completed', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -229,10 +228,10 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.on.losant.com/aSuffix`,
-      `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
-      `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
-      `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`
+      `${c.gray('Experience URL').padEnd(13)}\thttps://aSlug.on.losant.com/aSuffix`,
+      `${c.gray('Bootstrap Username').padEnd(13)}\ttest.user.yp926mfr6a@example.com`,
+      `${c.gray('Bootstrap Password').padEnd(13)}\typ926mfr6a`,
+      `${c.green('Completed').padEnd(13)}\tBootstrapping has been successful.`
     ]);
   });
 
@@ -370,10 +369,10 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${pad(c.gray('Experience URL'), 13)}\thttps://aSlug.on.losant.com/aSuffix`,
-      `${pad(c.gray('Bootstrap Username'), 13)}\ttest.user.yp926mfr6a@example.com`,
-      `${pad(c.gray('Bootstrap Password'), 13)}\typ926mfr6a`,
-      `${pad(c.green('Completed'), 13)}\tBootstrapping has been successful.`
+      `${c.gray('Experience URL').padEnd(13)}\thttps://aSlug.on.losant.com/aSuffix`,
+      `${c.gray('Bootstrap Username').padEnd(13)}\ttest.user.yp926mfr6a@example.com`,
+      `${c.gray('Bootstrap Password').padEnd(13)}\typ926mfr6a`,
+      `${c.green('Completed').padEnd(13)}\tBootstrapping has been successful.`
     ]);
   });
 });

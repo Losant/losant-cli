@@ -56,9 +56,6 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.3
-      lodash-template:
-        specifier: ^1.0.0
-        version: 1.0.0
       losant-rest:
         specifier: 2.14.1
         version: 2.14.1
@@ -74,9 +71,6 @@ importers:
       omnibelt:
         specifier: ^3.1.2
         version: 3.1.2
-      pad:
-        specifier: 3.2.0
-        version: 3.2.0
       proper-lockfile:
         specifier: ^4.1.2
         version: 4.1.2
@@ -98,7 +92,7 @@ importers:
         version: 2.1.0
       eslint:
         specifier: ^9.39.4
-        version: 9.39.5(supports-color@8.1.1)
+        version: 9.39.5
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -1350,10 +1344,6 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
-  lodash-template@1.0.0:
-    resolution: {integrity: sha512-zfvXAtxIWy1MEKKxkwh7wzwulqh2FlFJ9+9FQWspOVTWmYvS6YxvwuajzG9lbIJeaX5jixLR1hlpBZXQUSjFxQ==}
-    engines: {'0': node}
-
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
@@ -1587,10 +1577,6 @@ packages:
   package-json@6.5.0:
     resolution: {integrity: sha512-k3bdm2n25tkyxcjSKzB5x8kfVxlMdgsbPr0GkZcwHsLpba6cBjqCt1KlcChKEvxHIcTB1FVMuwoijZ26xex5MQ==}
     engines: {node: '>=8'}
-
-  pad@3.2.0:
-    resolution: {integrity: sha512-2u0TrjcGbOjBTJpyewEl4hBO3OeX5wWue7eIFPzQTg6wFSvoaHcBTTUY5m+n0hd04gmTCPuY0kCpVIVuw5etwg==}
-    engines: {node: '>= 4.0.0'}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -2157,14 +2143,14 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@eslint-community/eslint-utils@4.10.1(eslint@9.39.5(supports-color@8.1.1))':
+  '@eslint-community/eslint-utils@4.10.1(eslint@9.39.5)':
     dependencies:
-      eslint: 9.39.5(supports-color@8.1.1)
+      eslint: 9.39.5
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
 
-  '@eslint/config-array@0.21.2(supports-color@8.1.1)':
+  '@eslint/config-array@0.21.2':
     dependencies:
       '@eslint/object-schema': 2.1.7
       debug: 4.4.3(supports-color@8.1.1)
@@ -2180,7 +2166,7 @@ snapshots:
     dependencies:
       '@types/json-schema': 7.0.15
 
-  '@eslint/eslintrc@3.3.6(supports-color@8.1.1)':
+  '@eslint/eslintrc@3.3.6':
     dependencies:
       ajv: 6.15.0
       debug: 4.4.3(supports-color@8.1.1)
@@ -2238,9 +2224,9 @@ snapshots:
   '@losant/eslint-config-losant@2.1.0':
     dependencies:
       '@eslint/js': 9.39.5
-      eslint: 9.39.5(supports-color@8.1.1)
-      eslint-plugin-import: 2.32.0(eslint@9.39.5(supports-color@8.1.1))
-      eslint-plugin-n: 17.15.1(eslint@9.39.5(supports-color@8.1.1))
+      eslint: 9.39.5
+      eslint-plugin-import: 2.32.0(eslint@9.39.5)
+      eslint-plugin-n: 17.15.1(eslint@9.39.5)
       eslint-plugin-no-only-tests: 3.4.0
       globals: 17.9.0
     transitivePeerDependencies:
@@ -2823,9 +2809,9 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-compat-utils@0.5.1(eslint@9.39.5(supports-color@8.1.1)):
+  eslint-compat-utils@0.5.1(eslint@9.39.5):
     dependencies:
-      eslint: 9.39.5(supports-color@8.1.1)
+      eslint: 9.39.5
       semver: 7.8.5
 
   eslint-import-resolver-node@0.3.10:
@@ -2836,23 +2822,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.14.0(eslint-import-resolver-node@0.3.10)(eslint@9.39.5(supports-color@8.1.1)):
+  eslint-module-utils@2.14.0(eslint-import-resolver-node@0.3.10)(eslint@9.39.5):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      eslint: 9.39.5(supports-color@8.1.1)
+      eslint: 9.39.5
       eslint-import-resolver-node: 0.3.10
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-es-x@7.8.0(eslint@9.39.5(supports-color@8.1.1)):
+  eslint-plugin-es-x@7.8.0(eslint@9.39.5):
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5(supports-color@8.1.1))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5)
       '@eslint-community/regexpp': 4.12.2
-      eslint: 9.39.5(supports-color@8.1.1)
-      eslint-compat-utils: 0.5.1(eslint@9.39.5(supports-color@8.1.1))
+      eslint: 9.39.5
+      eslint-compat-utils: 0.5.1(eslint@9.39.5)
 
-  eslint-plugin-import@2.32.0(eslint@9.39.5(supports-color@8.1.1)):
+  eslint-plugin-import@2.32.0(eslint@9.39.5):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -2861,9 +2847,9 @@ snapshots:
       array.prototype.flatmap: 1.3.3
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: 9.39.5(supports-color@8.1.1)
+      eslint: 9.39.5
       eslint-import-resolver-node: 0.3.10
-      eslint-module-utils: 2.14.0(eslint-import-resolver-node@0.3.10)(eslint@9.39.5(supports-color@8.1.1))
+      eslint-module-utils: 2.14.0(eslint-import-resolver-node@0.3.10)(eslint@9.39.5)
       hasown: 2.0.4
       is-core-module: 2.16.2
       is-glob: 4.0.3
@@ -2879,12 +2865,12 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-n@17.15.1(eslint@9.39.5(supports-color@8.1.1)):
+  eslint-plugin-n@17.15.1(eslint@9.39.5):
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5(supports-color@8.1.1))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5)
       enhanced-resolve: 5.24.5
-      eslint: 9.39.5(supports-color@8.1.1)
-      eslint-plugin-es-x: 7.8.0(eslint@9.39.5(supports-color@8.1.1))
+      eslint: 9.39.5
+      eslint-plugin-es-x: 7.8.0(eslint@9.39.5)
       get-tsconfig: 4.14.1
       globals: 15.15.0
       ignore: 5.3.2
@@ -2902,14 +2888,14 @@ snapshots:
 
   eslint-visitor-keys@4.2.1: {}
 
-  eslint@9.39.5(supports-color@8.1.1):
+  eslint@9.39.5:
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5(supports-color@8.1.1))
+      '@eslint-community/eslint-utils': 4.10.1(eslint@9.39.5)
       '@eslint-community/regexpp': 4.12.2
-      '@eslint/config-array': 0.21.2(supports-color@8.1.1)
+      '@eslint/config-array': 0.21.2
       '@eslint/config-helpers': 0.4.2
       '@eslint/core': 0.17.0
-      '@eslint/eslintrc': 3.3.6(supports-color@8.1.1)
+      '@eslint/eslintrc': 3.3.6
       '@eslint/js': 9.39.5
       '@eslint/plugin-kit': 0.4.1
       '@humanfs/node': 0.16.8
@@ -3561,8 +3547,6 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
-  lodash-template@1.0.0: {}
-
   lodash.camelcase@4.3.0: {}
 
   lodash.includes@4.3.0: {}
@@ -3830,10 +3814,6 @@ snapshots:
       registry-auth-token: 4.2.2
       registry-url: 5.1.0
       semver: 6.3.1
-
-  pad@3.2.0:
-    dependencies:
-      wcwidth: 1.0.1
 
   parent-module@1.0.1:
     dependencies:
