@@ -17,15 +17,15 @@
     "losant": "./bin/losant.js"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=22"
   },
   "scripts": {
     "lint": "esw . --ext .js",
-    "lint:fix": "yarn lint --fix",
-    "lint:watch": "yarn lint --watch",
+    "lint:fix": "pnpm lint --fix",
+    "lint:watch": "pnpm lint --watch",
     "precommit": "lint-staged",
-    "test": "mocha test",
-    "reinstall": "rm -rf nodes_modules && yarn install",
+    "test": "FORCE_COLOR=1 mocha test",
+    "reinstall": "rm -rf nodes_modules && pnpm install",
     "prepare": "husky install"
   },
   "repository": {
@@ -55,7 +55,7 @@
     "minimatch": "^9.0.3",
     "moment": "^2.29.1",
     "omnibelt": "^3.1.2",
-    "pad": "^3.2.0",
+    "pad": "3.2.0",
     "proper-lockfile": "^4.1.2",
     "rollbar": "^2.26.2",
     "sanitize-filename": "^1.6.2",
@@ -64,6 +64,7 @@
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "1.6.1",
+    "eslint-watch": "^8.0.0",
     "husky": "^8.0.3",
     "lint-staged": "13.2.2",
     "mocha": "^10.2.0",
@@ -88,5 +89,6 @@
     "recursive": true,
     "require": "should",
     "check-leaks": true
-  }
+  },
+  "packageManager": "pnpm@11.10.0+sha512.0b7f8b98060031904c017e3a41eb187a16d40eeb829b95c4f8cb03681761fc4ab53dd219115b9b447f4dce1a05a214764461e7d3703392a9f32f9511ce8c86c8"
 }

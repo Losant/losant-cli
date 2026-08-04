@@ -1,5 +1,14 @@
 # Losant CLI Changelog
 
+## Losant CLI v2.0.0
+
+### Changed
+
+* Migrated package management from yarn to pnpm.
+* Raised minimum supported Node version to 22; default dev Node version to 24.18.0.
+
+--
+
 ## Losant CLI v1.3.3
 
 ### Fixed
