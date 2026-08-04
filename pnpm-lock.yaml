@@ -96,9 +96,9 @@ importers:
       '@losant/eslint-config-losant':
         specifier: 1.6.1
         version: 1.6.1(supports-color@8.1.1)
-      eslint-watch:
-        specifier: ^8.0.0
-        version: 8.0.0(eslint@8.57.1)
+      eslint:
+        specifier: ^8.35.0
+        version: 8.57.1
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -3729,7 +3729,7 @@ snapshots:
       eslint-plugin-node: 11.1.0(eslint@8.57.1)
       eslint-plugin-react: 7.37.5(eslint@8.57.1)
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
-      eslint-watch: 8.0.0(eslint@8.57.1)
+      eslint-watch: 8.0.0(eslint@8.57.1)(supports-color@8.1.1)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-typescript
@@ -4512,7 +4512,7 @@ snapshots:
 
   eslint-visitor-keys@3.4.3: {}
 
-  eslint-watch@8.0.0(eslint@8.57.1):
+  eslint-watch@8.0.0(eslint@8.57.1)(supports-color@8.1.1):
     dependencies:
       chokidar: 3.6.0
       debug: 4.4.3(supports-color@8.1.1)
