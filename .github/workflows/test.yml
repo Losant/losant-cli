@@ -11,7 +11,7 @@ jobs:
   test:
     strategy:
       matrix:
-        nodejs: [ '22', '24' ]
+        nodejs: [ '22', '24', '26' ]
     runs-on: ubuntu-latest
     permissions:
       actions: write

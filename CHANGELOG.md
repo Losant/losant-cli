@@ -5,7 +5,7 @@
 ### Changed
 
 * Migrated package management from yarn to pnpm.
-* Raised minimum supported Node version to 22; default dev Node version to 24.18.0.
+* Raised minimum supported Node version to 22; default dev Node version to 24.19.0.
 
 --
 
