@@ -44,7 +44,7 @@
     "find-file-up": "^2.0.1",
     "form-data": "^4.0.0",
     "fs-extra": "^11.1.1",
-    "glob": "10.2.2",
+    "glob": "^10.5.0",
     "inquirer": "^8.2.3",
     "js-yaml": "^3.14.1",
     "jsonwebtoken": "^9.0.2",
