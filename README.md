@@ -1,6 +1,6 @@
 # Losant CLI
 
-[![Build Status](https://travis-ci.org/Losant/losant-cli.svg?branch=master)](https://travis-ci.org/Losant/losant-cli) [![npm version](https://badge.fury.io/js/losant-cli.svg)](https://badge.fury.io/js/losant-cli)
+[![Run Tests](https://github.com/Losant/losant-cli/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/Losant/losant-cli/actions/workflows/test.yml) [![npm version](https://badge.fury.io/js/losant-cli.svg)](https://badge.fury.io/js/losant-cli)
 
 ## Description
 
@@ -30,25 +30,23 @@ losant [options] [command]
 * [files](#files)
 * [datatables](#data-tables)
 
+Before you run any other commands, authenticate with your Losant account using `losant login` or `losant set-token`. Both store credentials on your computer, and both accept a `LOSANT_API_URL` environment variable (default `https://api.losant.com`) to target a specific Losant installation, e.g. `LOSANT_API_URL=<api.private.install> losant login`. If you're logged in to multiple installations, `losant configure` asks which one to use for a given directory; every later request for that application uses the same API URL.
+
 ### Login
 
-Before you run any other commands, you must run `losant login` to authenticate with your Losant account. This command checks to see if your account is linked to a Single Sign-On (SSO) provider. If so, the command will prompt for a User Token; otherwise it will prompt for the password (and optionally your multi-factor code) for your Losant account. After either is given successfully, the command will store the authentication token on your computer. With this command, you can optionally set `LOSANT_API_URL` as an environment variable; e.g. `LOSANT_API_URL=<api.private.install> losant login`. By default the CLI will use `https://api.losant.com` as the API URL. This will allow you to log in across Losant installations. If you are logged in to multiple Losant installations when you configure a directory, you will be asked which API token to use to access the application. From then on, any request for that application will use the same API URL.
+`losant login` checks whether your account is linked to a Single Sign-On (SSO) provider: if so, it prompts for a User Token; otherwise it prompts for your Losant password (and, if enabled, your multi-factor code).
 
 ### Set-token
 
-The set-token command, `losant set-token`, is an alternative way to log in for those users whose account is linked to a Single Sign-On (SSO) provider. This will take the given token, verify that token against the API, and then set it on your user configuration file. With this command, you can optionally set the `LOSANT_API_URL` as an environment variable; e.g. `LOSANT_API_URL=<api.private.install> losant set-token`. By default the CLI will use `https://api.losant.com` as the API URL. This will allow you to set a token for any Losant private installation, and will allow you to set up multiple tokens (or use the `login` command) for different Losant installations. If you do log in to multiple Losant installations, when configuring a directory for an application, the `configure` command will ask which API to use to find the application. From then on, any request for that application will use the same API URL.
+`losant set-token` is an alternative for accounts linked to an SSO provider. Give it a token and it verifies that token against the API before storing it.
 
 ### Configure
 
-The `losant configure` command configures and links the current directory to one of your Losant Applications. Once you have configured you will notice a few new directories into your current directory. There will be the following directories added:
+The `losant configure` command configures and links the current directory to one of your Losant Applications, adding these directories so the CLI can detect files, experience views, and data tables you want to sync:
 
-* experience/components
-* experience/pages
-* experience/layouts
-* files/
-* dataTables/
-
-This is how the CLI will be able to detect new files, experience views, or data tables that you want to add, update or remove from your Losant Application. The files directory will contain and reflect the directory and files on your Losant Application's Files. Similarly, the dataTables directory will contain your Losant Application's data tables as csv files. and The experience directory is broken down by view type (components, layouts and pages), e.g. if you want to create a new component add this to your components directory, or if you want to remove a page, you will find that page located under experience/pages.
+* **experience/components**, **experience/layouts**, **experience/pages** — your Experience views, broken out by type. For example, add a new component under `experience/components`, or remove a page by deleting it from `experience/pages`.
+* **files/** — mirrors the directory structure and files in your Losant Application's Files.
+* **dataTables/** — your Losant Application's data tables, stored as CSV files.
 
 ### Experience
 
@@ -64,7 +62,7 @@ The `losant experience` command is how you manage the Experience Views and Versi
 
 #### Experience Examples
 
-* Download all experience views (components, layouts and pages)  
+* Download all experience views (components, layouts, and pages)  
   `$ losant experience download`
 * Download component views  
   `$ losant experience download --type components`
@@ -92,8 +90,6 @@ The `losant experience` command is how you manage the Experience Views and Versi
   `$ losant experience layout`
 * View all of your experience pages that match this pattern with their layout  
   `$ losant experience layout -l v1.*`
-* View all your experience pages with their layouts  
-  `$ losant experience layout`
 * To generate our standard experience starter views  
   `$ losant experience bootstrap`
 
