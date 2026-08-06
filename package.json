@@ -25,7 +25,7 @@
     "precommit": "lint-staged",
     "test": "FORCE_COLOR=1 mocha test",
     "reinstall": "rm -rf nodes_modules && pnpm install",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -45,10 +45,10 @@
     "form-data": "^4.0.0",
     "fs-extra": "^11.1.1",
     "glob": "^10.5.0",
-    "inquirer": "^8.2.3",
+    "inquirer": "^14.0.2",
     "js-yaml": "^3.14.1",
-    "jsonwebtoken": "^9.0.2",
-    "losant-rest": "2.14.1",
+    "jsonwebtoken": "^9.0.3",
+    "losant-rest": "3.0.0",
     "mime-types": "^2.1.30",
     "minimatch": "^9.0.3",
     "moment": "^2.29.1",
@@ -57,17 +57,17 @@
     "rollbar": "^2.26.2",
     "sanitize-filename": "^1.6.2",
     "single-line-log": "^1.1.2",
-    "update-notifier": "^5.1.0"
+    "update-notifier": "^7.3.1"
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "^2.1.0",
     "eslint": "^9.39.4",
-    "husky": "^8.0.3",
-    "lint-staged": "13.2.2",
-    "mocha": "^10.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
+    "mocha": "^11.8.0",
     "nock": "^13.3.6",
     "should": "^13.2.3",
-    "sinon": "^15.0.4"
+    "sinon": "^22.1.0"
   },
   "lint-staged": {
     "*.js": "eslint"

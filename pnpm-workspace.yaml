@@ -1,0 +1,9 @@
+# Security overrides: mocha pins these transitively below their patched
+# versions (serialize-javascript ^6.0.2, diff ^7.0.0) and hasn't bumped
+# either upstream yet. Remove once mocha does.
+# - serialize-javascript RCE: https://github.com/advisories/GHSA-5c6j-r48x-rmvq
+# - serialize-javascript DoS: https://github.com/advisories/GHSA-qj8w-gfj5-8c6v
+# - diff DoS: https://github.com/advisories/GHSA-73rr-hh4g-fpgx
+overrides:
+  serialize-javascript@<7.0.5: '>=7.0.5'
+  diff@<8.0.3: '>=8.0.3'

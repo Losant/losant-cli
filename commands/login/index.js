@@ -7,7 +7,7 @@ const c = require('chalk');
 const {
   saveUserConfig, logError, logResult
 } = require('../../lib/utils');
-const inquirer = require('inquirer');
+const inquirer = require('../../lib/inquirer');
 
 const signIn = async (isRetry) => {
   if (isRetry) {
