@@ -1,0 +1,36 @@
+name: Linter
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: ['opened', 'reopened', 'synchronize']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+    - name: Cancel Previous Runs
+      # tag 0.13.1
+      uses: styfle/cancel-workflow-action@d07a454dad7609a92316b57b23c9ccfd4f59af66
+      with:
+        access_token: ${{ github.token }}
+    # tag v6.0.2
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - name: Setup pnpm
+      # tag v5.0.0
+      uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320
+      with:
+        run_install: false
+    - name: Setup Node
+      # tag v6.3.0
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+      with:
+        node-version-file: '.node-version'
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm lint
