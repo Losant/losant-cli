@@ -9,22 +9,21 @@ const Table = require('cli-table3');
 const sinon = require('sinon');
 const nock = require('nock');
 const c = require('chalk');
-const pad = require('pad');
 const program = require('commander');
 const locker = require('proper-lockfile');
 const { pathExists, remove } = require('fs-extra');
 const path = require('path');
 
-const downloadLog = (msg) => { return `${pad(c.green('downloaded'), 13)}\t${msg}`; };
-const uploadedLog = (msg) => { return `${pad(c.green('uploaded'), 13)}\t${msg}`; };
-const unmodifiedLog = (msg) => { return `${`${pad(c.gray('unmodified'), 13)}\t${msg}`}`; };
-const modifiedLog = (msg) => { return `${`${pad(c.yellow('modified'), 13)}\t${msg}`}`; };
-const deletedLog = (msg) => { return `${`${pad(c.redBright('deleted'), 13)}\t${msg}`}`; };
-const deletedUploadLog = (msg) => { return `${`${pad(c.yellow('deleted'), 13)}\t${msg}`}`; };
-const processingLog = (msg) => { return `${pad(c.gray('processing'), 13)}\t${msg}`; };
-const conflictLog = (msg) => { return `${pad(c.redBright('conflict'), 13)}\t${msg}`; };
+const downloadLog = (msg) => { return `${c.green('downloaded').padEnd(13)}\t${msg}`; };
+const uploadedLog = (msg) => { return `${c.green('uploaded').padEnd(13)}\t${msg}`; };
+const unmodifiedLog = (msg) => { return `${`${c.gray('unmodified').padEnd(13)}\t${msg}`}`; };
+const modifiedLog = (msg) => { return `${`${c.yellow('modified').padEnd(13)}\t${msg}`}`; };
+const deletedLog = (msg) => { return `${`${c.redBright('deleted').padEnd(13)}\t${msg}`}`; };
+const deletedUploadLog = (msg) => { return `${`${c.yellow('deleted').padEnd(13)}\t${msg}`}`; };
+const processingLog = (msg) => { return `${c.gray('processing').padEnd(13)}\t${msg}`; };
+const conflictLog = (msg) => { return `${c.redBright('conflict').padEnd(13)}\t${msg}`; };
 const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
-const addedLog = (msg) => { return `${pad(c.green('added'), 13)}\t${msg}`; };
+const addedLog = (msg) => { return `${c.green('added').padEnd(13)}\t${msg}`; };
 const deleteFakeData = () => {
   return Promise.all(['experience', 'files', 'dataTables', 'views', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
