@@ -61,7 +61,7 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       losant-rest:
-        specifier: 3.0.0
+        specifier: ^3.0.0
         version: 3.0.0
       mime-types:
         specifier: ^2.1.30
