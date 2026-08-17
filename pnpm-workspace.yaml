@@ -5,5 +5,5 @@
 # - serialize-javascript DoS: https://github.com/advisories/GHSA-qj8w-gfj5-8c6v
 # - diff DoS: https://github.com/advisories/GHSA-73rr-hh4g-fpgx
 overrides:
-  serialize-javascript@<7.0.5: '>=7.0.5'
-  diff@<8.0.3: '>=8.0.3'
+  mocha>serialize-javascript: '>=7.0.5'
+  mocha>diff: '>=8.0.3'

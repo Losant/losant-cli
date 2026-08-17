@@ -25,7 +25,7 @@
     "precommit": "lint-staged",
     "test": "FORCE_COLOR=1 mocha test",
     "reinstall": "rm -rf nodes_modules && pnpm install",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "repository": {
     "type": "git",
