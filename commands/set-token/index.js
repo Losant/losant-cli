@@ -1,6 +1,6 @@
 const p = require('commander');
 const program = new p.Command('losant set-token');
-const inquirer = require('inquirer');
+const inquirer = require('../../lib/inquirer');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const {

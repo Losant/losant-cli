@@ -4,7 +4,7 @@ const {
 } = require('../common');
 const path = require('path');
 const { defer, sleep } = require('omnibelt');
-const inquirer = require('inquirer');
+const inquirer = require('../../lib/inquirer');
 const utils = require('../../lib/utils');
 
 describe('Login Command', () => {
