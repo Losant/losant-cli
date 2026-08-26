@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-const program = require('commander');
+const { program } = require('commander');
 const pkg = require('../package.json');
 
 const pgm = program

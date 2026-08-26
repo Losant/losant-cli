@@ -51,8 +51,6 @@ describe('Login Command', () => {
           'Mon, 10 May 2021 14:42:04 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '56',
           'Connection',
           'close',
           'Server',

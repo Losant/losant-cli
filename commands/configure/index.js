@@ -1,7 +1,7 @@
 const error = require('error/typed');
-const p = require('commander');
+const { Command } = require('commander');
 const { mergeRight, findIndex, propEq } = require('omnibelt');
-const program = new p.Command('losant configure');
+const program = new Command('losant configure');
 const getApi = require('../../lib/get-api');
 const c = require('chalk');
 const retryP = require('../../lib/retryP');

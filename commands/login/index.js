@@ -1,6 +1,6 @@
 const error = require('error/typed');
-const p = require('commander');
-const program = new p.Command('losant login');
+const { Command } = require('commander');
+const program = new Command('losant login');
 const getApi = require('../../lib/get-api');
 const retryP = require('../../lib/retryP');
 const c = require('chalk');
