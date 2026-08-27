@@ -15,8 +15,5 @@ const pgm = program
 
 pgm.parse(process.argv);
 
-// update-notifier v6+ is ESM-only; dynamic import keeps this file CommonJS.
-// Fire-and-forget -- doesn't block or affect command execution above.
-import('update-notifier').then(({ default: updateNotifier }) => {
-  updateNotifier({ pkg }).notify();
-}).catch(() => {});
+const { default: updateNotifier } = require('update-notifier');
+updateNotifier({ pkg }).notify();

@@ -61,8 +61,8 @@ importers:
         specifier: ^9.0.3
         version: 9.0.3
       losant-rest:
-        specifier: ^4.2.1
-        version: 4.2.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+        specifier: ^4.2.2
+        version: 4.2.2(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
       mime-types:
         specifier: ^3.0.2
         version: 3.0.2
@@ -859,6 +859,7 @@ packages:
   eslint@9.39.5:
     resolution: {integrity: sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -1395,8 +1396,8 @@ packages:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
 
-  losant-rest@4.2.1:
-    resolution: {integrity: sha512-QjAKwjq30zSpoN2ybfLBKzX3p/gZSwKiRnPErgPrLF2nY2XT02rNXfTF06ggWacSXS1so540zp7XmjTtgrdYsw==}
+  losant-rest@4.2.2:
+    resolution: {integrity: sha512-wID6+QxwIPhCCoEgX46IJp+Ufr0YALI4vd1OVmjHk21P8KN6wUOHacTTQR3NTaS2fX7epWr3SEoVYEwJNueslw==}
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
@@ -3480,7 +3481,7 @@ snapshots:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  losant-rest@4.2.1(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
+  losant-rest@4.2.2(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
       axios: 1.19.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
       eventsource: 4.1.1

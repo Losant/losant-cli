@@ -1,7 +1,7 @@
 const experienceLayout = require('../../lib/experience-layout');
 const { nock, sinon, buildConfig, printTable } = require('../common');
 const ssLog = require('single-line-log');
-const inquirer = require('../../lib/inquirer');
+const { default: inquirer } = require('inquirer');
 const c = require('chalk');
 
 describe('#ExperienceLayout', () => {

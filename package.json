@@ -48,7 +48,7 @@
     "inquirer": "^14.0.2",
     "js-yaml": "^5.3.0",
     "jsonwebtoken": "^9.0.3",
-    "losant-rest": "^4.2.1",
+    "losant-rest": "^4.2.2",
     "mime-types": "^3.0.2",
     "minimatch": "^10.2.6",
     "moment": "^2.29.1",

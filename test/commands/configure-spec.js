@@ -5,7 +5,7 @@ const {
 const path = require('path');
 const { saveUserConfig } = require('../../lib/utils');
 const { defer } = require('omnibelt');
-const inquirer = require('../../lib/inquirer');
+const { default: inquirer } = require('inquirer');
 
 
 describe('Configure Commands', () => {

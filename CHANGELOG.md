@@ -13,7 +13,6 @@
 ### Fixed
 
 * Bumped `glob` to patch a CLI command injection vulnerability.
-* Fixed a startup crash on current `rollbar` versions caused by relying on an unexported internal module path.
 
 --
 

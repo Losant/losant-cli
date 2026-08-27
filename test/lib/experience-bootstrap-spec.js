@@ -8,7 +8,7 @@ const {
 const bootstrap = require('../../lib/experience-bootstrap');
 const ssLog = require('single-line-log');
 const c = require('chalk');
-const inquirer = require('../../lib/inquirer');
+const { default: inquirer } = require('inquirer');
 
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {
