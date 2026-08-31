@@ -1,3 +1,5 @@
 #!/usr/bin/env node
-require('../lib/on-death');
-require('../commands/files').parse(process.argv);
+import '../lib/on-death.js';
+import program from '../commands/files/index.js';
+
+program.parse(process.argv);

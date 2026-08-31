@@ -1,4 +1,7 @@
-const { files: params } = require('../../lib/get-download-params');
+import getDownloadParams from '../../lib/get-download-params.js';
+import download from '../utils/download.js';
+
+const { files: params } = getDownloadParams;
 
 const helpLines = `
 Download all files
@@ -9,7 +12,7 @@ Force a download of all files overwriting local modifications
 $ losant files download -f
 `;
 
-module.exports = (program) => {
+export default (program) => {
   program.addHelpText('after', helpLines);
-  require('../utils/download')(program, params);
+  download(program, params);
 };

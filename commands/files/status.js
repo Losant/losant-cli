@@ -1,4 +1,7 @@
-const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = require('../../lib/constants');
+import constants from '../../lib/constants.js';
+import status from '../utils/status.js';
+
+const { files: { apiType, commandType, localStatusParams, remoteStatusParams } } = constants;
 const params = {
   apiType,
   commandType,
@@ -6,6 +9,7 @@ const params = {
   remoteStatusParams,
   getQuery: { type: 'file' }
 };
-module.exports = (program) => {
-  return require('../utils/status')(program, 'files', params);
+
+export default (program) => {
+  return status(program, 'files', params);
 };

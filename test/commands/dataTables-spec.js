@@ -1,15 +1,21 @@
-const path = require('path');
-const ssLog = require('single-line-log');
-const {
+import path from 'path';
+import ssLog from 'single-line-log';
+import {
   sinon,
   nock,
   errorLog,
   buildConfig,
   buildUserConfig
-} = require('../common');
-const { defer } = require('omnibelt');
+} from '../common.js';
+import { defer } from 'omnibelt';
+import dataTablesProgram from '../../commands/dataTables/index.js';
 
 describe('Data Tables Commands', () => {
+  it('should register the expected commands', () => {
+    dataTablesProgram.commands.map((cmd) => cmd.name()).should.deepEqual([
+      'export'
+    ]);
+  });
   it('should log an error if configure was not run first', async function() {
     await buildUserConfig();
     const deferred = defer();
@@ -17,9 +23,9 @@ describe('Data Tables Commands', () => {
       deferred.resolve(message);
     });
 
-    require('../../commands/dataTables').parse([
+    dataTablesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-dataTables.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-dataTables.js'),
       'export'
     ]);
     const msg = await deferred.promise;
@@ -37,9 +43,9 @@ describe('Data Tables Commands', () => {
       deferred.resolve(message);
     });
 
-    require('../../commands/dataTables').parse([
+    dataTablesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-dataTables.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-dataTables.js'),
       'export'
     ]);
     const msg = await deferred.promise;
@@ -84,9 +90,9 @@ describe('Data Tables Commands', () => {
       });
 
 
-    require('../../commands/dataTables').parse([
+    dataTablesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-dataTables.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-dataTables.js'),
       'export'
     ]);
     let msg = '';

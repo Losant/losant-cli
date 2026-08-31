@@ -1,6 +1,6 @@
-const { getStatusFunc } = require('../../lib');
+import getStatusFunc from '../../lib/get-status-func.js';
 
-module.exports = (program, type, params = {}) => {
+export default (program, type, params = {}) => {
   const helpLines = `
 Check status of all ${type === 'experience' ? 'experience views' : type}
 $ losant ${type} status

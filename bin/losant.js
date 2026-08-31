@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-const program = require('commander');
-const pkg = require('../package.json');
+import { program } from 'commander';
+import pkg from '../package.json' with { type: 'json' };
+import updateNotifier from 'update-notifier';
 
 const pgm = program
   .version(pkg.version)
@@ -15,8 +16,4 @@ const pgm = program
 
 pgm.parse(process.argv);
 
-// update-notifier v6+ is ESM-only; dynamic import keeps this file CommonJS.
-// Fire-and-forget -- doesn't block or affect command execution above.
-import('update-notifier').then(({ default: updateNotifier }) => {
-  updateNotifier({ pkg }).notify();
-}).catch(() => {});
+updateNotifier({ pkg }).notify();

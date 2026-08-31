@@ -2,28 +2,30 @@ process.env.NODE_ENV = 'test';
 process.env.LOSANT_API_URL = process.env.LOSANT_API_URL || 'https://api.losant.com';
 process.env.TZ = 'US/Eastern'; // for travis ci to run in eastern
 // this is for the utils file and saving the config.
-process.env.HOME = __dirname;
-process.env.DIR = __dirname;
-const utils = require('../lib/utils');
-const Table = require('cli-table3');
-const sinon = require('sinon');
-const nock = require('nock');
-const c = require('chalk');
-const program = require('commander');
-const locker = require('proper-lockfile');
-const { pathExists, remove } = require('fs-extra');
-const path = require('path');
+process.env.HOME = import.meta.dirname;
+process.env.DIR = import.meta.dirname;
+import utils from '../lib/utils.js';
+import Table from 'cli-table3';
+import { createSandbox } from 'sinon';
+import nock from 'nock';
+import c from 'chalk';
+import { program } from 'commander';
+import locker from 'proper-lockfile';
+import fsExtra from 'fs-extra';
+import path from 'path';
 
-const downloadLog = (msg) => { return `${c.green('downloaded').padEnd(13)}\t${msg}`; };
-const uploadedLog = (msg) => { return `${c.green('uploaded').padEnd(13)}\t${msg}`; };
-const unmodifiedLog = (msg) => { return `${`${c.gray('unmodified').padEnd(13)}\t${msg}`}`; };
-const modifiedLog = (msg) => { return `${`${c.yellow('modified').padEnd(13)}\t${msg}`}`; };
-const deletedLog = (msg) => { return `${`${c.redBright('deleted').padEnd(13)}\t${msg}`}`; };
-const deletedUploadLog = (msg) => { return `${`${c.yellow('deleted').padEnd(13)}\t${msg}`}`; };
-const processingLog = (msg) => { return `${c.gray('processing').padEnd(13)}\t${msg}`; };
-const conflictLog = (msg) => { return `${c.redBright('conflict').padEnd(13)}\t${msg}`; };
-const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
-const addedLog = (msg) => { return `${c.green('added').padEnd(13)}\t${msg}`; };
+const { pathExists, remove } = fsExtra;
+
+export const downloadLog = (msg) => { return `${c.green('downloaded').padEnd(13)}\t${msg}`; };
+export const uploadedLog = (msg) => { return `${c.green('uploaded').padEnd(13)}\t${msg}`; };
+export const unmodifiedLog = (msg) => { return `${`${c.gray('unmodified').padEnd(13)}\t${msg}`}`; };
+export const modifiedLog = (msg) => { return `${`${c.yellow('modified').padEnd(13)}\t${msg}`}`; };
+export const deletedLog = (msg) => { return `${`${c.redBright('deleted').padEnd(13)}\t${msg}`}`; };
+export const deletedUploadLog = (msg) => { return `${`${c.yellow('deleted').padEnd(13)}\t${msg}`}`; };
+export const processingLog = (msg) => { return `${c.gray('processing').padEnd(13)}\t${msg}`; };
+export const conflictLog = (msg) => { return `${c.redBright('conflict').padEnd(13)}\t${msg}`; };
+export const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
+export const addedLog = (msg) => { return `${c.green('added').padEnd(13)}\t${msg}`; };
 const deleteFakeData = () => {
   return Promise.all(['experience', 'files', 'dataTables', 'views', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {
@@ -32,7 +34,7 @@ const deleteFakeData = () => {
   }));
 };
 
-const printTable = (headers, columns) => {
+export const printTable = (headers, columns) => {
   headers = headers.map((name) => { return c.magentaBright(name); });
   const table = new Table({ head: headers });
 
@@ -41,21 +43,23 @@ const printTable = (headers, columns) => {
   return table.toString();
 };
 
-const unlockConfigFiles = (files) => {
+export const unlockConfigFiles = (files) => {
   if (!Array.isArray(files)) { files = [ files ]; }
   return Promise.all(files.map(async (file) => {
-    file = path.resolve(__dirname, '.losant', file);
+    file = path.resolve(import.meta.dirname, '.losant', file);
     if ((await pathExists(file)) && locker.checkSync(file)) { locker.unlockSync(file); }
   }));
 };
 
-const sandbox = sinon.createSandbox();
+const sandbox = createSandbox();
+export { sandbox as sinon };
+export { nock };
 
-const buildUserConfig = () => {
+export const buildUserConfig = () => {
   return utils.saveUserConfig({ 'https://api.losant.com': { apiToken: 'token', endpointDomain: 'on.losant.com', appUrl: 'https://app.losant.com' } });
 };
 
-const buildConfig = async () => {
+export const buildConfig = async () => {
   await buildUserConfig();
   const config = {
     applicationId: '5b9297591fefb200072e554d',
@@ -65,12 +69,12 @@ const buildConfig = async () => {
   return utils.saveConfig(undefined, config); // let it default
 };
 
-const buildResourceConfig = async (file, config = {}) => {
+export const buildResourceConfig = async (file, config = {}) => {
   return utils.saveConfig(file, config);
 };
 
 before(() => {
-  process.chdir(path.resolve(__dirname));
+  process.chdir(path.resolve(import.meta.dirname));
 });
 
 beforeEach(async () => {
@@ -90,7 +94,7 @@ afterEach(() => {
   }
 });
 
-const resetCommander = () => {
+export const resetCommander = () => {
   // in order to get a clean commander start every time.
   // #theMKway
   program.commands = [];
@@ -112,25 +116,5 @@ after(async () => {
   nock.cleanAll();
 });
 
-module.exports = {
-  nock,
-  sinon: sandbox,
-  downloadLog,
-  uploadedLog,
-  unmodifiedLog,
-  modifiedLog,
-  deletedLog,
-  deletedUploadLog,
-  processingLog,
-  conflictLog,
-  errorLog,
-  addedLog,
-  resetCommander,
-  unlockConfigFiles,
-  buildConfig,
-  printTable,
-  buildUserConfig,
-  buildResourceConfig,
-  statusExpHeaders: [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ],
-  statusFilesHeaders: [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ]
-};
+export const statusExpHeaders = [ 'Name', 'View Type', 'Local Status', 'Remote Status', 'Conflict' ];
+export const statusFilesHeaders = [ 'Name', 'Directory', 'Local Status', 'Remote Status', 'Conflict' ];

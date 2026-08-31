@@ -1,14 +1,14 @@
-const {
+import {
   nock,
   sinon,
   buildConfig,
   downloadLog,
   processingLog
-} = require('../common');
-const bootstrap = require('../../lib/experience-bootstrap');
-const ssLog = require('single-line-log');
-const c = require('chalk');
-const inquirer = require('../../lib/inquirer');
+} from '../common.js';
+import bootstrap from '../../lib/experience-bootstrap.js';
+import ssLog from 'single-line-log';
+import c from 'chalk';
+import inquirer from 'inquirer';
 
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {
@@ -29,8 +29,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -76,8 +74,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -115,8 +111,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -164,8 +158,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -190,8 +182,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:22 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '88',
         'Connection',
         'close',
         'Pragma',
@@ -253,8 +243,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -302,8 +290,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -328,8 +314,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:22 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '88',
         'Connection',
         'close',
         'Pragma',

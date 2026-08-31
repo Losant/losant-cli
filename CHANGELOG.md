@@ -4,8 +4,16 @@
 
 ### Changed
 
+* Converted the codebase to ES modules (`"type": "module"`).
 * Migrated package management from yarn to pnpm.
-* Raised minimum supported Node version to 22; default dev Node version to 24.19.0.
+* Raised minimum supported Node version to 22.12; default dev Node version to 24.19.0.
+* Upgraded `eslint` to v10 and `@losant/eslint-config-losant` to v2.1.0.
+* Removed unused `lodash-template` and `pad` dependencies.
+* Upgraded `losant-rest`, `commander`, `js-yaml`, `omnibelt`, `minimatch`, `glob`, `mime-types`, `chokidar`, `rollbar`, `jsonwebtoken`, `inquirer`, `update-notifier`, and other dependencies to their latest major versions.
+
+### Fixed
+
+* Bumped `glob` to patch a CLI command injection vulnerability.
 
 --
 

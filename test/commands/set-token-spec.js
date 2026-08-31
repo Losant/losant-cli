@@ -1,11 +1,12 @@
-const {
+import {
   sinon,
   nock
-} = require('../common');
-const path = require('path');
-const { defer, sleep } = require('omnibelt');
-const inquirer = require('../../lib/inquirer');
-const utils = require('../../lib/utils');
+} from '../common.js';
+import path from 'path';
+import { defer, sleep } from 'omnibelt';
+import inquirer from 'inquirer';
+import utils from '../../lib/utils.js';
+import setTokenProgram from '../../commands/set-token/index.js';
 
 describe('Set Token Command', () => {
   it('should set the API token', async () => {
@@ -21,8 +22,6 @@ describe('Set Token Command', () => {
           'Mon, 10 May 2021 14:42:04 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '56',
           'Connection',
           'close',
           'Server',
@@ -51,9 +50,9 @@ describe('Set Token Command', () => {
       return Promise.resolve({ token: 'token1' });
     });
 
-    require('../../commands/set-token').parse([
+    setTokenProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/set-token.js')
+      path.resolve(import.meta.dirname, '/bin/set-token.js')
     ]);
 
     await deferred.promise;
@@ -81,8 +80,6 @@ describe('Set Token Command', () => {
           'Mon, 10 May 2021 14:42:04 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '56',
           'Connection',
           'close',
           'Server',
@@ -104,9 +101,9 @@ describe('Set Token Command', () => {
         ]
       );
 
-    require('../../commands/set-token').parse([
+    setTokenProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/set-token.js'),
+      path.resolve(import.meta.dirname, '/bin/set-token.js'),
       'token1'
     ]);
 

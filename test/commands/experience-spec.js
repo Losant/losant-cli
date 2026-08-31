@@ -1,6 +1,6 @@
-const path = require('path');
-const ssLog = require('single-line-log');
-const {
+import path from 'path';
+import ssLog from 'single-line-log';
+import {
   sinon,
   nock,
   downloadLog,
@@ -15,14 +15,22 @@ const {
   deletedUploadLog,
   uploadedLog,
   statusExpHeaders
-} = require('../common');
-const { defer, uniq, reject, isNil } = require('omnibelt');
+} from '../common.js';
+import { defer, uniq, reject, isNil } from 'omnibelt';
+import fsExtra from 'fs-extra';
+import c from 'chalk';
+import experienceProgram from '../../commands/experience/index.js';
+
 let spy;
-const { remove, writeFile, ensureFile } = require('fs-extra');
-const c = require('chalk');
+const { remove, writeFile, ensureFile } = fsExtra;
 const CONFIG_FILE = '.application.yml';
 
 describe('Experience Commands', () => {
+  it('should register the expected commands', () => {
+    experienceProgram.commands.map((cmd) => cmd.name()).should.deepEqual([
+      'bootstrap', 'download', 'layout', 'status', 'upload', 'version', 'watch'
+    ]);
+  });
   it('should log an error if configure was not run first', async () => {
     await buildUserConfig();
     const deferred = defer();
@@ -30,9 +38,9 @@ describe('Experience Commands', () => {
 
       deferred.resolve(message);
     });
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     const msg = await deferred.promise;
@@ -79,8 +87,6 @@ describe('Experience Commands', () => {
         'Thu, 18 Oct 2018 19:37:34 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '15063',
         'Connection',
         'close',
         'Pragma',
@@ -102,9 +108,9 @@ describe('Experience Commands', () => {
       deferred.resolve(message);
     });
 
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     const msg = await deferred.promise;
@@ -166,8 +172,6 @@ describe('Experience Commands', () => {
           'Thu, 18 Oct 2018 19:37:34 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '15063',
           'Connection',
           'close',
           'Pragma',
@@ -196,9 +200,9 @@ describe('Experience Commands', () => {
       }
     });
 
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'download'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -233,9 +237,9 @@ describe('Experience Commands', () => {
       statusMessage = message;
       statusDeferred.resolve();
     });
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -267,9 +271,9 @@ describe('Experience Commands', () => {
       statusMessage = message;
       statusDeferred.resolve();
     });
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -335,8 +339,6 @@ describe('Experience Commands', () => {
         'Thu, 18 Oct 2018 19:37:34 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '15063',
         'Connection',
         'close',
         'Pragma',
@@ -354,9 +356,9 @@ describe('Experience Commands', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'upload'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -409,8 +411,6 @@ describe('Experience Commands', () => {
           'Thu, 18 Oct 2018 19:37:34 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '15063',
           'Connection',
           'close',
           'Pragma',
@@ -439,9 +439,9 @@ describe('Experience Commands', () => {
       }
     });
 
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'download'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -476,9 +476,9 @@ describe('Experience Commands', () => {
       statusMessage = message;
       statusDeferred.resolve();
     });
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -510,9 +510,9 @@ describe('Experience Commands', () => {
       statusMessage = message;
       statusDeferred.resolve();
     });
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'status'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
@@ -548,8 +548,6 @@ describe('Experience Commands', () => {
           'Thu, 18 Oct 2018 19:37:34 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '15063',
           'Connection',
           'close',
           'Pragma',
@@ -574,8 +572,6 @@ describe('Experience Commands', () => {
           'Thu, 18 Oct 2018 19:37:34 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '15063',
           'Connection',
           'close',
           'Pragma',
@@ -603,8 +599,6 @@ describe('Experience Commands', () => {
         'Thu, 18 Oct 2018 19:37:34 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '15063',
         'Connection',
         'close',
         'Pragma',
@@ -631,8 +625,6 @@ describe('Experience Commands', () => {
         'Thu, 18 Oct 2018 19:37:34 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '15063',
         'Connection',
         'close',
         'Pragma',
@@ -660,8 +652,6 @@ describe('Experience Commands', () => {
         'Thu, 18 Oct 2018 19:37:34 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '15063',
         'Connection',
         'close',
         'Pragma',
@@ -679,9 +669,9 @@ describe('Experience Commands', () => {
         'Strict-Transport-Security',
         'max-age=31536000' ]);
 
-    require('../../commands/experience').parse([
+    experienceProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-experience.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-experience.js'),
       'upload'
     ]);
     await unlockConfigFiles(CONFIG_FILE);
