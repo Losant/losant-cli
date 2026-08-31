@@ -1,8 +1,8 @@
-const experienceLayout = require('../../lib/experience-layout');
-const { nock, sinon, buildConfig, printTable } = require('../common');
-const ssLog = require('single-line-log');
-const { default: inquirer } = require('inquirer');
-const c = require('chalk');
+import experienceLayout from '../../lib/experience-layout.js';
+import { nock, sinon, buildConfig, printTable } from '../common.js';
+import ssLog from 'single-line-log';
+import inquirer from 'inquirer';
+import c from 'chalk';
 
 describe('#ExperienceLayout', () => {
   it('should log out that not pages were found', async () => {

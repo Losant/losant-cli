@@ -1,23 +1,28 @@
-const error = require('error/typed');
-const { Command } = require('commander');
-const { mergeRight, findIndex, propEq } = require('omnibelt');
+import error from 'error/typed.js';
+import { Command } from 'commander';
+import { mergeRight, findIndex, propEq } from 'omnibelt';
+import getApi from '../../lib/get-api.js';
+import c from 'chalk';
+import retryP from '../../lib/retryP.js';
+import fsExtra from 'fs-extra';
+import getDownloadParams from '../../lib/get-download-params.js';
+import getExportParams from '../../lib/get-export-params.js';
+import getDownloader from '../../lib/get-downloader.js';
+import getExporter from '../../lib/get-exporter.js';
+import experienceBootstrap from '../../lib/experience-bootstrap.js';
+import inquirer from 'inquirer';
+import utils from '../../lib/utils.js';
+
 const program = new Command('losant configure');
-const getApi = require('../../lib/get-api');
-const c = require('chalk');
-const retryP = require('../../lib/retryP');
-const { ensureDir } = require('fs-extra');
-const params = require('../../lib/get-download-params');
-const dtParams = require('../../lib/get-export-params').dataTables;
-const getDownloader = require('../../lib/get-downloader');
-const getExporter = require('../../lib/get-exporter');
-const experienceBootstrap = require('../../lib/experience-bootstrap');
-const { default: inquirer } = require('inquirer');
+const { ensureDir } = fsExtra;
+const params = getDownloadParams;
+const dtParams = getExportParams.dataTables;
 const experienceDownload = getDownloader(params.experience);
 const filesDownload = getDownloader(params.files);
 const dataTablesExport = getExporter(dtParams);
 const {
   saveConfig, logError, logResult, log, loadUserConfig, saveLocalMeta, hasBootstrapped, getApiURL
-} = require('../../lib/utils');
+} = utils;
 
 const DIRECTORIES_TO_GENERATE = [
   'dataTables',
@@ -173,4 +178,4 @@ program
     log('Configuration completed! :D');
   });
 
-module.exports = program;
+export default program;

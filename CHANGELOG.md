@@ -4,6 +4,7 @@
 
 ### Changed
 
+* Converted the codebase to ES modules (`"type": "module"`).
 * Migrated package management from yarn to pnpm.
 * Raised minimum supported Node version to 22.12; default dev Node version to 24.19.0.
 * Upgraded `eslint` to v10 and `@losant/eslint-config-losant` to v2.1.0.

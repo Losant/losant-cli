@@ -1,5 +1,8 @@
-const { experience: params } = require('../../lib/get-download-params');
-const constants = require('../../lib/constants');
+import getDownloadParams from '../../lib/get-download-params.js';
+import constants from '../../lib/constants.js';
+import download from '../utils/download.js';
+
+const { experience: params } = getDownloadParams;
 
 const helpLines = `
 Download all experience views (components, layouts and pages)
@@ -15,9 +18,9 @@ $ losant experience download -r
 `;
 
 
-module.exports = (program) => {
+export default (program) => {
   program.addHelpText('after', helpLines);
   const options = [ constants.options.viewType, constants.options.reset ];
 
-  require('../utils/download')(program, params, options);
+  download(program, params, options);
 };

@@ -1,14 +1,17 @@
-const {
+import {
   nock,
   sinon,
   buildConfig,
   processingLog,
   uploadedLog
-} = require('../common');
-const { defer, sleep } = require('omnibelt');
-const watch = require('../../lib/watch-files')('files', 1000);
-const ssLog = require('single-line-log');
-const { ensureDir, writeFile, appendFile, emptyDir } = require('fs-extra');
+} from '../common.js';
+import { defer, sleep } from 'omnibelt';
+import watchFiles from '../../lib/watch-files.js';
+import ssLog from 'single-line-log';
+import fsExtra from 'fs-extra';
+
+const watch = watchFiles('files', 1000);
+const { ensureDir, writeFile, appendFile, emptyDir } = fsExtra;
 
 describe('#Watch Files', () => {
   let watcherClose;

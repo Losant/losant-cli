@@ -1,14 +1,14 @@
-const {
+import {
   nock,
   sinon,
   buildConfig,
   downloadLog,
   processingLog
-} = require('../common');
-const bootstrap = require('../../lib/experience-bootstrap');
-const ssLog = require('single-line-log');
-const c = require('chalk');
-const { default: inquirer } = require('inquirer');
+} from '../common.js';
+import bootstrap from '../../lib/experience-bootstrap.js';
+import ssLog from 'single-line-log';
+import c from 'chalk';
+import inquirer from 'inquirer';
 
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {

@@ -1,15 +1,18 @@
-const { fromFiles } = require('@rjhilgefort/export-dir');
-const commands = Object.values(fromFiles(null, __dirname));
-const commonCommands = Object.values(require('../common'));
-const { Command } = require('commander');
+import { Command } from 'commander';
+import download from './download.js';
+import status from './status.js';
+import upload from './upload.js';
+import * as common from '../common/index.js';
+
+const commands = [download, status, upload];
 const program = new Command('losant files');
 program.description('Manage Files on Losant for your Application.');
 program.showHelpAfterError();
 commands.forEach((command) => {
   command(program);
 });
-commonCommands.forEach((command) => {
+Object.values(common).forEach((command) => {
   command('files', program);
 });
 
-module.exports = program;
+export default program;

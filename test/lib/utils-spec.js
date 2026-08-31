@@ -1,10 +1,12 @@
-const { buildUserConfig, nock } = require('../common');
-const utils     = require('../../lib/utils');
-const { mergeRight } = require('omnibelt');
-const { writeFile, remove, pathExists } = require('fs-extra');
-const should = require('should');
-const path = require('path');
-const jwt = require('jsonwebtoken');
+import { buildUserConfig, nock } from '../common.js';
+import utils from '../../lib/utils.js';
+import { mergeRight } from 'omnibelt';
+import fsExtra from 'fs-extra';
+import should from 'should';
+import path from 'path';
+import jwt from 'jsonwebtoken';
+
+const { writeFile, remove, pathExists } = fsExtra;
 
 describe('utils', () => {
   describe('logging', () => {
@@ -24,7 +26,7 @@ describe('utils', () => {
   });
   describe('Configuration', () => {
     let ogUrl;
-    const file = path.resolve(__dirname, 'save-config.yaml');
+    const file = path.resolve(import.meta.dirname, 'save-config.yaml');
     before(() => {
       ogUrl = process.env.LOSANT_API_URL;
     });

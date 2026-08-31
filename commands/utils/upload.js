@@ -1,7 +1,9 @@
-const { getUploader } = require('../../lib');
-const { options } = require('../../lib/constants');
+import getUploader from '../../lib/get-uploader.js';
+import constants from '../../lib/constants.js';
 
-module.exports = (program, params, opts) => {
+const { options } = constants;
+
+export default (program, params, opts) => {
   const subProgram = program
     .command('upload [pattern]')
     .option(...options.force)

@@ -1,4 +1,8 @@
-const { files: params } = require('../../lib/get-upload-params');
+import getUploadParams from '../../lib/get-upload-params.js';
+import upload from '../utils/upload.js';
+
+const { files: params } = getUploadParams;
+
 const helpLines = `
 Upload all files
 $ losant files upload
@@ -7,7 +11,7 @@ $ losant files upload images/*
 Force an upload of all files overwriting remote modifications
 $ losant files upload -f
 `;
-module.exports = (program) => {
+export default (program) => {
   program.addHelpText('after', helpLines);
-  require('../utils/upload')(program, params);
+  upload(program, params);
 };

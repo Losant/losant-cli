@@ -1,6 +1,7 @@
 {
   "name": "losant-cli",
   "version": "2.0.0",
+  "type": "module",
   "description": "Losant Command Line Interface",
   "license": "MIT",
   "homepage": "https://github.com/Losant/losant-cli#readme",
@@ -32,7 +33,6 @@
     "url": "git+https://github.com/Losant/losant-cli.git"
   },
   "dependencies": {
-    "@rjhilgefort/export-dir": "^2.0.0",
     "axios": "^1.5.1",
     "chalk": "^4.1.1",
     "chokidar": "^5.0.0",

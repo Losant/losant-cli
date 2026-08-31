@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-const { program } = require('commander');
-const pkg = require('../package.json');
+import { program } from 'commander';
+import pkg from '../package.json' with { type: 'json' };
+import updateNotifier from 'update-notifier';
 
 const pgm = program
   .version(pkg.version)
@@ -15,5 +16,4 @@ const pgm = program
 
 pgm.parse(process.argv);
 
-const { default: updateNotifier } = require('update-notifier');
 updateNotifier({ pkg }).notify();

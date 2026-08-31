@@ -1,11 +1,10 @@
-const { nock, sinon, buildConfig, printTable, statusFilesHeaders } = require('../common');
-const getStatusFunc   = require('../../lib/get-status-func');
-const log             = require('single-line-log');
-const c               = require('chalk');
-const {
-  ensureDir,
-  writeFile
-} = require('fs-extra');
+import { nock, sinon, buildConfig, printTable, statusFilesHeaders } from '../common.js';
+import getStatusFunc from '../../lib/get-status-func.js';
+import log from 'single-line-log';
+import c from 'chalk';
+import fsExtra from 'fs-extra';
+
+const { ensureDir, writeFile } = fsExtra;
 
 const API_TYPE = 'experienceViews';
 const COMMAND_TYPE = 'views';

@@ -1,3 +1,5 @@
+import experienceVersion from '../../lib/experience-version.js';
+
 const helpLines = `
 List all of your current experience versions
 $ losant experience version
@@ -15,7 +17,7 @@ Create a new experience version associated with specific slug IDs or names
 $ losant experience version v1.0.1 -s "653981225c401f279a221ebb,mypersonalslug,653981225c401f279a221ebc"
 `;
 
-module.exports = (program) => {
+export default (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('version [version]')
@@ -23,5 +25,5 @@ module.exports = (program) => {
     .option('-d, --description <description>', 'a description to attach to this version')
     .option('-o --domainIds <domainIds>', 'a comma separated list of domain IDs or names')
     .option('-s --slugIds <slugIds>', 'a comma separated list of slug IDs or names')
-    .action(require('../../lib/experience-version'));
+    .action(experienceVersion);
 };

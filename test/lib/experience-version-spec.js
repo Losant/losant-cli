@@ -1,7 +1,7 @@
-const { nock, sinon, buildConfig } = require('../common');
-const ssLog = require('single-line-log');
-const versionCommand = require('../../lib/experience-version');
-const c = require('chalk');
+import { nock, sinon, buildConfig } from '../common.js';
+import ssLog from 'single-line-log';
+import versionCommand from '../../lib/experience-version.js';
+import c from 'chalk';
 
 describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {

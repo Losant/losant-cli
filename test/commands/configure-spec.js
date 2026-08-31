@@ -1,11 +1,14 @@
-const {
+import {
   sinon,
   nock
-} = require('../common');
-const path = require('path');
-const { saveUserConfig } = require('../../lib/utils');
-const { defer } = require('omnibelt');
-const { default: inquirer } = require('inquirer');
+} from '../common.js';
+import path from 'path';
+import utils from '../../lib/utils.js';
+import { defer } from 'omnibelt';
+import inquirer from 'inquirer';
+import configureProgram from '../../commands/configure/index.js';
+
+const { saveUserConfig } = utils;
 
 
 describe('Configure Commands', () => {
@@ -64,9 +67,9 @@ describe('Configure Commands', () => {
       return Promise.resolve({ canExportDataTables: false });
     });
 
-    require('../../commands/configure').parse([
+    configureProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-configure.js')]);
+      path.resolve(import.meta.dirname, '/bin/losant-configure.js')]);
 
     await deferred.promise;
   });
