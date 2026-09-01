@@ -9,7 +9,6 @@ import Table from 'cli-table3';
 import { createSandbox } from 'sinon';
 import nock from 'nock';
 import c from 'chalk';
-import { program } from 'commander';
 import locker from 'proper-lockfile';
 import fsExtra from 'fs-extra';
 import path from 'path';
@@ -93,23 +92,6 @@ afterEach(() => {
     throw new Error(`Pending Nocks: ${nock.pendingMocks()}`);
   }
 });
-
-export const resetCommander = () => {
-  // in order to get a clean commander start every time.
-  // #theMKway
-  program.commands = [];
-  program.options = [];
-  program._execs = {};
-  program._allowUnknownOption = false;
-  program._args = [];
-  program._name = '';
-  program._description = '';
-  delete program.rawArgs;
-  delete program.args;
-  delete program._events;
-  delete program._argsDescription;
-  delete program._eventsCount;
-};
 
 after(async () => {
   await deleteFakeData();

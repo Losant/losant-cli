@@ -8,7 +8,6 @@ import {
   unmodifiedLog,
   processingLog,
   errorLog,
-  resetCommander,
   unlockConfigFiles,
   buildConfig,
   buildUserConfig,
@@ -24,10 +23,6 @@ const { writeFile, ensureFile } = fsExtra;
 const CONFIG_FILE = '.application.yml';
 
 describe('Files Commands', () => {
-
-  before(() => {
-    resetCommander();
-  });
 
   it('should register the expected commands', () => {
     filesProgram.commands.map((cmd) => cmd.name()).should.deepEqual([
