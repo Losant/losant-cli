@@ -10,5 +10,5 @@ $ losant datatables export
 
 export default (program) => {
   program.addHelpText('after', helpLines);
-  exportCommand(program, params);
+  exportCommand(program, params).description('Export data tables to local CSV files');
 };

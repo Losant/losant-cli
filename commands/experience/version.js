@@ -9,8 +9,6 @@ Create a new experience version
 $ losant experience version v1.0.0
 Create a new experience version with a description
 $ losant experience version v1.0.1 -d "updated home page"
-Create a new experience version with a description
-$ losant experience version v1.0.1 -d "updated home page"
 Create a new experience version associated with specific domain IDs or names
 $ losant experience version v1.0.1 -o "653981225c401f279a221eaa,653981225c401f279a221eab,*.foo.bar"
 Create a new experience version associated with specific slug IDs or names
@@ -21,6 +19,7 @@ export default (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('version [version]')
+    .description('List or create experience versions')
     .option('-l, --list <pattern>', 'list all versions like this pattern')
     .option('-d, --description <description>', 'a description to attach to this version')
     .option('-o --domainIds <domainIds>', 'a comma separated list of domain IDs or names')

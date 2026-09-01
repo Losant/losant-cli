@@ -11,6 +11,7 @@ export default (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('layout [page]')
+    .description('View or set the layout used by your experience pages')
     .option('-l, --list <pattern>', 'pages that match this pattern will be listed with their layout')
     .action(experienceLayout);
 };

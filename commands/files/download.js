@@ -14,5 +14,5 @@ $ losant files download -f
 
 export default (program) => {
   program.addHelpText('after', helpLines);
-  download(program, params);
+  download(program, params).description('Download files from your Losant Application');
 };

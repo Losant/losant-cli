@@ -8,5 +8,6 @@ export default (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('bootstrap')
+    .description('Generate a set of starter experience views')
     .action(experienceBootstrap);
 };

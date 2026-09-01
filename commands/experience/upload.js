@@ -14,5 +14,5 @@ $ losant experience upload --type components /*
 export default (program) => {
   program.addHelpText('after', helpLines);
   const options = [ constants.options.viewType ];
-  upload(program, params, options);
+  upload(program, params, options).description('Upload experience views to your Losant Application');
 };

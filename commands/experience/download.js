@@ -22,5 +22,5 @@ export default (program) => {
   program.addHelpText('after', helpLines);
   const options = [ constants.options.viewType, constants.options.reset ];
 
-  download(program, params, options);
+  download(program, params, options).description('Download experience views (components, layouts and pages)');
 };

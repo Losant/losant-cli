@@ -13,5 +13,5 @@ $ losant files upload -f
 `;
 export default (program) => {
   program.addHelpText('after', helpLines);
-  upload(program, params);
+  upload(program, params).description('Upload files to your Losant Application');
 };
