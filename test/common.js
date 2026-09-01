@@ -81,9 +81,9 @@ beforeEach(async () => {
   await unlockConfigFiles(['.losant.yml']);
   await deleteFakeData();
   if (await pathExists('../.losant')) {
-    return remove('../.losant');
+    await remove('../.losant');
   }
-  await sandbox.restore();
+  sandbox.restore();
   nock.disableNetConnect();
   nock.cleanAll();
 });
