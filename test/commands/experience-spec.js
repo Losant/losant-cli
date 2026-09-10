@@ -677,7 +677,7 @@ describe('Experience Commands', () => {
     await unlockConfigFiles(CONFIG_FILE);
     await uploadDeferred.promise;
     const status = uniq(reject(isNil, uploadMessages.map((msg) => {
-      const stat = msg.split('\x1B')[1].replace('[90m', '').replace('[33m', '').replace('[32m', '');
+      const stat = msg.split('\x1B')[1].replace('[90m', '').replace('[33m', '').replace('[32m', '').trim();
       if (stat !== 'processing') {
         return stat;
       }

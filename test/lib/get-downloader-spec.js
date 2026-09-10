@@ -92,8 +92,8 @@ describe('#getDownloader', () => {
     await downloader(null, command);
     await unlockConfigFiles('.application.yml');
     let messages = await nextLog.promise;
-    messages[0].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/GET mynewroute.hbs`);
-    messages[1].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/GET mynewroute.hbs`);
+    messages[0].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/GET mynewroute.hbs`);
+    messages[1].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/GET mynewroute.hbs`);
     nextLog = getNextLogs();
     const getStatus = getStatusFunc({
       apiType: API_TYPE,
@@ -210,16 +210,16 @@ describe('#getDownloader', () => {
     await unlockConfigFiles('.application.yml');
     const messages = await nextLog.promise;
     messages.length.should.equal(10);
-    messages[0].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
-    messages[1].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
-    messages[2].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/myView.hbs`);
-    messages[3].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/myView.hbs`);
-    messages[4].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/myView-1.hbs`);
-    messages[5].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/myView-1.hbs`);
-    messages[6].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/myView-2.hbs`);
-    messages[7].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/myView-2.hbs`);
-    messages[8].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/${exps[4].id}.hbs`);
-    messages[9].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/${exps[4].id}.hbs`);
+    messages[0].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
+    messages[1].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/5b92975dc2f8de0006e2ca93.hbs`);
+    messages[2].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/myView.hbs`);
+    messages[3].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/myView.hbs`);
+    messages[4].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/myView-1.hbs`);
+    messages[5].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/myView-1.hbs`);
+    messages[6].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/myView-2.hbs`);
+    messages[7].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/myView-2.hbs`);
+    messages[8].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/${exps[4].id}.hbs`);
+    messages[9].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/${exps[4].id}.hbs`);
   });
   it('should leave files that have previously been created locally', async () => {
     const localText =  'write something else to make it modified...';
@@ -284,10 +284,10 @@ describe('#getDownloader', () => {
     await downloader(null, command);
     await unlockConfigFiles('.application.yml');
     const messages = await nextLog.promise;
-    messages[0].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/my:View.hbs`);
-    messages[1].should.equal(`${c.green('downloaded').padEnd(13)}\texperience/layouts/my:View.hbs`);
-    messages[2].should.equal(`${c.gray('processing').padEnd(13)}\texperience/layouts/myOtherView.hbs`);
-    messages[3].should.equal(`${c.gray('unmodified').padEnd(13)}\texperience/layouts/myOtherView.hbs`);
+    messages[0].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/my:View.hbs`);
+    messages[1].should.equal(`${c.green('downloaded'.padEnd(13))}\texperience/layouts/my:View.hbs`);
+    messages[2].should.equal(`${c.gray('processing'.padEnd(13))}\texperience/layouts/myOtherView.hbs`);
+    messages[3].should.equal(`${c.gray('unmodified'.padEnd(13))}\texperience/layouts/myOtherView.hbs`);
     const layout = (await readFile(path.join(path.join(process.env.DIR, 'experience/layouts/my:View.hbs')))).toString();
     layout.should.equal('a body');
 

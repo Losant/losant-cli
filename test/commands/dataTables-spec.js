@@ -1,5 +1,6 @@
 import path from 'path';
 import ssLog from 'single-line-log';
+import c from 'chalk';
 import {
   sinon,
   nock,
@@ -49,7 +50,7 @@ describe('Data Tables Commands', () => {
       'export'
     ]);
     const msg = await deferred.promise;
-    msg.should.equal('\u001b[33mMissing\u001b[39m\tNo dataTables found to export.');
+    msg.should.equal(`${c.yellow('Missing'.padEnd(13))}\tNo dataTables found to export.`);
   });
 
   it('should get rows from a data table', async function() {
@@ -105,6 +106,6 @@ describe('Data Tables Commands', () => {
       deferred.resolve();
     });
     await deferred.promise;
-    msg.should.equal('\u001b[90mprocessing\u001b[39m\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n\u001b[32mexported\u001b[39m\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n');
+    msg.should.equal(`${c.gray('processing'.padEnd(13))}\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n${c.green('exported'.padEnd(13))}\tdataTables/Red-5d2c9dab16770d0008c013fb.csv\n`);
   });
 });

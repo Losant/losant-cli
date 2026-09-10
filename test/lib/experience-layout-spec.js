@@ -208,7 +208,7 @@ describe('#ExperienceLayout', () => {
       return Promise.resolve({ name: 'Another Layout https://app.losant.com/applications/5b9297591fefb200072e554d/experience/versions/develop/views/layouts/5c0a9a163fb78400095ec089' });
     });
     await experienceLayout('Home Page', {});
-    message.should.equal(`${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`);
+    message.should.equal(`${c.green('Complete'.padEnd(13))}\tHome Page is now using the layout "Another Layout".`);
   });
   it('should update multiple pages layouts', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -393,8 +393,8 @@ describe('#ExperienceLayout', () => {
     });
     await experienceLayout('*', {});
     messages.should.deepEqual([
-      `${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`,
-      `${c.green('Complete')}\tLog In is now using the layout "Another Layout".`
+      `${c.green('Complete'.padEnd(13))}\tHome Page is now using the layout "Another Layout".`,
+      `${c.green('Complete'.padEnd(13))}\tLog In is now using the layout "Another Layout".`
     ]);
   });
 
@@ -581,8 +581,8 @@ describe('#ExperienceLayout', () => {
     });
     await experienceLayout('*', {});
     messages.should.deepEqual([
-      `${c.green('Complete')}\tHome Page no longer has a layout set.`,
-      `${c.green('Complete')}\tLog In no longer has a layout set.`
+      `${c.green('Complete'.padEnd(13))}\tHome Page no longer has a layout set.`,
+      `${c.green('Complete'.padEnd(13))}\tLog In no longer has a layout set.`
     ]);
   });
 });

@@ -15,16 +15,16 @@ import path from 'path';
 
 const { pathExists, remove } = fsExtra;
 
-export const downloadLog = (msg) => { return `${c.green('downloaded').padEnd(13)}\t${msg}`; };
-export const uploadedLog = (msg) => { return `${c.green('uploaded').padEnd(13)}\t${msg}`; };
-export const unmodifiedLog = (msg) => { return `${`${c.gray('unmodified').padEnd(13)}\t${msg}`}`; };
-export const modifiedLog = (msg) => { return `${`${c.yellow('modified').padEnd(13)}\t${msg}`}`; };
-export const deletedLog = (msg) => { return `${`${c.redBright('deleted').padEnd(13)}\t${msg}`}`; };
-export const deletedUploadLog = (msg) => { return `${`${c.yellow('deleted').padEnd(13)}\t${msg}`}`; };
-export const processingLog = (msg) => { return `${c.gray('processing').padEnd(13)}\t${msg}`; };
-export const conflictLog = (msg) => { return `${c.redBright('conflict').padEnd(13)}\t${msg}`; };
+export const downloadLog = (msg) => { return `${c.green('downloaded'.padEnd(13))}\t${msg}`; };
+export const uploadedLog = (msg) => { return `${c.green('uploaded'.padEnd(13))}\t${msg}`; };
+export const unmodifiedLog = (msg) => { return `${`${c.gray('unmodified'.padEnd(13))}\t${msg}`}`; };
+export const modifiedLog = (msg) => { return `${`${c.yellow('modified'.padEnd(13))}\t${msg}`}`; };
+export const deletedLog = (msg) => { return `${`${c.redBright('deleted'.padEnd(13))}\t${msg}`}`; };
+export const deletedUploadLog = (msg) => { return `${`${c.yellow('deleted'.padEnd(13))}\t${msg}`}`; };
+export const processingLog = (msg) => { return `${c.gray('processing'.padEnd(13))}\t${msg}`; };
+export const conflictLog = (msg) => { return `${c.redBright('conflict'.padEnd(13))}\t${msg}`; };
 export const errorLog = (msg) => { return `${c.redBright('Error')} ${msg}`; };
-export const addedLog = (msg) => { return `${c.green('added').padEnd(13)}\t${msg}`; };
+export const addedLog = (msg) => { return `${c.green('added'.padEnd(13))}\t${msg}`; };
 const deleteFakeData = () => {
   return Promise.all(['experience', 'files', 'dataTables', 'views', '.losant', 'losant.yml'].map(async (folder) => {
     if (await pathExists(`./${folder}`)) {

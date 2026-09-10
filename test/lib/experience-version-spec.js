@@ -105,7 +105,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with slugs', async () => {
@@ -165,7 +165,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with domains', async () => {
@@ -224,7 +224,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with domains and slugs', async () => {
@@ -285,6 +285,6 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 });
