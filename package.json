@@ -24,8 +24,8 @@
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
     "precommit": "lint-staged",
-    "test": "FORCE_COLOR=1 mocha test",
-    "reinstall": "rm -rf nodes_modules && pnpm install",
+    "test": "FORCE_COLOR=1 mocha test --forbid-only",
+    "reinstall": "rm -rf node_modules && pnpm install",
     "prepare": "husky || true"
   },
   "repository": {
