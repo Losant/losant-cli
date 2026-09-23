@@ -13,7 +13,8 @@ import locker from 'proper-lockfile';
 import fsExtra from 'fs-extra';
 import path from 'path';
 
-const { pathExists, remove } = fsExtra;
+const { pathExists, readdir, remove } = fsExtra;
+const CONFIG_DIR = '.losant';
 
 export const downloadLog = (msg) => { return `${c.green('downloaded'.padEnd(13))}\t${msg}`; };
 export const uploadedLog = (msg) => { return `${c.green('uploaded'.padEnd(13))}\t${msg}`; };
@@ -45,9 +46,20 @@ export const printTable = (headers, columns) => {
 export const unlockConfigFiles = (files) => {
   if (!Array.isArray(files)) { files = [ files ]; }
   return Promise.all(files.map(async (file) => {
-    file = path.resolve(import.meta.dirname, '.losant', file);
+    file = path.resolve(import.meta.dirname, CONFIG_DIR, file);
     if ((await pathExists(file)) && locker.checkSync(file)) { locker.unlockSync(file); }
   }));
+};
+
+// A lock left behind by a test outlives that test: proper-lockfile keeps stat-ing the
+// lockfile every few seconds, and deleteFakeData below removes it out from under that
+// refresh, which surfaces as an ECOMPROMISED thrown at whichever test is running then.
+// Release whatever is actually held rather than guessing at config file names.
+const unlockHeldConfigFiles = async () => {
+  const configDir = path.resolve(import.meta.dirname, CONFIG_DIR);
+  if (!(await pathExists(configDir))) { return; }
+  const held = (await readdir(configDir)).filter((entry) => entry.endsWith('.lock'));
+  return unlockConfigFiles(held.map((entry) => path.basename(entry, '.lock')));
 };
 
 const sandbox = createSandbox();
@@ -77,7 +89,7 @@ before(() => {
 });
 
 beforeEach(async () => {
-  await unlockConfigFiles(['.losant.yml']);
+  await unlockHeldConfigFiles();
   await deleteFakeData();
   if (await pathExists('../.losant')) {
     await remove('../.losant');
@@ -94,6 +106,7 @@ afterEach(() => {
 });
 
 after(async () => {
+  await unlockHeldConfigFiles();
   await deleteFakeData();
   nock.cleanAll();
 });

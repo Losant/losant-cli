@@ -21,9 +21,9 @@ describe('#Watch Files', () => {
     await ensureDir('files/mine');
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     if (watcherClose) {
-      watcherClose();
+      await watcherClose();
       watcherClose = null;
     }
   });
