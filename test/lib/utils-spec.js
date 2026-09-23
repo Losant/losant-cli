@@ -1,10 +1,12 @@
-const { buildUserConfig, nock } = require('../common');
-const utils     = require('../../lib/utils');
-const { mergeRight } = require('omnibelt');
-const { writeFile, remove, pathExists } = require('fs-extra');
-const should = require('should');
-const path = require('path');
-const jwt = require('jsonwebtoken');
+import { buildUserConfig, nock } from '../common.js';
+import utils from '../../lib/utils.js';
+import { mergeRight } from 'omnibelt';
+import fsExtra from 'fs-extra';
+import should from 'should';
+import path from 'path';
+import jwt from 'jsonwebtoken';
+
+const { writeFile, remove, pathExists, ensureDir, ensureFile } = fsExtra;
 
 describe('utils', () => {
   describe('logging', () => {
@@ -24,7 +26,7 @@ describe('utils', () => {
   });
   describe('Configuration', () => {
     let ogUrl;
-    const file = path.resolve(__dirname, 'save-config.yaml');
+    const file = path.resolve(import.meta.dirname, 'save-config.yaml');
     before(() => {
       ogUrl = process.env.LOSANT_API_URL;
     });
@@ -84,6 +86,34 @@ describe('utils', () => {
       });
     });
   });
+  // A config file with no document in it - empty, whitespace or comments only - is a
+  // normal state, so reading one yields an empty result instead of throwing.
+  describe('Empty configuration files', () => {
+    const credentials = path.resolve(process.env.HOME, '.losant', '.credentials.yml');
+
+    it('.loadUserConfig should return an empty config on a first run', async () => {
+      // loadUserConfig ensureFile's the credentials file, so a brand new user
+      // parses a zero byte file before they have ever run losant login
+      (await pathExists(credentials)).should.equal(false);
+      const config = await utils.loadUserConfig(false);
+      config.should.deepEqual({});
+    });
+
+    it('.loadUserConfig should return an empty config when the file is only comments', async () => {
+      await ensureFile(credentials);
+      await writeFile(credentials, '# everything commented out\n');
+      const config = await utils.loadUserConfig(false);
+      config.should.deepEqual({});
+    });
+
+    it('.loadLocalMeta should return undefined when the meta file is empty', async () => {
+      const dir = path.resolve('.losant');
+      await ensureDir(dir);
+      await writeFile(path.resolve(dir, 'files.yml'), '   \n');
+      should.not.exist(await utils.loadLocalMeta('files'));
+    });
+  });
+
   describe('Meta Data', () => {
     it('should save and load meta data', async () => {
       // to do clean up after this test create a file.

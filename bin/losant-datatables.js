@@ -1,3 +1,6 @@
 #!/usr/bin/env node
-require('../lib/on-death');
-require('../commands/dataTables').parse(process.argv);
+import '../lib/node-env.js';
+import '../lib/on-death.js';
+import program from '../commands/dataTables/index.js';
+
+program.parse(process.argv);

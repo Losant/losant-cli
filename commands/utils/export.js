@@ -1,7 +1,9 @@
-const { getExporter } = require('../../lib');
-const { options } = require('../../lib/constants');
+import getExporter from '../../lib/get-exporter.js';
+import constants from '../../lib/constants.js';
 
-module.exports = (program, params = {}, opts) => {
+const { options } = constants;
+
+export default (program, params = {}, opts) => {
   const subProgram = program
     .command('export [pattern]')
     .option(...options.force)

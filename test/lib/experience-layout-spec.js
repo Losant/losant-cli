@@ -1,8 +1,8 @@
-const experienceLayout = require('../../lib/experience-layout');
-const { nock, sinon, buildConfig, printTable } = require('../common');
-const ssLog = require('single-line-log');
-const inquirer = require('../../lib/inquirer');
-const c = require('chalk');
+import experienceLayout from '../../lib/experience-layout.js';
+import { nock, sinon, buildConfig, printTable } from '../common.js';
+import ssLog from 'single-line-log';
+import inquirer from 'inquirer';
+import c from 'chalk';
 
 describe('#ExperienceLayout', () => {
   it('should log out that not pages were found', async () => {
@@ -15,8 +15,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:06:38 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '5924',
         'Connection',
         'close',
         'Pragma',
@@ -69,8 +67,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:06:38 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '5924',
         'Connection',
         'close',
         'Pragma',
@@ -124,8 +120,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '4851',
         'Connection',
         'close',
         'Pragma',
@@ -160,8 +154,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '5924',
         'Connection',
         'close',
         'Pragma',
@@ -190,8 +182,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:51:59 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '2796',
         'Connection',
         'close',
         'Pragma',
@@ -218,7 +208,7 @@ describe('#ExperienceLayout', () => {
       return Promise.resolve({ name: 'Another Layout https://app.losant.com/applications/5b9297591fefb200072e554d/experience/versions/develop/views/layouts/5c0a9a163fb78400095ec089' });
     });
     await experienceLayout('Home Page', {});
-    message.should.equal(`${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`);
+    message.should.equal(`${c.green('Complete'.padEnd(13))}\tHome Page is now using the layout "Another Layout".`);
   });
   it('should update multiple pages layouts', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -247,8 +237,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '4851',
         'Connection',
         'close',
         'Pragma',
@@ -315,8 +303,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '5924',
         'Connection',
         'close',
         'Pragma',
@@ -345,8 +331,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:51:59 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '2796',
         'Connection',
         'close',
         'Pragma',
@@ -373,8 +357,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:51:59 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '2796',
         'Connection',
         'close',
         'Pragma',
@@ -411,8 +393,8 @@ describe('#ExperienceLayout', () => {
     });
     await experienceLayout('*', {});
     messages.should.deepEqual([
-      `${c.green('Complete')}\tHome Page is now using the layout "Another Layout".`,
-      `${c.green('Complete')}\tLog In is now using the layout "Another Layout".`
+      `${c.green('Complete'.padEnd(13))}\tHome Page is now using the layout "Another Layout".`,
+      `${c.green('Complete'.padEnd(13))}\tLog In is now using the layout "Another Layout".`
     ]);
   });
 
@@ -443,8 +425,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '4851',
         'Connection',
         'close',
         'Pragma',
@@ -511,8 +491,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:41:37 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '5924',
         'Connection',
         'close',
         'Pragma',
@@ -541,8 +519,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:51:59 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '2796',
         'Connection',
         'close',
         'Pragma',
@@ -569,8 +545,6 @@ describe('#ExperienceLayout', () => {
         'Fri, 07 Dec 2018 16:51:59 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '2796',
         'Connection',
         'close',
         'Pragma',
@@ -607,8 +581,8 @@ describe('#ExperienceLayout', () => {
     });
     await experienceLayout('*', {});
     messages.should.deepEqual([
-      `${c.green('Complete')}\tHome Page no longer has a layout set.`,
-      `${c.green('Complete')}\tLog In no longer has a layout set.`
+      `${c.green('Complete'.padEnd(13))}\tHome Page no longer has a layout set.`,
+      `${c.green('Complete'.padEnd(13))}\tLog In no longer has a layout set.`
     ]);
   });
 });

@@ -1,6 +1,6 @@
-const path = require('path');
-const ssLog = require('single-line-log');
-const {
+import path from 'path';
+import ssLog from 'single-line-log';
+import {
   sinon,
   nock,
   downloadLog,
@@ -8,22 +8,26 @@ const {
   unmodifiedLog,
   processingLog,
   errorLog,
-  resetCommander,
   unlockConfigFiles,
   buildConfig,
   buildUserConfig,
   printTable,
   statusFilesHeaders
-} = require('../common');
-const { defer } = require('omnibelt');
-const { writeFile, ensureFile } = require('fs-extra');
-const c = require('chalk');
+} from '../common.js';
+import { defer } from 'omnibelt';
+import fsExtra from 'fs-extra';
+import c from 'chalk';
+import filesProgram from '../../commands/files/index.js';
+
+const { writeFile, ensureFile } = fsExtra;
 const CONFIG_FILE = '.application.yml';
 
 describe('Files Commands', () => {
 
-  before(() => {
-    resetCommander();
+  it('should register the expected commands', () => {
+    filesProgram.commands.map((cmd) => cmd.name()).should.deepEqual([
+      'download', 'status', 'upload', 'watch'
+    ]);
   });
 
   it('should log an error if configure was not run first', async function() {
@@ -33,9 +37,9 @@ describe('Files Commands', () => {
       deferred.resolve(message);
     });
 
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'status'
     ]);
     const msg = await deferred.promise;
@@ -63,8 +67,6 @@ describe('Files Commands', () => {
         'Fri, 19 Oct 2018 20:24:18 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '1642',
         'Connection',
         'close',
         'Pragma',
@@ -85,9 +87,9 @@ describe('Files Commands', () => {
       deferred.resolve(message);
     });
 
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'status'
     ]);
     const msg = await deferred.promise;
@@ -99,8 +101,6 @@ describe('Files Commands', () => {
       .get('/5b9297591fefb200072e554d/7c_iLKJn.jpg')
       .reply(200, 'helloworld', [ 'Content-Type',
         'image/jpeg',
-        'Content-Length',
-        '104606',
         'Connection',
         'close',
         'Date',
@@ -127,8 +127,6 @@ describe('Files Commands', () => {
       .get('/5b9297591fefb200072e554d/30442479_1804907812955173_2594707246956191799_n.jpg')
       .reply(200, 'helloworld', [ 'Content-Type',
         'image/jpeg',
-        'Content-Length',
-        '104606',
         'Connection',
         'close',
         'Date',
@@ -174,8 +172,6 @@ describe('Files Commands', () => {
           'Fri, 19 Oct 2018 20:24:18 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '1642',
           'Connection',
           'close',
           'Pragma',
@@ -223,8 +219,6 @@ describe('Files Commands', () => {
         'Fri, 19 Oct 2018 20:24:19 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '1473',
         'Connection',
         'close',
         'Pragma',
@@ -271,8 +265,6 @@ describe('Files Commands', () => {
         'Fri, 19 Oct 2018 20:24:19 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '1473',
         'Connection',
         'close',
         'Pragma',
@@ -318,9 +310,9 @@ describe('Files Commands', () => {
         downloadDefer.resolve();
       }
     });
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'download'
     ]);
     await downloadDefer.promise;
@@ -342,9 +334,9 @@ describe('Files Commands', () => {
       statusMessage = message;
       statusDefer.resolve();
     });
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'status'
     ]);
     await statusDefer.promise;
@@ -367,9 +359,9 @@ describe('Files Commands', () => {
       statusMessage = message;
       statusDefer.resolve();
     });
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'status'
     ]);
     await statusDefer.promise;
@@ -393,9 +385,9 @@ describe('Files Commands', () => {
         uploadDefer.resolve();
       }
     });
-    require('../../commands/files').parse([
+    filesProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/losant-files.js'),
+      path.resolve(import.meta.dirname, '/bin/losant-files.js'),
       'upload'
     ]);
     await uploadDefer.promise;

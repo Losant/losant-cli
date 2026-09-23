@@ -1,10 +1,13 @@
+import experienceBootstrap from '../../lib/experience-bootstrap.js';
+
 const helpLines = `
 To generate our standard experience starter views
 $ losant experience bootstrap`;
 
-module.exports = (program) => {
+export default (program) => {
   program.addHelpText('after', helpLines);
   program
     .command('bootstrap')
-    .action(require('../../lib/experience-bootstrap'));
+    .description('Generate a set of starter experience views')
+    .action(experienceBootstrap);
 };
