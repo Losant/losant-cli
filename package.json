@@ -33,7 +33,7 @@
     "url": "git+https://github.com/Losant/losant-cli.git"
   },
   "dependencies": {
-    "axios": "^1.5.1",
+    "axios": "^1.20.0",
     "chalk": "^4.1.1",
     "chokidar": "^5.0.0",
     "cli-table3": "^0.6.0",
@@ -46,12 +46,12 @@
     "fs-extra": "^11.1.1",
     "glob": "^13.0.6",
     "inquirer": "^14.0.2",
-    "js-yaml": "^5.3.0",
+    "js-yaml": "^5.4.2",
     "jsonwebtoken": "^9.0.3",
     "losant-rest": "^4.2.2",
     "mime-types": "^3.0.2",
     "minimatch": "^10.2.6",
-    "moment": "^2.29.1",
+    "moment": "^2.31.0",
     "omnibelt": "^4.1.0",
     "proper-lockfile": "^4.1.2",
     "rollbar": "^3.1.0",
