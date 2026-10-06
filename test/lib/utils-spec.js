@@ -106,11 +106,11 @@ describe('utils', () => {
       config.should.deepEqual({});
     });
 
-    it('.loadLocalMeta should return undefined when the meta file is empty', async () => {
+    it('.loadLocalMeta should return an empty object when the meta file is empty', async () => {
       const dir = path.resolve('.losant');
       await ensureDir(dir);
       await writeFile(path.resolve(dir, 'files.yml'), '   \n');
-      should.not.exist(await utils.loadLocalMeta('files'));
+      (await utils.loadLocalMeta('files')).should.deepEqual({});
     });
   });
 
