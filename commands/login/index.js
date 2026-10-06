@@ -1,13 +1,13 @@
-const error = require('error/typed');
-const p = require('commander');
-const program = new p.Command('losant login');
-const getApi = require('../../lib/get-api');
-const retryP = require('../../lib/retryP');
-const c = require('chalk');
-const {
-  saveUserConfig, logError, logResult
-} = require('../../lib/utils');
-const inquirer = require('../../lib/inquirer');
+import error from 'error/typed.js';
+import { Command } from 'commander';
+import getApi from '../../lib/get-api.js';
+import retryP from '../../lib/retryP.js';
+import c from 'chalk';
+import utils from '../../lib/utils.js';
+import inquirer from 'inquirer';
+
+const program = new Command('losant login');
+const { saveUserConfig, logError, logResult } = utils;
 
 const signIn = async (isRetry) => {
   if (isRetry) {
@@ -74,4 +74,4 @@ program
     }
   });
 
-module.exports = program;
+export default program;

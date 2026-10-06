@@ -1,14 +1,14 @@
-const {
+import {
   nock,
   sinon,
   buildConfig,
   downloadLog,
   processingLog
-} = require('../common');
-const bootstrap = require('../../lib/experience-bootstrap');
-const ssLog = require('single-line-log');
-const c = require('chalk');
-const inquirer = require('../../lib/inquirer');
+} from '../common.js';
+import bootstrap from '../../lib/experience-bootstrap.js';
+import ssLog from 'single-line-log';
+import c from 'chalk';
+import inquirer from 'inquirer';
 
 describe('#ExperienceBootstrap', () => {
   it('should skip bootstrapping when skipping and confirming with a no', async () => {
@@ -29,8 +29,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -56,7 +54,7 @@ describe('#ExperienceBootstrap', () => {
     });
     await buildConfig();
     await bootstrap();
-    message.should.equal(`${c.yellow('Skip').padEnd(13)}\tBootstrapping for this application Test Application.`);
+    message.should.equal(`${c.yellow('Skip'.padEnd(13))}\tBootstrapping for this application Test Application.`);
   });
   it('should not bootstrap if it has already been completed', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -76,8 +74,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -100,7 +96,7 @@ describe('#ExperienceBootstrap', () => {
     });
     await buildConfig();
     await bootstrap();
-    message.should.equal(`${c.yellow('Cannot Complete').padEnd(13)}\tBootstrapping has already been completed for Test Application`);
+    message.should.equal(`${c.yellow('Cannot Complete'.padEnd(13))}\tBootstrapping has already been completed for Test Application`);
   });
   it('should log out that pages were downloaded and bootstrapping completed', async () => {
     nock('https://api.losant.com:443', { encodedQueryParams: true })
@@ -115,8 +111,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -164,8 +158,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -190,8 +182,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:22 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '88',
         'Connection',
         'close',
         'Pragma',
@@ -228,10 +218,10 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${c.gray('Experience URL').padEnd(13)}\thttps://aSlug.on.losant.com/aSuffix`,
-      `${c.gray('Bootstrap Username').padEnd(13)}\ttest.user.yp926mfr6a@example.com`,
-      `${c.gray('Bootstrap Password').padEnd(13)}\typ926mfr6a`,
-      `${c.green('Completed').padEnd(13)}\tBootstrapping has been successful.`
+      `${c.gray('Experience URL'.padEnd(13))}\thttps://aSlug.on.losant.com/aSuffix`,
+      `${c.gray('Bootstrap Username'.padEnd(13))}\ttest.user.yp926mfr6a@example.com`,
+      `${c.gray('Bootstrap Password'.padEnd(13))}\typ926mfr6a`,
+      `${c.green('Completed'.padEnd(13))}\tBootstrapping has been successful.`
     ]);
   });
 
@@ -253,8 +243,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -302,8 +290,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:23 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '13475',
         'Connection',
         'close',
         'Pragma',
@@ -328,8 +314,6 @@ describe('#ExperienceBootstrap', () => {
         'Mon, 10 Dec 2018 23:17:22 GMT',
         'Content-Type',
         'application/json',
-        'Content-Length',
-        '88',
         'Connection',
         'close',
         'Pragma',
@@ -369,10 +353,10 @@ describe('#ExperienceBootstrap', () => {
       downloadLog('experience/components/gaTracking.hbs'),
       processingLog('experience/components/userIndicator.hbs'),
       downloadLog('experience/components/userIndicator.hbs'),
-      `${c.gray('Experience URL').padEnd(13)}\thttps://aSlug.on.losant.com/aSuffix`,
-      `${c.gray('Bootstrap Username').padEnd(13)}\ttest.user.yp926mfr6a@example.com`,
-      `${c.gray('Bootstrap Password').padEnd(13)}\typ926mfr6a`,
-      `${c.green('Completed').padEnd(13)}\tBootstrapping has been successful.`
+      `${c.gray('Experience URL'.padEnd(13))}\thttps://aSlug.on.losant.com/aSuffix`,
+      `${c.gray('Bootstrap Username'.padEnd(13))}\ttest.user.yp926mfr6a@example.com`,
+      `${c.gray('Bootstrap Password'.padEnd(13))}\typ926mfr6a`,
+      `${c.green('Completed'.padEnd(13))}\tBootstrapping has been successful.`
     ]);
   });
 });

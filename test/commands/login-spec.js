@@ -1,11 +1,12 @@
-const {
+import {
   sinon,
   nock
-} = require('../common');
-const path = require('path');
-const { defer, sleep } = require('omnibelt');
-const inquirer = require('../../lib/inquirer');
-const utils = require('../../lib/utils');
+} from '../common.js';
+import path from 'path';
+import { defer, sleep } from 'omnibelt';
+import inquirer from 'inquirer';
+import utils from '../../lib/utils.js';
+import loginProgram from '../../commands/login/index.js';
 
 describe('Login Command', () => {
   it('should set the API token', async () => {
@@ -51,8 +52,6 @@ describe('Login Command', () => {
           'Mon, 10 May 2021 14:42:04 GMT',
           'Content-Type',
           'application/json',
-          'Content-Length',
-          '56',
           'Connection',
           'close',
           'Server',
@@ -86,9 +85,9 @@ describe('Login Command', () => {
       return Promise.resolve({ token: 'token1' });
     });
 
-    require('../../commands/login').parse([
+    loginProgram.parse([
       '/bin/node',
-      path.resolve(__dirname, '/bin/login.js')
+      path.resolve(import.meta.dirname, '/bin/login.js')
     ]);
     await deferred.promise;
 

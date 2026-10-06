@@ -1,7 +1,9 @@
-const { getDownloader } = require('../../lib');
-const { options } = require('../../lib/constants');
+import getDownloader from '../../lib/get-downloader.js';
+import constants from '../../lib/constants.js';
 
-module.exports = (program, params = {}, opts) => {
+const { options } = constants;
+
+export default (program, params = {}, opts) => {
   const subProgram = program
     .command('download [pattern]')
     .option(...options.force)
