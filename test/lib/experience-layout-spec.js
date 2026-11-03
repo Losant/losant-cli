@@ -380,7 +380,7 @@ describe('#ExperienceLayout', () => {
       messages.push(_message);
     });
     sinon.stub(inquirer, 'prompt').callsFake((config) => {
-      if (config[0].type === 'list') {
+      if (config[0].type === 'select') {
         return Promise.resolve({ name: 'Another Layout https://app.losant.com/applications/5b9297591fefb200072e554d/experience/versions/develop/views/layouts/5c0a9a163fb78400095ec089' });
       } else {
         return Promise.resolve({
@@ -568,7 +568,7 @@ describe('#ExperienceLayout', () => {
       messages.push(_message);
     });
     sinon.stub(inquirer, 'prompt').callsFake((config) => {
-      if (config[0].type === 'list') {
+      if (config[0].type === 'select') {
         return Promise.resolve({ name: 'no layout' });
       } else {
         return Promise.resolve({

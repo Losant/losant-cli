@@ -57,7 +57,7 @@ const getApplicationFunc = (api, appUrl) => {
       });
       choices.push('none of these, search again');
       const { name } = await inquirer.prompt([{
-        type: 'list',
+        type: 'select',
         name: 'name',
         message: `Several applications were found with the name ${filter}, choose one:`,
         choices
