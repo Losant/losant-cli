@@ -1,7 +1,7 @@
-const { nock, sinon, buildConfig } = require('../common');
-const ssLog = require('single-line-log');
-const versionCommand = require('../../lib/experience-version');
-const c = require('chalk');
+import { nock, sinon, buildConfig } from '../common.js';
+import ssLog from 'single-line-log';
+import versionCommand from '../../lib/experience-version.js';
+import c from 'chalk';
 
 describe('#ExperienceVersion', function() {
   it('should print a table of versions', async () => {
@@ -105,7 +105,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with slugs', async () => {
@@ -165,7 +165,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with domains', async () => {
@@ -224,7 +224,7 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 
   it('should create a new version with domains and slugs', async () => {
@@ -285,6 +285,6 @@ describe('#ExperienceVersion', function() {
     createDomainCall.isDone().should.be.true();
     createSlugCall.isDone().should.be.true();
     createCall.isDone().should.be.true();
-    message.should.equal(`${c.green('created')}\tv1.0.0`);
+    message.should.equal(`${c.green('created'.padEnd(13))}\tv1.0.0`);
   });
 });

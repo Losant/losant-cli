@@ -1,5 +1,8 @@
-const { experience } = require('../../lib/constants');
+import constants from '../../lib/constants.js';
+import status from '../utils/status.js';
 
-module.exports = (program) => {
-  return require('../utils/status')(program, 'experience', experience);
+const { experience } = constants;
+
+export default (program) => {
+  return status(program, 'experience', experience);
 };

@@ -1,11 +1,11 @@
-const p = require('commander');
-const program = new p.Command('losant set-token');
-const inquirer = require('../../lib/inquirer');
-const getApi = require('../../lib/get-api');
-const c = require('chalk');
-const {
-  saveUserConfig, logError, logResult
-} = require('../../lib/utils');
+import { Command } from 'commander';
+import inquirer from 'inquirer';
+import getApi from '../../lib/get-api.js';
+import c from 'chalk';
+import utils from '../../lib/utils.js';
+
+const program = new Command('losant set-token');
+const { saveUserConfig, logError, logResult } = utils;
 
 program
   .description('Create a User API Token in your Losant account, then set it here to configure the command line tool.')
@@ -36,4 +36,4 @@ program
     }
   });
 
-module.exports = program;
+export default program;
